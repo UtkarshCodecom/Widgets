@@ -1,81 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:hint="Name" app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_name"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Step 1: Basic Info"
+        android:textColor="@color/yellow_accent"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:hint="Description"
-        app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_description"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/dark_card"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp">
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:hint="Category ID"
-        app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_category_id"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorphic_small"
+            android:orientation="vertical"
+            android:padding="14dp">
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:hint="Category Name"
-        app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_category_name"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/input_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_neumorphic_input"
+                android:hint="Widget Name"
+                android:paddingHorizontal="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="14sp" />
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:hint="Thumbnail URL"
-        app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_thumbnail_url"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/input_description"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_neumorphic_input"
+                android:hint="Short Description"
+                android:paddingHorizontal="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="14sp" />
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:hint="Preview URL"
-        app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_preview_url"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:hint="Config JSON"
-        app:boxStrokeColor="@color/yellow_accent">
-        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_config_json"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textColor="@color/text_primary" />
-    </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-    <Switch xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_is_pro" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_marginTop="8dp"
-        android:text="Pro Widget" android:textColor="@color/text_primary" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Step 2: Category"
+        android:textColor="@color/yellow_accent"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
-    <Switch xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_is_featured" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_marginTop="8dp"
-        android:text="Featured" android:textColor="@color/text_primary" />
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/dark_card"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp">
 
-    <Switch xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_is_trending" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_marginTop="8dp"
-        android:text="Trending" android:textColor="@color/text_primary" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorphic_small"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <EditText
+                android:id="@+id/input_category_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_neumorphic_input"
+                android:hint="Category Name (e.g. Clock, Weather)"
+                android:paddingHorizontal="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Tip: Create categories first, then type the name here"
+                android:textColor="@color/text_tertiary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Step 3: Upload Images"
+        android:textColor="@color/yellow_accent"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/dark_card"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorphic_small"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <Button
+                android:id="@+id/btn_upload_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_neumorphic_button"
+                android:gravity="center"
+                android:text="Upload Thumbnail Image"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="12dp" />
+
+            <TextView
+                android:id="@+id/txt_thumbnail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="No file selected"
+                android:textColor="@color/text_tertiary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_upload_preview"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_neumorphic_button"
+                android:gravity="center"
+                android:text="Upload Preview Image"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="12dp" />
+
+            <TextView
+                android:id="@+id/txt_preview_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="No file selected"
+                android:textColor="@color/text_tertiary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Step 4: Options"
+        android:textColor="@color/yellow_accent"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="@color/dark_card"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorphic_small"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <Switch
+                android:id="@+id/input_is_pro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Premium Widget (Pro)"
+                android:textColor="@color/text_primary"
+                android:thumbTint="@color/yellow_accent"
+                android:trackTint="@color/yellow_accent_alpha_20" />
+
+            <Switch
+                android:id="@+id/input_is_featured"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Featured"
+                android:textColor="@color/text_primary"
+                android:thumbTint="@color/yellow_accent"
+                android:trackTint="@color/yellow_accent_alpha_20" />
+
+            <Switch
+                android:id="@+id/input_is_trending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Trending"
+                android:textColor="@color/text_primary"
+                android:thumbTint="@color/yellow_accent"
+                android:trackTint="@color/yellow_accent_alpha_20" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/dark_card"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_neumorphic_small"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <EditText
+                android:id="@+id/input_config_json"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_neumorphic_input"
+                android:gravity="top"
+                android:hint='{"key": "value"}'
+                android:padding="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Optional: JSON config for widget settings"
+                android:textColor="@color/text_tertiary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

@@ -4,9 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,30 +24,51 @@ import com.desire.widget.ui.customize.CustomizeFragment;
 import com.desire.widget.ui.settings.SettingsFragment;
 import com.desire.widget.ui.settings.SettingsViewModel;
 import com.desire.widget.ui.widgets.WidgetsFragment;
-import com.desire.widget.util.Tasks;
 import com.desire.widget.util.AppExecutors;
-import com.google.android.datatransport.BuildConfig;
+import com.desire.widget.util.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private FragmentManager fragmentManager;
-    private SettingsViewModel settingsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Tell the system we'll handle insets ourselves
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
         setContentView(R.layout.activity_main);
 
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_background));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dark_background));
 
-        fragmentManager = getSupportFragmentManager();
-        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-
         bottomNavigation = findViewById(R.id.bottom_navigation);
+
+        // Push content down by status bar height and up by nav bar height
+        View rootView = findViewById(R.id.root_layout);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() |
+                            WindowInsetsCompat.Type.displayCutout()
+            );
+            // Top padding keeps content below status bar / notch
+            v.setPadding(insets.left, insets.top, insets.right, 0);
+
+            // Bottom margin on nav bar keeps it above gesture bar
+            ViewGroup.MarginLayoutParams params =
+                    (ViewGroup.MarginLayoutParams) bottomNavigation.getLayoutParams();
+            params.bottomMargin = insets.bottom;
+            bottomNavigation.setLayoutParams(params);
+
+            return WindowInsetsCompat.CONSUMED;
+        });
+
+        fragmentManager = getSupportFragmentManager();
+        new ViewModelProvider(this).get(SettingsViewModel.class);
+
         bottomNavigation.setOnItemSelectedListener(this::onNavigationItemSelected);
 
         if (savedInstanceState == null) {
@@ -81,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> showMaintenanceDialog(config.getMaintenanceMessage()));
                         return;
                     }
-
-                    int currentVersion = BuildConfig.VERSION_CODE;
+                    int currentVersion = getPackageManager()
+                            .getPackageInfo(getPackageName(), 0).versionCode;
                     if (config.isForceUpdate() && config.getLatestVersion() > currentVersion) {
                         runOnUiThread(() -> showForceUpdateDialog(config.getForceUpdateMessage()));
                     }

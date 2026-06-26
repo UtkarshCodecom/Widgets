@@ -2,6 +2,7 @@ package com.desire.widget.ui.settings;
 
 import android.app.Application;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,21 +10,21 @@ import android.content.pm.PackageManager;
 
 import com.desire.widget.data.model.AppConfig;
 import com.desire.widget.data.remote.FirebaseService;
-import com.desire.widget.ui.base.BaseViewModel;
 import com.desire.widget.util.PreferenceManager;
 import com.desire.widget.util.Tasks;
 
-public class SettingsViewModel extends BaseViewModel {
-    private final Application application;
+public class SettingsViewModel extends AndroidViewModel {
     private final PreferenceManager prefs;
     private final MutableLiveData<Integer> developerTapCount = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> developerMode = new MutableLiveData<>(false);
     private final MutableLiveData<AppConfig> appConfig = new MutableLiveData<>(null);
     private final MutableLiveData<Boolean> updateAvailable = new MutableLiveData<>(false);
     private final MutableLiveData<String> updateMessage = new MutableLiveData<>(null);
+    private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
+    private final MutableLiveData<String> error = new MutableLiveData<>(null);
 
     public SettingsViewModel(Application application) {
-        this.application = application;
+        super(application);
         prefs = PreferenceManager.getInstance(application);
         developerTapCount.setValue(prefs.getDeveloperTapCount());
         developerMode.setValue(prefs.isDeveloperModeUnlocked());
@@ -31,21 +32,24 @@ public class SettingsViewModel extends BaseViewModel {
 
     public int getVersionCode() {
         try {
-            return application.getPackageManager()
-                    .getPackageInfo(application.getPackageName(), 0).versionCode;
+            return getApplication().getPackageManager()
+                    .getPackageInfo(getApplication().getPackageName(), 0).versionCode;
         } catch (Exception e) {
             return 1;
         }
     }
+
     public String getVersionName() {
         try {
-            return application.getPackageManager()
-                    .getPackageInfo(application.getPackageName(), 0).versionName;
+            return getApplication().getPackageManager()
+                    .getPackageInfo(getApplication().getPackageName(), 0).versionName;
         } catch (Exception e) {
             return "1.0";
         }
     }
 
+    public LiveData<Boolean> isLoading() { return loading; }
+    public LiveData<String> getError() { return error; }
     public LiveData<Integer> getDeveloperTapCount() { return developerTapCount; }
     public LiveData<Boolean> isDeveloperMode() { return developerMode; }
     public LiveData<AppConfig> getAppConfig() { return appConfig; }
@@ -66,7 +70,7 @@ public class SettingsViewModel extends BaseViewModel {
     }
 
     public void checkUpdates() {
-        showLoading();
+        loading.postValue(true);
         com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 AppConfig config = Tasks.await(FirebaseService.getInstance().getAppConfig());
@@ -83,23 +87,23 @@ public class SettingsViewModel extends BaseViewModel {
                     }
                 }
             } catch (Exception e) {
-                setError("Failed to check updates");
+                error.postValue("Failed to check updates");
             } finally {
-                hideLoading();
+                loading.postValue(false);
             }
         });
     }
 
     public void restorePurchases() {
-        showLoading();
+        loading.postValue(true);
         com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Thread.sleep(1000);
                 prefs.setPremium(true);
-                hideLoading();
+                loading.postValue(false);
             } catch (Exception e) {
-                setError("Restore failed");
-                hideLoading();
+                error.postValue("Restore failed");
+                loading.postValue(false);
             }
         });
     }

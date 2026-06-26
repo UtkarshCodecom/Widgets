@@ -43,4 +43,10 @@
     <!-- Gradient Colors -->
     <color name="gradient_start">#FFFFD700</color>
     <color name="gradient_end">#FFFF8C00</color>
+
+    <!-- Neumorphic -->
+    <color name="neu_dark_shadow">#40000000</color>
+    <color name="neu_light_shadow">#1AFFFFFF</color>
+    <color name="neu_dark_shadow_strong">#50000000</color>
+    <color name="neu_light_shadow_strong">#30FFFFFF</color>
 </resources>

@@ -2,12 +2,12 @@ package com.desire.widget.ui.customize;
 
 import android.app.Application;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.desire.widget.data.local.entity.ThemeEntity;
 import com.desire.widget.data.repository.WidgetRepository;
-import com.desire.widget.ui.base.BaseViewModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -15,15 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomizeViewModel extends BaseViewModel {
+public class CustomizeViewModel extends AndroidViewModel {
     private final WidgetRepository repository;
-    private final Application application;
     private final MutableLiveData<Map<String, Object>> currentConfig = new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<String> selectedThemeId = new MutableLiveData<>(null);
     private final Gson gson = new Gson();
 
     public CustomizeViewModel(Application application) {
-        this.application = application;
+        super(application);
         repository = WidgetRepository.getInstance(application);
         loadDefaultConfig();
     }
@@ -82,7 +81,7 @@ public class CustomizeViewModel extends BaseViewModel {
         if (config != null) {
             String json = gson.toJson(config);
             com.desire.widget.util.PreferenceManager.getInstance(
-                    application
+                    getApplication()
             ).setSavedConfigJson(json);
         }
     }

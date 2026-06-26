@@ -23,10 +23,20 @@
         <item name="colorOnSurfaceVariant">@color/text_secondary</item>
         <item name="colorOutline">@color/divider</item>
         <item name="colorOutlineVariant">@color/yellow_accent_alpha_20</item>
+
+        <!-- Status bar / nav bar -->
         <item name="android:statusBarColor">@color/dark_background</item>
         <item name="android:navigationBarColor">@color/dark_background</item>
-        <item name="elevationOverlayEnabled">true</item>
-        <item name="elevationOverlayColor">@color/yellow_accent_alpha_10</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+
+        <!-- Allow content to draw into cutout area — MainActivity handles insets -->
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">shortEdges</item>
+
+        <item name="elevationOverlayEnabled">false</item>
+
+        <!-- Neumorphic: remove default card elevation -->
+        <item name="cardViewStyle">@style/Widget.Widgets.Card.Neumorphic</item>
     </style>
 
     <style name="Theme.Widgets" parent="Base.Theme.Widgets" />
@@ -42,10 +52,26 @@
     <style name="Widget.Widgets.Card" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">@color/dark_card</item>
         <item name="cardCornerRadius">16dp</item>
-        <item name="cardElevation">4dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/divider</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
         <item name="contentPadding">16dp</item>
+        <item name="android:background">@drawable/bg_neumorphic</item>
+    </style>
+
+    <style name="Widget.Widgets.Card.Neumorphic" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/dark_card</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="android:background">@drawable/bg_neumorphic</item>
+    </style>
+
+    <style name="Widget.Widgets.Card.Neumorphic.Small" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/dark_card</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="android:background">@drawable/bg_neumorphic_small</item>
     </style>
 
     <style name="Widget.Widgets.Button.Yellow" parent="Widget.Material3.Button">

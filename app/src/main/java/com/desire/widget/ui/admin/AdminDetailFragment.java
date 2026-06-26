@@ -1,5 +1,6 @@
 package com.desire.widget.ui.admin;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,8 +30,6 @@ import com.desire.widget.data.remote.FirebaseService;
 import com.desire.widget.util.Tasks;
 import com.desire.widget.util.AppExecutors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,12 +38,20 @@ import java.util.Map;
 
 public class AdminDetailFragment extends Fragment {
     private static final String ARG_SECTION = "section";
+    private static final int PICK_THUMBNAIL = 1001;
+    private static final int PICK_PREVIEW = 1002;
+
     private String section;
     private AdminViewModel viewModel;
     private LinearLayout contentContainer;
     private LinearLayout formContainer;
     private View listView;
     private View formView;
+
+    private String pendingThumbnailUrl;
+    private String pendingPreviewUrl;
+    private Uri thumbnailUri;
+    private Uri previewUri;
 
     public static AdminDetailFragment newInstance(String section) {
         AdminDetailFragment fragment = new AdminDetailFragment();
@@ -62,7 +69,6 @@ public class AdminDetailFragment extends Fragment {
         }
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_admin_detail, container, false);
@@ -85,19 +91,43 @@ public class AdminDetailFragment extends Fragment {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         addButton.setOnClickListener(v -> showAddForm());
 
+        viewModel.getUploadResult().observe(getViewLifecycleOwner(), url -> {
+            if (url != null) {
+                if (pendingThumbnailUrl == null && thumbnailUri != null) {
+                    pendingThumbnailUrl = url;
+                    updateUploadLabel(R.id.txt_thumbnail_name, "Uploaded!");
+                } else if (pendingPreviewUrl == null && previewUri != null) {
+                    pendingPreviewUrl = url;
+                    updateUploadLabel(R.id.txt_preview_name, "Uploaded!");
+                }
+                viewModel.clearUploadResult();
+            }
+        });
+
         loadSectionData();
+    }
+
+    private void updateUploadLabel(int textViewId, String text) {
+        View fv = formContainer.getChildAt(0);
+        if (fv != null) {
+            TextView tv = fv.findViewById(textViewId);
+            if (tv != null) {
+                tv.setText(text);
+                tv.setTextColor(getResources().getColor(R.color.status_free));
+            }
+        }
     }
 
     private String getSectionTitle() {
         switch (section) {
-            case "Widgets": return "Widget Management";
-            case "Themes": return "Theme Management";
-            case "Categories": return "Category Management";
+            case "Widgets": return "Widgets";
+            case "Themes": return "Themes";
+            case "Categories": return "Categories";
             case "Announcements": return "Announcements";
             case "Offers": return "Offers";
             case "FeatureFlags": return "Feature Flags";
             case "Analytics": return "Analytics";
-            case "AppConfig": return "App Configuration";
+            case "AppConfig": return "App Config";
             default: return section;
         }
     }
@@ -141,7 +171,7 @@ public class AdminDetailFragment extends Fragment {
     private void renderWidgetList(List<Widget> widgets) {
         contentContainer.removeAllViews();
         if (widgets == null || widgets.isEmpty()) {
-            addEmptyView("No widgets yet. Tap + to add one.");
+            addEmptyView("No widgets yet. Tap + Add New to create your first widget!");
             return;
         }
         for (Widget w : widgets) {
@@ -236,8 +266,6 @@ public class AdminDetailFragment extends Fragment {
         viewModel.loadWidgets();
     }
 
-    // ==================== ITEM VIEWS ====================
-
     private View createWidgetItemView(Widget w) {
         View view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.item_admin_list, contentContainer, false);
@@ -247,9 +275,8 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(w.getName());
-        subtitle.setText((w.isPro() ? "PRO • " : "FREE • ") +
-                "Downloads: " + w.getDownloadCount() + " • " +
-                (w.isActive() ? "Active" : "Inactive"));
+        subtitle.setText((w.isPro() ? "PRO" : "FREE") + " \u2022 Downloads: " + w.getDownloadCount()
+                + " \u2022 " + (w.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showWidgetForm(w));
         deleteBtn.setOnClickListener(v -> confirmDelete("widget", w.getId(), () -> viewModel.deleteWidget(w.getId())));
@@ -265,7 +292,7 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(c.getName());
-        subtitle.setText("Order: " + c.getOrder() + " • " + (c.isActive() ? "Active" : "Inactive"));
+        subtitle.setText("Order: " + c.getOrder() + " \u2022 " + (c.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showCategoryForm(c));
         deleteBtn.setOnClickListener(v -> confirmDelete("category", c.getId(), () -> viewModel.deleteCategory(c.getId())));
@@ -281,9 +308,8 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(t.getName());
-        subtitle.setText((t.isPro() ? "PRO" : "FREE") + " • " +
-                (t.isDefault() ? "Default" : "") + " • " +
-                (t.isActive() ? "Active" : "Inactive"));
+        subtitle.setText((t.isPro() ? "PRO" : "FREE") + " \u2022 "
+                + (t.isDefault() ? "Default " : "") + (t.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showThemeForm(t));
         deleteBtn.setOnClickListener(v -> confirmDelete("theme", t.getId(), () -> viewModel.deleteTheme(t.getId())));
@@ -299,8 +325,8 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(a.getTitle());
-        subtitle.setText(a.getType() + " • Priority: " + a.getPriority() + " • " +
-                (a.isActive() ? "Active" : "Inactive"));
+        subtitle.setText(a.getType() + " \u2022 Priority: " + a.getPriority() + " \u2022 "
+                + (a.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showAnnouncementForm(a));
         deleteBtn.setOnClickListener(v -> confirmDelete("announcement", a.getId(),
@@ -317,8 +343,8 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(o.getTitle());
-        subtitle.setText(o.getDiscountPercent() + "% OFF • Code: " + o.getCode() + " • " +
-                (o.isActive() ? "Active" : "Inactive"));
+        subtitle.setText(o.getDiscountPercent() + "% OFF \u2022 Code: " + o.getCode() + " \u2022 "
+                + (o.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showOfferForm(o));
         deleteBtn.setOnClickListener(v -> confirmDelete("offer", o.getId(), () -> viewModel.deleteOffer(o.getId())));
@@ -345,10 +371,10 @@ public class AdminDetailFragment extends Fragment {
     private View createAppConfigView(AppConfig config) {
         View view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.view_app_config, contentContainer, false);
-        TextInputEditText latestVersion = view.findViewById(R.id.latest_version);
-        TextInputEditText minVersion = view.findViewById(R.id.min_version);
-        TextInputEditText forceUpdateMsg = view.findViewById(R.id.force_update_message);
-        TextInputEditText maintenanceMsg = view.findViewById(R.id.maintenance_message);
+        EditText latestVersion = view.findViewById(R.id.latest_version);
+        EditText minVersion = view.findViewById(R.id.min_version);
+        EditText forceUpdateMsg = view.findViewById(R.id.force_update_message);
+        EditText maintenanceMsg = view.findViewById(R.id.maintenance_message);
         Switch forceUpdateToggle = view.findViewById(R.id.force_update_toggle);
         Switch maintenanceToggle = view.findViewById(R.id.maintenance_toggle);
         Button saveBtn = view.findViewById(R.id.save_config_btn);
@@ -375,8 +401,6 @@ public class AdminDetailFragment extends Fragment {
         return view;
     }
 
-    // ==================== FORMS ====================
-
     private void showAddForm() {
         switch (section) {
             case "Widgets": showWidgetForm(null); break;
@@ -388,23 +412,50 @@ public class AdminDetailFragment extends Fragment {
     }
 
     private void showWidgetForm(@Nullable Widget existing) {
+        pendingThumbnailUrl = null;
+        pendingPreviewUrl = null;
+        thumbnailUri = null;
+        previewUri = null;
+
         View view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.form_widget, formContainer, false);
         showForm("Widget", view, () -> {
             Widget w = existing != null ? existing : new Widget();
-            w.setName(((TextInputEditText) view.findViewById(R.id.input_name)).getText().toString());
-            w.setDescription(((TextInputEditText) view.findViewById(R.id.input_description)).getText().toString());
-            w.setCategoryId(((TextInputEditText) view.findViewById(R.id.input_category_id)).getText().toString());
-            w.setCategoryName(((TextInputEditText) view.findViewById(R.id.input_category_name)).getText().toString());
-            w.setThumbnailUrl(((TextInputEditText) view.findViewById(R.id.input_thumbnail_url)).getText().toString());
-            w.setPreviewUrl(((TextInputEditText) view.findViewById(R.id.input_preview_url)).getText().toString());
-            w.setConfigJson(((TextInputEditText) view.findViewById(R.id.input_config_json)).getText().toString());
+
+            String name = ((EditText) view.findViewById(R.id.input_name)).getText().toString().trim();
+            if (name.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter a widget name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            w.setName(name);
+            w.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString().trim());
+            w.setCategoryName(((EditText) view.findViewById(R.id.input_category_name)).getText().toString().trim());
+            if (pendingThumbnailUrl != null) w.setThumbnailUrl(pendingThumbnailUrl);
+            if (pendingPreviewUrl != null) w.setPreviewUrl(pendingPreviewUrl);
+            w.setConfigJson(((EditText) view.findViewById(R.id.input_config_json)).getText().toString());
             w.setPro(((Switch) view.findViewById(R.id.input_is_pro)).isChecked());
             w.setFeatured(((Switch) view.findViewById(R.id.input_is_featured)).isChecked());
             w.setTrending(((Switch) view.findViewById(R.id.input_is_trending)).isChecked());
             w.setActive(true);
+            if (w.getDownloadCount() == 0) w.setDownloadCount(0);
+            if (w.getFavoriteCount() == 0) w.setFavoriteCount(0);
+            if (w.getVersion() == 0) w.setVersion(1);
+
             viewModel.saveWidget(w);
+            Toast.makeText(requireContext(), "Widget saved!", Toast.LENGTH_SHORT).show();
         }, existing);
+
+        view.findViewById(R.id.btn_upload_thumbnail).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, PICK_THUMBNAIL);
+        });
+
+        view.findViewById(R.id.btn_upload_preview).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, PICK_PREVIEW);
+        });
     }
 
     private void showCategoryForm(@Nullable Category existing) {
@@ -412,11 +463,11 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_category, formContainer, false);
         showForm("Category", view, () -> {
             Category c = existing != null ? existing : new Category();
-            c.setName(((TextInputEditText) view.findViewById(R.id.input_name)).getText().toString());
-            c.setIcon(((TextInputEditText) view.findViewById(R.id.input_icon)).getText().toString());
-            c.setColor(((TextInputEditText) view.findViewById(R.id.input_color)).getText().toString());
+            c.setName(((EditText) view.findViewById(R.id.input_name)).getText().toString());
+            c.setIcon(((EditText) view.findViewById(R.id.input_icon)).getText().toString());
+            c.setColor(((EditText) view.findViewById(R.id.input_color)).getText().toString());
             try {
-                c.setOrder(Integer.parseInt(((TextInputEditText) view.findViewById(R.id.input_order)).getText().toString()));
+                c.setOrder(Integer.parseInt(((EditText) view.findViewById(R.id.input_order)).getText().toString()));
             } catch (NumberFormatException ignored) {}
             c.setActive(((Switch) view.findViewById(R.id.input_active)).isChecked());
             viewModel.saveCategory(c);
@@ -428,9 +479,9 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_theme, formContainer, false);
         showForm("Theme", view, () -> {
             Theme t = existing != null ? existing : new Theme();
-            t.setName(((TextInputEditText) view.findViewById(R.id.input_name)).getText().toString());
-            t.setDescription(((TextInputEditText) view.findViewById(R.id.input_description)).getText().toString());
-            t.setThumbnailUrl(((TextInputEditText) view.findViewById(R.id.input_thumbnail_url)).getText().toString());
+            t.setName(((EditText) view.findViewById(R.id.input_name)).getText().toString());
+            t.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString());
+            t.setThumbnailUrl(((EditText) view.findViewById(R.id.input_thumbnail_url)).getText().toString());
             t.setPro(((Switch) view.findViewById(R.id.input_is_pro)).isChecked());
             t.setDefault(((Switch) view.findViewById(R.id.input_is_default)).isChecked());
             t.setActive(true);
@@ -443,14 +494,14 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_announcement, formContainer, false);
         showForm("Announcement", view, () -> {
             Announcement a = existing != null ? existing : new Announcement();
-            a.setTitle(((TextInputEditText) view.findViewById(R.id.input_title)).getText().toString());
-            a.setMessage(((TextInputEditText) view.findViewById(R.id.input_message)).getText().toString());
-            a.setType(((TextInputEditText) view.findViewById(R.id.input_type)).getText().toString());
-            a.setActionLabel(((TextInputEditText) view.findViewById(R.id.input_action_label)).getText().toString());
-            a.setActionUrl(((TextInputEditText) view.findViewById(R.id.input_action_url)).getText().toString());
-            a.setImageUrl(((TextInputEditText) view.findViewById(R.id.input_image_url)).getText().toString());
+            a.setTitle(((EditText) view.findViewById(R.id.input_title)).getText().toString());
+            a.setMessage(((EditText) view.findViewById(R.id.input_message)).getText().toString());
+            a.setType(((EditText) view.findViewById(R.id.input_type)).getText().toString());
+            a.setActionLabel(((EditText) view.findViewById(R.id.input_action_label)).getText().toString());
+            a.setActionUrl(((EditText) view.findViewById(R.id.input_action_url)).getText().toString());
+            a.setImageUrl(((EditText) view.findViewById(R.id.input_image_url)).getText().toString());
             try {
-                a.setPriority(Integer.parseInt(((TextInputEditText) view.findViewById(R.id.input_priority)).getText().toString()));
+                a.setPriority(Integer.parseInt(((EditText) view.findViewById(R.id.input_priority)).getText().toString()));
             } catch (NumberFormatException ignored) {}
             a.setStartAt(System.currentTimeMillis());
             a.setEndAt(System.currentTimeMillis() + 86400000L * 30);
@@ -464,13 +515,13 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_offer, formContainer, false);
         showForm("Offer", view, () -> {
             Offer o = existing != null ? existing : new Offer();
-            o.setTitle(((TextInputEditText) view.findViewById(R.id.input_title)).getText().toString());
-            o.setDescription(((TextInputEditText) view.findViewById(R.id.input_description)).getText().toString());
-            o.setCode(((TextInputEditText) view.findViewById(R.id.input_code)).getText().toString());
+            o.setTitle(((EditText) view.findViewById(R.id.input_title)).getText().toString());
+            o.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString());
+            o.setCode(((EditText) view.findViewById(R.id.input_code)).getText().toString());
             try {
-                o.setDiscountPercent(Integer.parseInt(((TextInputEditText) view.findViewById(R.id.input_discount)).getText().toString()));
+                o.setDiscountPercent(Integer.parseInt(((EditText) view.findViewById(R.id.input_discount)).getText().toString()));
             } catch (NumberFormatException ignored) {}
-            o.setImageUrl(((TextInputEditText) view.findViewById(R.id.input_image_url)).getText().toString());
+            o.setImageUrl(((EditText) view.findViewById(R.id.input_image_url)).getText().toString());
             o.setStartAt(System.currentTimeMillis());
             o.setEndAt(System.currentTimeMillis() + 86400000L * 30);
             o.setActive(((Switch) view.findViewById(R.id.input_active)).isChecked());
@@ -499,19 +550,36 @@ public class AdminDetailFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            if (requestCode == PICK_THUMBNAIL) {
+                thumbnailUri = data.getData();
+                viewModel.uploadThumbnail(thumbnailUri);
+                updateUploadLabel(R.id.txt_thumbnail_name, "Uploading...");
+            } else if (requestCode == PICK_PREVIEW) {
+                previewUri = data.getData();
+                viewModel.uploadPreview(previewUri);
+                updateUploadLabel(R.id.txt_preview_name, "Uploading...");
+            }
+        }
+    }
+
     private void populateForm(Object item, View formView) {
         if (item instanceof Widget) {
             Widget w = (Widget) item;
             setText(formView, R.id.input_name, w.getName());
             setText(formView, R.id.input_description, w.getDescription());
-            setText(formView, R.id.input_category_id, w.getCategoryId());
             setText(formView, R.id.input_category_name, w.getCategoryName());
-            setText(formView, R.id.input_thumbnail_url, w.getThumbnailUrl());
-            setText(formView, R.id.input_preview_url, w.getPreviewUrl());
             setText(formView, R.id.input_config_json, w.getConfigJson());
             setChecked(formView, R.id.input_is_pro, w.isPro());
             setChecked(formView, R.id.input_is_featured, w.isFeatured());
             setChecked(formView, R.id.input_is_trending, w.isTrending());
+            pendingThumbnailUrl = w.getThumbnailUrl();
+            pendingPreviewUrl = w.getPreviewUrl();
+            if (pendingThumbnailUrl != null) updateUploadLabel(R.id.txt_thumbnail_name, "Has image");
+            if (pendingPreviewUrl != null) updateUploadLabel(R.id.txt_preview_name, "Has image");
         } else if (item instanceof Category) {
             Category c = (Category) item;
             setText(formView, R.id.input_name, c.getName());
@@ -549,8 +617,8 @@ public class AdminDetailFragment extends Fragment {
 
     private void setText(View parent, int id, String text) {
         View v = parent.findViewById(id);
-        if (v instanceof TextInputEditText) {
-            ((TextInputEditText) v).setText(text != null ? text : "");
+        if (v instanceof EditText) {
+            ((EditText) v).setText(text != null ? text : "");
         }
     }
 

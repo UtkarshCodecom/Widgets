@@ -2,6 +2,7 @@ package com.desire.widget.ui.widgets;
 
 import android.app.Application;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -9,20 +10,20 @@ import androidx.lifecycle.Transformations;
 import com.desire.widget.data.local.entity.CategoryEntity;
 import com.desire.widget.data.local.entity.WidgetEntity;
 import com.desire.widget.data.repository.WidgetRepository;
-import com.desire.widget.ui.base.BaseViewModel;
 
 import java.util.List;
 
-public class WidgetsViewModel extends BaseViewModel {
+public class WidgetsViewModel extends AndroidViewModel {
     private final WidgetRepository repository;
     private final MutableLiveData<String> selectedCategoryId = new MutableLiveData<>("all");
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>("");
     private final MutableLiveData<Boolean> showFavoritesOnly = new MutableLiveData<>(false);
 
-    private LiveData<List<WidgetEntity>> widgets;
-    private LiveData<List<CategoryEntity>> categories;
+    private final LiveData<List<WidgetEntity>> widgets;
+    private final LiveData<List<CategoryEntity>> categories;
 
     public WidgetsViewModel(Application application) {
+        super(application);
         repository = WidgetRepository.getInstance(application);
         categories = repository.getAllCategories();
         widgets = Transformations.switchMap(selectedCategoryId, categoryId -> {
@@ -35,18 +36,16 @@ public class WidgetsViewModel extends BaseViewModel {
     }
 
     public LiveData<List<WidgetEntity>> getWidgets() {
-        LiveData<List<WidgetEntity>> source;
         if (Boolean.TRUE.equals(showFavoritesOnly.getValue())) {
-            source = repository.getFavoriteWidgets();
+            return repository.getFavoriteWidgets();
         } else {
             String query = searchQuery.getValue();
             if (query != null && !query.isEmpty()) {
-                source = repository.searchWidgets(query);
+                return repository.searchWidgets(query);
             } else {
-                source = widgets;
+                return widgets;
             }
         }
-        return source;
     }
 
     public LiveData<List<CategoryEntity>> getCategories() {

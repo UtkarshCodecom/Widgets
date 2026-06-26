@@ -11,7 +11,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/dark_background"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/developer_section"
+        app:title="Admin Dashboard"
         app:titleTextColor="@color/text_primary">
 
         <Button
@@ -38,29 +38,108 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/dashboard"
+                android:text="Quick Actions"
                 android:textColor="@color/yellow_accent"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Dashboard Grid -->
-            <GridLayout
+            <LinearLayout
+                android:id="@+id/quick_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:columnCount="2"
-                android:rowCount="4">
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-                <include layout="@layout/item_admin_card" android:id="@+id/widgets_management_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/themes_management_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/categories_management_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/announcements_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/offers_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/feature_flags_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/analytics_card" />
-                <include layout="@layout/item_admin_card" android:id="@+id/app_config_card" />
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/widgets_management_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-            </GridLayout>
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/categories_management_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/themes_management_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/announcements_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/offers_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/analytics_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Configuration"
+                android:textColor="@color/yellow_accent"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/feature_flags_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <include layout="@layout/item_admin_card"
+                    android:id="@+id/app_config_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

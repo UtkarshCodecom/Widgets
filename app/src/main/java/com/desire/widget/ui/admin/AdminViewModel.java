@@ -3,6 +3,7 @@ package com.desire.widget.ui.admin;
 import android.app.Application;
 import android.net.Uri;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,13 +14,18 @@ import com.desire.widget.data.model.Offer;
 import com.desire.widget.data.model.Theme;
 import com.desire.widget.data.model.Widget;
 import com.desire.widget.data.remote.FirebaseService;
-import com.desire.widget.ui.base.BaseViewModel;
+import com.desire.widget.data.remote.R2Service;
+import com.desire.widget.util.AppExecutors;
 import com.desire.widget.util.Tasks;
 
 import java.util.List;
 
-public class AdminViewModel extends BaseViewModel {
+public class AdminViewModel extends AndroidViewModel {
     private final FirebaseService firebaseService;
+    private final R2Service r2Service;
+
+    private final MutableLiveData<Boolean> loading = new MutableLiveData<>(false);
+    private final MutableLiveData<String> error = new MutableLiveData<>(null);
 
     private final MutableLiveData<List<Widget>> widgets = new MutableLiveData<>();
     private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
@@ -28,11 +34,16 @@ public class AdminViewModel extends BaseViewModel {
     private final MutableLiveData<List<Offer>> offers = new MutableLiveData<>();
     private final MutableLiveData<AppConfig> appConfig = new MutableLiveData<>();
     private final MutableLiveData<String> uploadProgress = new MutableLiveData<>(null);
+    private final MutableLiveData<String> uploadResult = new MutableLiveData<>(null);
 
     public AdminViewModel(Application application) {
+        super(application);
         firebaseService = FirebaseService.getInstance();
+        r2Service = R2Service.getInstance();
     }
 
+    public LiveData<Boolean> isLoading() { return loading; }
+    public LiveData<String> getError() { return error; }
     public LiveData<List<Widget>> getWidgets() { return widgets; }
     public LiveData<List<Category>> getCategories() { return categories; }
     public LiveData<List<Theme>> getThemes() { return themes; }
@@ -40,6 +51,11 @@ public class AdminViewModel extends BaseViewModel {
     public LiveData<List<Offer>> getOffers() { return offers; }
     public LiveData<AppConfig> getAppConfig() { return appConfig; }
     public LiveData<String> getUploadProgress() { return uploadProgress; }
+    public LiveData<String> getUploadResult() { return uploadResult; }
+
+    private void showLoading() { loading.postValue(true); }
+    private void hideLoading() { loading.postValue(false); }
+    private void setError(String message) { error.postValue(message); }
 
     public void loadAll() {
         loadWidgets();
@@ -52,7 +68,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void loadWidgets() {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 List<Widget> result = Tasks.await(firebaseService.getAllWidgets());
                 widgets.postValue(result);
@@ -65,7 +81,7 @@ public class AdminViewModel extends BaseViewModel {
     }
 
     public void loadCategories() {
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 List<Category> result = Tasks.await(firebaseService.getAllCategories());
                 categories.postValue(result);
@@ -76,7 +92,7 @@ public class AdminViewModel extends BaseViewModel {
     }
 
     public void loadThemes() {
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 List<Theme> result = Tasks.await(firebaseService.getAllThemes());
                 themes.postValue(result);
@@ -87,7 +103,7 @@ public class AdminViewModel extends BaseViewModel {
     }
 
     public void loadAnnouncements() {
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 List<Announcement> result = Tasks.await(firebaseService.getAllAnnouncements());
                 announcements.postValue(result);
@@ -98,7 +114,7 @@ public class AdminViewModel extends BaseViewModel {
     }
 
     public void loadOffers() {
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 List<Offer> result = Tasks.await(firebaseService.getAllOffers());
                 offers.postValue(result);
@@ -109,7 +125,7 @@ public class AdminViewModel extends BaseViewModel {
     }
 
     public void loadAppConfig() {
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 AppConfig result = Tasks.await(firebaseService.getAppConfig());
                 appConfig.postValue(result);
@@ -121,7 +137,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void saveWidget(Widget widget) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.saveWidget(widget));
                 loadWidgets();
@@ -135,7 +151,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void deleteWidget(String id) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.deleteWidget(id));
                 loadWidgets();
@@ -149,7 +165,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void saveCategory(Category category) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.saveCategory(category));
                 loadCategories();
@@ -163,7 +179,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void deleteCategory(String id) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.deleteCategory(id));
                 loadCategories();
@@ -177,7 +193,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void saveTheme(Theme theme) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.saveTheme(theme));
                 loadThemes();
@@ -191,7 +207,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void deleteTheme(String id) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.deleteTheme(id));
                 loadThemes();
@@ -205,7 +221,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void saveAnnouncement(Announcement announcement) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.saveAnnouncement(announcement));
                 loadAnnouncements();
@@ -219,7 +235,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void deleteAnnouncement(String id) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.deleteAnnouncement(id));
                 loadAnnouncements();
@@ -233,7 +249,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void saveOffer(Offer offer) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.saveOffer(offer));
                 loadOffers();
@@ -247,7 +263,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void deleteOffer(String id) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.deleteOffer(id));
                 loadOffers();
@@ -261,7 +277,7 @@ public class AdminViewModel extends BaseViewModel {
 
     public void saveAppConfig(AppConfig config) {
         showLoading();
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
+        AppExecutors.getInstance().networkIO().execute(() -> {
             try {
                 Tasks.await(firebaseService.saveAppConfig(config));
                 loadAppConfig();
@@ -273,19 +289,42 @@ public class AdminViewModel extends BaseViewModel {
         });
     }
 
-    public void uploadFile(String path, Uri fileUri) {
-        showLoading();
-        uploadProgress.postValue("Uploading...");
-        com.desire.widget.util.AppExecutors.getInstance().networkIO().execute(() -> {
-            try {
-                Tasks.await(firebaseService.uploadFile(path, fileUri));
-                uploadProgress.postValue("Upload complete");
-            } catch (Exception e) {
-                setError("Upload failed");
+    // R2 Upload methods
+    public void uploadThumbnail(Uri fileUri) {
+        uploadProgress.postValue("Uploading thumbnail...");
+        r2Service.uploadWidgetThumbnail(getApplication(), fileUri, new R2Service.UploadCallback() {
+            @Override
+            public void onSuccess(String publicUrl) {
                 uploadProgress.postValue(null);
-            } finally {
-                hideLoading();
+                uploadResult.postValue(publicUrl);
+            }
+
+            @Override
+            public void onError(String error) {
+                uploadProgress.postValue(null);
+                setError("Thumbnail upload: " + error);
             }
         });
+    }
+
+    public void uploadPreview(Uri fileUri) {
+        uploadProgress.postValue("Uploading preview...");
+        r2Service.uploadWidgetPreview(getApplication(), fileUri, new R2Service.UploadCallback() {
+            @Override
+            public void onSuccess(String publicUrl) {
+                uploadProgress.postValue(null);
+                uploadResult.postValue(publicUrl);
+            }
+
+            @Override
+            public void onError(String error) {
+                uploadProgress.postValue(null);
+                setError("Preview upload: " + error);
+            }
+        });
+    }
+
+    public void clearUploadResult() {
+        uploadResult.postValue(null);
     }
 }
