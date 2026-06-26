@@ -34,7 +34,9 @@ public class AdminViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Offer>> offers = new MutableLiveData<>();
     private final MutableLiveData<AppConfig> appConfig = new MutableLiveData<>();
     private final MutableLiveData<String> uploadProgress = new MutableLiveData<>(null);
-    private final MutableLiveData<String> uploadResult = new MutableLiveData<>(null);
+    private final MutableLiveData<String> thumbnailUploadResult = new MutableLiveData<>(null);
+    private final MutableLiveData<String> previewUploadResult = new MutableLiveData<>(null);
+    private final MutableLiveData<String> uploadError = new MutableLiveData<>(null);
 
     public AdminViewModel(Application application) {
         super(application);
@@ -51,7 +53,9 @@ public class AdminViewModel extends AndroidViewModel {
     public LiveData<List<Offer>> getOffers() { return offers; }
     public LiveData<AppConfig> getAppConfig() { return appConfig; }
     public LiveData<String> getUploadProgress() { return uploadProgress; }
-    public LiveData<String> getUploadResult() { return uploadResult; }
+    public LiveData<String> getThumbnailUploadResult() { return thumbnailUploadResult; }
+    public LiveData<String> getPreviewUploadResult() { return previewUploadResult; }
+    public LiveData<String> getUploadError() { return uploadError; }
 
     private void showLoading() { loading.postValue(true); }
     private void hideLoading() { loading.postValue(false); }
@@ -292,39 +296,43 @@ public class AdminViewModel extends AndroidViewModel {
     // R2 Upload methods
     public void uploadThumbnail(Uri fileUri) {
         uploadProgress.postValue("Uploading thumbnail...");
+        uploadError.postValue(null);
         r2Service.uploadWidgetThumbnail(getApplication(), fileUri, new R2Service.UploadCallback() {
             @Override
             public void onSuccess(String publicUrl) {
                 uploadProgress.postValue(null);
-                uploadResult.postValue(publicUrl);
+                thumbnailUploadResult.postValue(publicUrl);
             }
 
             @Override
             public void onError(String error) {
                 uploadProgress.postValue(null);
-                setError("Thumbnail upload: " + error);
+                uploadError.postValue("Thumbnail: " + error);
             }
         });
     }
 
     public void uploadPreview(Uri fileUri) {
         uploadProgress.postValue("Uploading preview...");
+        uploadError.postValue(null);
         r2Service.uploadWidgetPreview(getApplication(), fileUri, new R2Service.UploadCallback() {
             @Override
             public void onSuccess(String publicUrl) {
                 uploadProgress.postValue(null);
-                uploadResult.postValue(publicUrl);
+                previewUploadResult.postValue(publicUrl);
             }
 
             @Override
             public void onError(String error) {
                 uploadProgress.postValue(null);
-                setError("Preview upload: " + error);
+                uploadError.postValue("Preview: " + error);
             }
         });
     }
 
-    public void clearUploadResult() {
-        uploadResult.postValue(null);
+    public void clearUploadResults() {
+        thumbnailUploadResult.postValue(null);
+        previewUploadResult.postValue(null);
+        uploadError.postValue(null);
     }
 }

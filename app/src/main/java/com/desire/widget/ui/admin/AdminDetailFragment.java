@@ -26,9 +26,9 @@ import com.desire.widget.data.model.Category;
 import com.desire.widget.data.model.Offer;
 import com.desire.widget.data.model.Theme;
 import com.desire.widget.data.model.Widget;
-import com.desire.widget.data.remote.FirebaseService;
 import com.desire.widget.util.Tasks;
 import com.desire.widget.util.AppExecutors;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -91,29 +91,47 @@ public class AdminDetailFragment extends Fragment {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         addButton.setOnClickListener(v -> showAddForm());
 
-        viewModel.getUploadResult().observe(getViewLifecycleOwner(), url -> {
+        viewModel.getThumbnailUploadResult().observe(getViewLifecycleOwner(), url -> {
             if (url != null) {
-                if (pendingThumbnailUrl == null && thumbnailUri != null) {
-                    pendingThumbnailUrl = url;
-                    updateUploadLabel(R.id.txt_thumbnail_name, "Uploaded!");
-                } else if (pendingPreviewUrl == null && previewUri != null) {
-                    pendingPreviewUrl = url;
-                    updateUploadLabel(R.id.txt_preview_name, "Uploaded!");
+                pendingThumbnailUrl = url;
+                updateUploadLabel(R.id.txt_thumbnail_name, "Uploaded!", R.color.status_free);
+            }
+        });
+
+        viewModel.getPreviewUploadResult().observe(getViewLifecycleOwner(), url -> {
+            if (url != null) {
+                pendingPreviewUrl = url;
+                updateUploadLabel(R.id.txt_preview_name, "Uploaded!", R.color.status_free);
+            }
+        });
+
+        viewModel.getUploadError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
+                if (error.startsWith("Thumbnail")) {
+                    updateUploadLabel(R.id.txt_thumbnail_name, "Upload Failed", R.color.status_pro);
+                } else if (error.startsWith("Preview")) {
+                    updateUploadLabel(R.id.txt_preview_name, "Upload Failed", R.color.status_pro);
                 }
-                viewModel.clearUploadResult();
+            }
+        });
+
+        viewModel.getUploadProgress().observe(getViewLifecycleOwner(), progress -> {
+            if (progress != null) {
+                Toast.makeText(requireContext(), progress, Toast.LENGTH_SHORT).show();
             }
         });
 
         loadSectionData();
     }
 
-    private void updateUploadLabel(int textViewId, String text) {
+    private void updateUploadLabel(int textViewId, String text, int colorRes) {
         View fv = formContainer.getChildAt(0);
         if (fv != null) {
             TextView tv = fv.findViewById(textViewId);
             if (tv != null) {
                 tv.setText(text);
-                tv.setTextColor(getResources().getColor(R.color.status_free));
+                tv.setTextColor(ContextCompat.getColor(requireContext(), colorRes));
             }
         }
     }
@@ -412,8 +430,9 @@ public class AdminDetailFragment extends Fragment {
     }
 
     private void showWidgetForm(@Nullable Widget existing) {
-        pendingThumbnailUrl = null;
-        pendingPreviewUrl = null;
+        viewModel.clearUploadResults();
+        pendingThumbnailUrl = existing != null ? existing.getThumbnailUrl() : null;
+        pendingPreviewUrl = existing != null ? existing.getPreviewUrl() : null;
         thumbnailUri = null;
         previewUri = null;
 
@@ -557,11 +576,11 @@ public class AdminDetailFragment extends Fragment {
             if (requestCode == PICK_THUMBNAIL) {
                 thumbnailUri = data.getData();
                 viewModel.uploadThumbnail(thumbnailUri);
-                updateUploadLabel(R.id.txt_thumbnail_name, "Uploading...");
+                updateUploadLabel(R.id.txt_thumbnail_name, "Uploading...", R.color.text_tertiary);
             } else if (requestCode == PICK_PREVIEW) {
                 previewUri = data.getData();
                 viewModel.uploadPreview(previewUri);
-                updateUploadLabel(R.id.txt_preview_name, "Uploading...");
+                updateUploadLabel(R.id.txt_preview_name, "Uploading...", R.color.text_tertiary);
             }
         }
     }
@@ -578,8 +597,8 @@ public class AdminDetailFragment extends Fragment {
             setChecked(formView, R.id.input_is_trending, w.isTrending());
             pendingThumbnailUrl = w.getThumbnailUrl();
             pendingPreviewUrl = w.getPreviewUrl();
-            if (pendingThumbnailUrl != null) updateUploadLabel(R.id.txt_thumbnail_name, "Has image");
-            if (pendingPreviewUrl != null) updateUploadLabel(R.id.txt_preview_name, "Has image");
+            if (pendingThumbnailUrl != null) updateUploadLabel(R.id.txt_thumbnail_name, "Has image", R.color.status_free);
+            if (pendingPreviewUrl != null) updateUploadLabel(R.id.txt_preview_name, "Has image", R.color.status_free);
         } else if (item instanceof Category) {
             Category c = (Category) item;
             setText(formView, R.id.input_name, c.getName());
@@ -632,7 +651,7 @@ public class AdminDetailFragment extends Fragment {
     private void addEmptyView(String message) {
         TextView tv = new TextView(requireContext());
         tv.setText(message);
-        tv.setTextColor(getResources().getColor(R.color.text_secondary));
+        tv.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
         tv.setTextSize(14);
         tv.setPadding(32, 32, 32, 32);
         contentContainer.addView(tv);
