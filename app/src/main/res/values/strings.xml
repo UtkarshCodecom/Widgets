@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">Widgets</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_widgets">Widgets</string>
+    <string name="nav_customize">Customize</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Widgets Tab -->
+    <string name="search_hint">Search widgets…</string>
+    <string name="all_categories">All</string>
+    <string name="favorites">Favorites</string>
+    <string name="free">Free</string>
+    <string name="pro">Pro</string>
+    <string name="add_to_home">Add to Home</string>
+    <string name="widget_preview">Preview</string>
+    <string name="no_favorites">No favorites yet</string>
+    <string name="no_widgets">No widgets found</string>
+
+    <!-- Customize Tab -->
+    <string name="theme_manager">Theme Manager</string>
+    <string name="widget_studio">Widget Studio</string>
+    <string name="edit_text">Edit Text</string>
+    <string name="edit_colors">Colors</string>
+    <string name="edit_fonts">Fonts</string>
+    <string name="edit_gradients">Gradients</string>
+    <string name="edit_shadows">Shadows</string>
+    <string name="edit_borders">Borders</string>
+    <string name="edit_padding">Padding</string>
+    <string name="edit_opacity">Opacity</string>
+    <string name="edit_corner_radius">Corner Radius</string>
+    <string name="edit_glass_effect">Glass Effect</string>
+    <string name="edit_icon_shape">Icon Shape</string>
+    <string name="edit_wallpaper">Wallpaper</string>
+    <string name="edit_clock_style">Clock Style</string>
+    <string name="edit_date_format">Date Format</string>
+    <string name="save_config">Save Configuration</string>
+    <string name="reset_config">Reset to Default</string>
+
+    <!-- Settings Tab -->
+    <string name="premium_banner">Unlock Premium Features</string>
+    <string name="check_updates">Check Updates</string>
+    <string name="whats_new">What\'s New</string>
+    <string name="restore_purchases">Restore Purchases</string>
+    <string name="notification_permission">Notification Permission</string>
+    <string name="background_running_guide">Background Running Guide</string>
+    <string name="battery_optimization_guide">Battery Optimization Guide</string>
+    <string name="faq">FAQ</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="report_bug">Report Bug</string>
+    <string name="support">Support</string>
+    <string name="about">About</string>
+    <string name="social_links">Social Links</string>
+    <string name="more_apps">More Apps</string>
+    <string name="version">Version</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="share_app">Share App</string>
+
+    <!-- Developer Section -->
+    <string name="developer_section">Developer Options</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="widget_crud">Widget Management</string>
+    <string name="theme_crud">Theme Management</string>
+    <string name="category_crud">Category Management</string>
+    <string name="announcement_manager">Announcements</string>
+    <string name="offer_manager">Offers</string>
+    <string name="feature_flags">Feature Flags</string>
+    <string name="analytics">Analytics</string>
+    <string name="app_configuration">App Configuration</string>
+    <string name="force_update">Force Update</string>
+    <string name="maintenance_mode">Maintenance Mode</string>
+    <string name="trending_widgets">Trending Widgets</string>
+    <string name="featured_widgets">Featured Widgets</string>
+
+    <!-- FAQ -->
+    <string name="faq_placeholder">Frequently Asked Questions\n\nQ: How do I add widgets to my home screen?\nA: Browse widgets, tap one, and select \"Add to Home\".\n\nQ: Are there premium features?\nA: Yes, pro widgets and themes require a premium subscription.\n\nQ: How do I customize a widget?\nA: Go to the Customize tab and use the Widget Studio.\n\nQ: How often does content update?\nA: Widgets sync automatically from the cloud every hour.</string>
+
+    <!-- Admin Actions -->
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="upload">Upload</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Messages -->
+    <string name="update_available">Update Available</string>
+    <string name="update_message">A new version is available. Please update to the latest version.</string>
+    <string name="update_now">Update Now</string>
+    <string name="later">Later</string>
+    <string name="no_update">No updates available</string>
+    <string name="maintenance_message">Under maintenance. Please try again later.</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="error_network">No internet connection</string>
+    <string name="success_saved">Saved successfully</string>
+    <string name="success_deleted">Deleted successfully</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_app_logo">App Logo</string>
+    <string name="cd_widget_thumbnail">Widget Thumbnail</string>
+    <string name="cd_preview">Widget Preview</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_favorite">Toggle Favorite</string>
+</resources>

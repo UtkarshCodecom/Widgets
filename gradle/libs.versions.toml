@@ -1,0 +1,100 @@
+[versions]
+agp = "9.3.0-alpha12"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+appcompat = "1.7.1"
+material = "1.14.0"
+activity = "1.9.3"
+constraintlayout = "2.2.1"
+lifecycle = "2.8.7"
+navigation = "2.8.5"
+room = "2.6.1"
+firebase-bom = "33.7.0"
+work = "2.10.0"
+glide = "4.16.0"
+lottie = "6.4.1"
+gson = "2.11.0"
+datastore = "1.1.2"
+preference = "1.2.1"
+recyclerview = "1.3.2"
+cardview = "1.0.0"
+viewpager2 = "1.1.0"
+swiperefreshlayout = "1.1.0"
+androidx-core = "1.15.0"
+fragment = "1.8.5"
+documentfile = "1.0.1"
+webkit = "1.12.1"
+
+[libraries]
+# AndroidX Core
+androidx-core = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
+
+# JUnit
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+# AndroidX
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
+webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
+preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+
+# Material
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Lifecycle
+lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycle" }
+lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycle" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycle" }
+lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
+
+# Navigation
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
+
+# Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
+
+# Firebase BOM
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+
+# WorkManager
+work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work" }
+
+# Glide
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+
+# Lottie
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+
+# Gson
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+# DataStore
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.2" }

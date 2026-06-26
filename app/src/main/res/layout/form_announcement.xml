@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Title" app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_title"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:hint="Message"
+        app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_message"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:hint="Type (info/warning/update)"
+        app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_type"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:hint="Action Label"
+        app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_action_label"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:hint="Action URL"
+        app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_action_url"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:hint="Image URL"
+        app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_image_url"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:hint="Priority"
+        app:boxStrokeColor="@color/yellow_accent">
+        <com.google.android.material.textfield.TextInputEditText xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_priority"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Switch xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/input_active" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="8dp"
+        android:text="Active" android:textColor="@color/text_primary" />
+
+</LinearLayout>

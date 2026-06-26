@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/dark_background"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/developer_section"
+        app:titleTextColor="@color/text_primary">
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="?selectableItemBackgroundBorderless"
+            android:visibility="gone" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dashboard"
+                android:textColor="@color/yellow_accent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Dashboard Grid -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:columnCount="2"
+                android:rowCount="4">
+
+                <include layout="@layout/item_admin_card" android:id="@+id/widgets_management_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/themes_management_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/categories_management_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/announcements_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/offers_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/feature_flags_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/analytics_card" />
+                <include layout="@layout/item_admin_card" android:id="@+id/app_config_card" />
+
+            </GridLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

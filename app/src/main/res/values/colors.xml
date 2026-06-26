@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Dark Theme -->
+    <color name="dark_background">#FF0D0D0D</color>
+    <color name="dark_surface">#FF1A1A1A</color>
+    <color name="dark_surface_variant">#FF242424</color>
+    <color name="dark_card">#FF2A2A2A</color>
+    <color name="dark_elevated">#FF333333</color>
+
+    <!-- Yellow Accent -->
+    <color name="yellow_accent">#FFFFD700</color>
+    <color name="yellow_accent_light">#FFFFE44D</color>
+    <color name="yellow_accent_dark">#FFCCB100</color>
+    <color name="yellow_accent_alpha_20">#33FFD700</color>
+    <color name="yellow_accent_alpha_10">#1AFFD700</color>
+
+    <!-- Status Colors -->
+    <color name="status_free">#FF4CAF50</color>
+    <color name="status_pro">#FFFFD700</color>
+    <color name="status_premium">#FFFF9800</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#B3FFFFFF</color>
+    <color name="text_tertiary">#80FFFFFF</color>
+    <color name="text_disabled">#4DFFFFFF</color>
+
+    <!-- Functional -->
+    <color name="error">#FFCF6679</color>
+    <color name="error_container">#FF93001A</color>
+    <color name="success">#FF4CAF50</color>
+    <color name="warning">#FFFF9800</color>
+    <color name="info">#FF2196F3</color>
+    <color name="divider">#1FFFFFFF</color>
+
+    <!-- Glass Effect -->
+    <color name="glass_background">#1AFFFFFF</color>
+    <color name="glass_stroke">#33FFFFFF</color>
+
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#FFFFD700</color>
+    <color name="gradient_end">#FFFF8C00</color>
+</resources>

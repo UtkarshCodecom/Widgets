@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "720281365958",
+    "project_id": "prospectart-c98f6",
+    "storage_bucket": "prospectart-c98f6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720281365958:android:5989c3c8b1b8b21f8216c7",
+        "android_client_info": {
+          "package_name": "com.desire.widget"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuY1TtXkpUKEg_eaLPzr15-Qcdlj-NOCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

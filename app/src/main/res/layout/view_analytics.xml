@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="@color/dark_card"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:columnCount="2"
+            android:rowCount="2">
+
+            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:orientation="vertical"
+                android:gravity="center" android:padding="12dp">
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:text="Total Widgets" android:textColor="@color/text_tertiary" android:textSize="12sp" />
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/total_widgets" android:text="0"
+                    android:textColor="@color/text_primary" android:textSize="28sp" android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:orientation="vertical"
+                android:gravity="center" android:padding="12dp">
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:text="Total Downloads" android:textColor="@color/text_tertiary" android:textSize="12sp" />
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/total_downloads" android:text="0"
+                    android:textColor="@color/text_primary" android:textSize="28sp" android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:orientation="vertical"
+                android:gravity="center" android:padding="12dp">
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:text="Free Widgets" android:textColor="@color/text_tertiary" android:textSize="12sp" />
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/free_widgets" android:text="0"
+                    android:textColor="@color/status_free" android:textSize="28sp" android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:orientation="vertical"
+                android:gravity="center" android:padding="12dp">
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:text="Pro Widgets" android:textColor="@color/text_tertiary" android:textSize="12sp" />
+                <TextView xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/pro_widgets" android:text="0"
+                    android:textColor="@color/yellow_accent" android:textSize="28sp" android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+        </GridLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

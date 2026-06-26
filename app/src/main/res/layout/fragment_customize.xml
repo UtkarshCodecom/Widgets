@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/dark_background"
+        app:title="@string/theme_manager"
+        app:titleTextColor="@color/text_primary" />
+
+    <LinearLayout
+        android:id="@+id/config_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Theme List -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Themes"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/theme_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <!-- Toggle Studio Button -->
+        <Button
+            android:id="@+id/toggle_studio_btn"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/yellow_accent"
+            android:text="@string/widget_studio"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
+
+        <!-- Studio Panel -->
+        <ScrollView
+            android:id="@+id/studio_panel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="24dp">
+
+                <!-- Preview Widget -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/preview_widget"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    app:cardBackgroundColor="@color/dark_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+
+                    <TextView
+                        android:id="@+id/preview_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Widget Preview"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Text &amp; Colors"
+                    android:textColor="@color/yellow_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Text Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_color_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Background Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/bg_color_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Accent Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/accent_color_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Typography"
+                    android:textColor="@color/yellow_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Font Size: 14"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/font_size_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="10"
+                    android:valueTo="30"
+                    android:value="14"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Font Family">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/font_family_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Layout"
+                    android:textColor="@color/yellow_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Corner Radius: 16"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/corner_radius_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="48"
+                    android:value="16"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Padding: 16"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/padding_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="48"
+                    android:value="16"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Opacity: 1.0"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/opacity_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:value="1"
+                    android:stepSize="0.1"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Borders &amp; Shadows"
+                    android:textColor="@color/yellow_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Border Width: 0"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/border_width_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="8"
+                    android:value="0"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Border Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/border_color_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Shadow Radius: 8"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/shadow_radius_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="24"
+                    android:value="8"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Shadow Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shadow_color_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Effects"
+                    android:textColor="@color/yellow_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/glass_effect_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Glass Effect"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Glass Opacity: 0.2"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/glass_opacity_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:value="0.2"
+                    android:stepSize="0.1"
+                    app:thumbColor="@color/yellow_accent"
+                    app:trackColorActive="@color/yellow_accent" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/gradient_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Enable Gradient"
+                    android:textColor="@color/text_primary" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Gradient Start Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/gradient_start_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/yellow_accent"
+                    android:hint="Gradient End Color">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/gradient_end_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Action Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/save_config_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:backgroundTint="@color/yellow_accent"
+                        android:text="@string/save_config"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp" />
+
+                    <Button
+                        android:id="@+id/reset_config_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        style="@style/Widget.Widgets.Button.Outlined"
+                        android:text="@string/reset_config" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>
