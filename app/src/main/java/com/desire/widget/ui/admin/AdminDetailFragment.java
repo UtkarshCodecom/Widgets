@@ -26,12 +26,10 @@ import com.desire.widget.data.model.Category;
 import com.desire.widget.data.model.Offer;
 import com.desire.widget.data.model.Theme;
 import com.desire.widget.data.model.Widget;
-import com.desire.widget.util.Tasks;
-import com.desire.widget.util.AppExecutors;
 import androidx.core.content.ContextCompat;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +50,12 @@ public class AdminDetailFragment extends Fragment {
     private String pendingPreviewUrl;
     private Uri thumbnailUri;
     private Uri previewUri;
+    private boolean isThumbnailUploading;
+    private boolean isPreviewUploading;
+
+    private interface FormSaveAction {
+        boolean save();
+    }
 
     public static AdminDetailFragment newInstance(String section) {
         AdminDetailFragment fragment = new AdminDetailFragment();
@@ -86,14 +90,17 @@ public class AdminDetailFragment extends Fragment {
         formView = view.findViewById(R.id.form_view);
         Button addButton = view.findViewById(R.id.add_button);
         Button backButton = view.findViewById(R.id.back_button);
+        MaterialToolbar toolbar = view.findViewById(R.id.admin_detail_toolbar);
 
         title.setText(getSectionTitle());
+        toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
         addButton.setOnClickListener(v -> showAddForm());
 
         viewModel.getThumbnailUploadResult().observe(getViewLifecycleOwner(), url -> {
             if (url != null) {
                 pendingThumbnailUrl = url;
+                isThumbnailUploading = false;
                 updateUploadLabel(R.id.txt_thumbnail_name, "Uploaded!", R.color.status_free);
             }
         });
@@ -101,6 +108,7 @@ public class AdminDetailFragment extends Fragment {
         viewModel.getPreviewUploadResult().observe(getViewLifecycleOwner(), url -> {
             if (url != null) {
                 pendingPreviewUrl = url;
+                isPreviewUploading = false;
                 updateUploadLabel(R.id.txt_preview_name, "Uploaded!", R.color.status_free);
             }
         });
@@ -109,8 +117,10 @@ public class AdminDetailFragment extends Fragment {
             if (error != null) {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
                 if (error.startsWith("Thumbnail")) {
+                    isThumbnailUploading = false;
                     updateUploadLabel(R.id.txt_thumbnail_name, "Upload Failed", R.color.status_pro);
                 } else if (error.startsWith("Preview")) {
+                    isPreviewUploading = false;
                     updateUploadLabel(R.id.txt_preview_name, "Upload Failed", R.color.status_pro);
                 }
             }
@@ -293,7 +303,7 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(w.getName());
-        subtitle.setText((w.isPro() ? "PRO" : "FREE") + " \u2022 Downloads: " + w.getDownloadCount()
+        subtitle.setText(widgetSize(w.getWidgetSize()) + " \u2022 " + (w.isPro() ? "PRO" : "FREE") + " \u2022 Downloads: " + w.getDownloadCount()
                 + " \u2022 " + (w.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showWidgetForm(w));
@@ -435,6 +445,8 @@ public class AdminDetailFragment extends Fragment {
         pendingPreviewUrl = existing != null ? existing.getPreviewUrl() : null;
         thumbnailUri = null;
         previewUri = null;
+        isThumbnailUploading = false;
+        isPreviewUploading = false;
 
         View view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.form_widget, formContainer, false);
@@ -444,11 +456,25 @@ public class AdminDetailFragment extends Fragment {
             String name = ((EditText) view.findViewById(R.id.input_name)).getText().toString().trim();
             if (name.isEmpty()) {
                 Toast.makeText(requireContext(), "Please enter a widget name", Toast.LENGTH_SHORT).show();
-                return;
+                return false;
+            }
+            if (isThumbnailUploading || isPreviewUploading) {
+                Toast.makeText(requireContext(), "Please wait for uploads to finish", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (thumbnailUri != null && pendingThumbnailUrl == null) {
+                Toast.makeText(requireContext(), "Thumbnail upload has not completed", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (previewUri != null && pendingPreviewUrl == null) {
+                Toast.makeText(requireContext(), "Preview upload has not completed", Toast.LENGTH_SHORT).show();
+                return false;
             }
             w.setName(name);
             w.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString().trim());
             w.setCategoryName(((EditText) view.findViewById(R.id.input_category_name)).getText().toString().trim());
+            w.setWidgetSize(widgetSize(((EditText) view.findViewById(R.id.input_widget_size)).getText().toString()));
+            w.setPreviewStyle(previewStyle(((EditText) view.findViewById(R.id.input_preview_style)).getText().toString()));
             if (pendingThumbnailUrl != null) w.setThumbnailUrl(pendingThumbnailUrl);
             if (pendingPreviewUrl != null) w.setPreviewUrl(pendingPreviewUrl);
             w.setConfigJson(((EditText) view.findViewById(R.id.input_config_json)).getText().toString());
@@ -462,6 +488,7 @@ public class AdminDetailFragment extends Fragment {
 
             viewModel.saveWidget(w);
             Toast.makeText(requireContext(), "Widget saved!", Toast.LENGTH_SHORT).show();
+            return true;
         }, existing);
 
         view.findViewById(R.id.btn_upload_thumbnail).setOnClickListener(v -> {
@@ -482,7 +509,12 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_category, formContainer, false);
         showForm("Category", view, () -> {
             Category c = existing != null ? existing : new Category();
-            c.setName(((EditText) view.findViewById(R.id.input_name)).getText().toString());
+            String name = ((EditText) view.findViewById(R.id.input_name)).getText().toString().trim();
+            if (name.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter a category name", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            c.setName(name);
             c.setIcon(((EditText) view.findViewById(R.id.input_icon)).getText().toString());
             c.setColor(((EditText) view.findViewById(R.id.input_color)).getText().toString());
             try {
@@ -490,6 +522,7 @@ public class AdminDetailFragment extends Fragment {
             } catch (NumberFormatException ignored) {}
             c.setActive(((Switch) view.findViewById(R.id.input_active)).isChecked());
             viewModel.saveCategory(c);
+            return true;
         }, existing);
     }
 
@@ -498,13 +531,19 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_theme, formContainer, false);
         showForm("Theme", view, () -> {
             Theme t = existing != null ? existing : new Theme();
-            t.setName(((EditText) view.findViewById(R.id.input_name)).getText().toString());
+            String name = ((EditText) view.findViewById(R.id.input_name)).getText().toString().trim();
+            if (name.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter a theme name", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            t.setName(name);
             t.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString());
             t.setThumbnailUrl(((EditText) view.findViewById(R.id.input_thumbnail_url)).getText().toString());
             t.setPro(((Switch) view.findViewById(R.id.input_is_pro)).isChecked());
             t.setDefault(((Switch) view.findViewById(R.id.input_is_default)).isChecked());
             t.setActive(true);
             viewModel.saveTheme(t);
+            return true;
         }, existing);
     }
 
@@ -513,7 +552,12 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_announcement, formContainer, false);
         showForm("Announcement", view, () -> {
             Announcement a = existing != null ? existing : new Announcement();
-            a.setTitle(((EditText) view.findViewById(R.id.input_title)).getText().toString());
+            String title = ((EditText) view.findViewById(R.id.input_title)).getText().toString().trim();
+            if (title.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter an announcement title", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            a.setTitle(title);
             a.setMessage(((EditText) view.findViewById(R.id.input_message)).getText().toString());
             a.setType(((EditText) view.findViewById(R.id.input_type)).getText().toString());
             a.setActionLabel(((EditText) view.findViewById(R.id.input_action_label)).getText().toString());
@@ -526,6 +570,7 @@ public class AdminDetailFragment extends Fragment {
             a.setEndAt(System.currentTimeMillis() + 86400000L * 30);
             a.setActive(((Switch) view.findViewById(R.id.input_active)).isChecked());
             viewModel.saveAnnouncement(a);
+            return true;
         }, existing);
     }
 
@@ -534,7 +579,12 @@ public class AdminDetailFragment extends Fragment {
                 .inflate(R.layout.form_offer, formContainer, false);
         showForm("Offer", view, () -> {
             Offer o = existing != null ? existing : new Offer();
-            o.setTitle(((EditText) view.findViewById(R.id.input_title)).getText().toString());
+            String title = ((EditText) view.findViewById(R.id.input_title)).getText().toString().trim();
+            if (title.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter an offer title", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            o.setTitle(title);
             o.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString());
             o.setCode(((EditText) view.findViewById(R.id.input_code)).getText().toString());
             try {
@@ -545,23 +595,26 @@ public class AdminDetailFragment extends Fragment {
             o.setEndAt(System.currentTimeMillis() + 86400000L * 30);
             o.setActive(((Switch) view.findViewById(R.id.input_active)).isChecked());
             viewModel.saveOffer(o);
+            return true;
         }, existing);
     }
 
-    private void showForm(String title, View formContent, Runnable saveAction, @Nullable Object existing) {
+    private void showForm(String title, View formContent, FormSaveAction saveAction, @Nullable Object existing) {
         formView.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
         formContainer.removeAllViews();
         formContainer.addView(formContent);
+        ((Button) formView.findViewById(R.id.form_save_btn)).setText("Save " + title);
 
         if (existing != null) {
             populateForm(existing, formContent);
         }
 
         formView.findViewById(R.id.form_save_btn).setOnClickListener(v -> {
-            saveAction.run();
-            formView.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
+            if (saveAction.save()) {
+                formView.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+            }
         });
         formView.findViewById(R.id.form_cancel_btn).setOnClickListener(v -> {
             formView.setVisibility(View.GONE);
@@ -575,10 +628,14 @@ public class AdminDetailFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             if (requestCode == PICK_THUMBNAIL) {
                 thumbnailUri = data.getData();
+                pendingThumbnailUrl = null;
+                isThumbnailUploading = true;
                 viewModel.uploadThumbnail(thumbnailUri);
                 updateUploadLabel(R.id.txt_thumbnail_name, "Uploading...", R.color.text_tertiary);
             } else if (requestCode == PICK_PREVIEW) {
                 previewUri = data.getData();
+                pendingPreviewUrl = null;
+                isPreviewUploading = true;
                 viewModel.uploadPreview(previewUri);
                 updateUploadLabel(R.id.txt_preview_name, "Uploading...", R.color.text_tertiary);
             }
@@ -591,6 +648,8 @@ public class AdminDetailFragment extends Fragment {
             setText(formView, R.id.input_name, w.getName());
             setText(formView, R.id.input_description, w.getDescription());
             setText(formView, R.id.input_category_name, w.getCategoryName());
+            setText(formView, R.id.input_widget_size, widgetSize(w.getWidgetSize()));
+            setText(formView, R.id.input_preview_style, previewStyle(w.getPreviewStyle()));
             setText(formView, R.id.input_config_json, w.getConfigJson());
             setChecked(formView, R.id.input_is_pro, w.isPro());
             setChecked(formView, R.id.input_is_featured, w.isFeatured());
@@ -655,6 +714,39 @@ public class AdminDetailFragment extends Fragment {
         tv.setTextSize(14);
         tv.setPadding(32, 32, 32, 32);
         contentContainer.addView(tv);
+    }
+
+    private String widgetSize(String value) {
+        if (value == null || value.trim().isEmpty()) return "2x2";
+        String normalized = value.trim().toLowerCase().replace(" ", "");
+        switch (normalized) {
+            case "1x1":
+            case "2x2":
+            case "1x2":
+            case "2x1":
+            case "1x4":
+            case "4x1":
+            case "4x2":
+            case "2x4":
+                return normalized;
+            default:
+                return "2x2";
+        }
+    }
+
+    private String previewStyle(String value) {
+        if (value == null || value.trim().isEmpty()) return "icon";
+        String normalized = value.trim().toLowerCase().replace(" ", "_");
+        switch (normalized) {
+            case "ai_bar":
+            case "folder":
+            case "icon":
+            case "clock_digital":
+            case "clock_analog":
+                return normalized;
+            default:
+                return "icon";
+        }
     }
 
     private void confirmDelete(String type, String id, Runnable deleteAction) {

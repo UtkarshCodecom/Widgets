@@ -36,6 +36,12 @@ public class WidgetEntity implements Serializable {
     @ColumnInfo(name = "config_json")
     private String configJson;
 
+    @ColumnInfo(name = "widget_size")
+    private String widgetSize;
+
+    @ColumnInfo(name = "preview_style")
+    private String previewStyle;
+
     @ColumnInfo(name = "is_pro")
     private boolean isPro;
 
@@ -85,6 +91,12 @@ public class WidgetEntity implements Serializable {
 
     public String getConfigJson() { return configJson; }
     public void setConfigJson(String configJson) { this.configJson = configJson; }
+
+    public String getWidgetSize() { return widgetSize; }
+    public void setWidgetSize(String widgetSize) { this.widgetSize = widgetSize; }
+
+    public String getPreviewStyle() { return previewStyle; }
+    public void setPreviewStyle(String previewStyle) { this.previewStyle = previewStyle; }
 
     public boolean isPro() { return isPro; }
     public void setPro(boolean pro) { isPro = pro; }

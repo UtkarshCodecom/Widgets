@@ -1,92 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/dark_card"
+    android:background="@color/black"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="24dp"
+    android:paddingTop="26dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="28dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:cardBackgroundColor="@color/dark_card"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="0dp"
-        app:contentPadding="0dp">
-
-        <ImageView
-            android:id="@+id/preview_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_neumorphic"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/cd_preview" />
-
-    </com.google.android.material.card.MaterialCardView>
+    <View
+        android:layout_width="42dp"
+        android:layout_height="4dp"
+        android:background="@drawable/bg_selection_indicator" />
 
     <TextView
-        android:id="@+id/widget_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Choose Widget Mode"
         android:textColor="@color/text_primary"
-        android:textSize="20sp"
+        android:textSize="26sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/widget_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/text_secondary"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Pick whichever works best on your HomeScreen."
+        android:textColor="@color/text_tertiary"
         android:textSize="14sp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_marginTop="44dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-        <TextView
-            android:id="@+id/category_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:background="@drawable/bg_badge"
+        <LinearLayout
+            android:id="@+id/mode_responsive"
+            android:layout_width="0dp"
+            android:layout_height="132dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_store_card"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
             android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:textColor="@color/yellow_accent"
-            android:textSize="12sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/pro_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_badge_pro"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="□"
+                android:textColor="@color/info"
+                android:textSize="34sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Responsive"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Adapts to size"
+                android:textColor="@color/text_tertiary"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mode_fixed"
+            android:layout_width="0dp"
+            android:layout_height="132dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_store_card"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackground"
             android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:text="@string/pro"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▢"
+                android:textColor="@color/info"
+                android:textSize="34sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Fixed"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Native ratio"
+                android:textColor="@color/text_tertiary"
+                android:textSize="13sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/add_to_home_btn"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_neumorphic_button"
-        android:gravity="center"
-        android:text="@string/add_to_home"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:cornerRadius="14dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Set a default in Settings"
+        android:textColor="@color/text_tertiary"
+        android:textSize="13sp" />
 
 </LinearLayout>

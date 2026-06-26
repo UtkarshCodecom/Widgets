@@ -100,6 +100,8 @@ public class WidgetRepository {
                     entity.setThumbnailUrl(w.getThumbnailUrl());
                     entity.setPreviewUrl(w.getPreviewUrl());
                     entity.setConfigJson(w.getConfigJson());
+                    entity.setWidgetSize(w.getWidgetSize());
+                    entity.setPreviewStyle(w.getPreviewStyle());
                     entity.setPro(w.isPro());
                     entity.setFeatured(w.isFeatured());
                     entity.setTrending(w.isTrending());

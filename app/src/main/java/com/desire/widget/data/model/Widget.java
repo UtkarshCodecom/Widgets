@@ -32,6 +32,12 @@ public class Widget {
     @SerializedName("configJson")
     private String configJson;
 
+    @SerializedName("widgetSize")
+    private String widgetSize;
+
+    @SerializedName("previewStyle")
+    private String previewStyle;
+
     @SerializedName("isPro")
     private boolean isPro;
 
@@ -93,6 +99,12 @@ public class Widget {
 
     public String getConfigJson() { return configJson; }
     public void setConfigJson(String configJson) { this.configJson = configJson; }
+
+    public String getWidgetSize() { return widgetSize; }
+    public void setWidgetSize(String widgetSize) { this.widgetSize = widgetSize; }
+
+    public String getPreviewStyle() { return previewStyle; }
+    public void setPreviewStyle(String previewStyle) { this.previewStyle = previewStyle; }
 
     public boolean isPro() { return isPro; }
     public void setPro(boolean pro) { isPro = pro; }

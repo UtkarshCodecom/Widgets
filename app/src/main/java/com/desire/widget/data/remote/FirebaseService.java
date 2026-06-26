@@ -114,6 +114,8 @@ public class FirebaseService {
         data.put("previewUrl", widget.getPreviewUrl());
         data.put("configUrl", widget.getConfigUrl());
         data.put("configJson", widget.getConfigJson());
+        data.put("widgetSize", widget.getWidgetSize());
+        data.put("previewStyle", widget.getPreviewStyle());
         data.put("isPro", widget.isPro());
         data.put("isFeatured", widget.isFeatured());
         data.put("isTrending", widget.isTrending());

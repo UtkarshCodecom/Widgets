@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.desire.widget.R;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class AdminFragment extends Fragment {
     private AdminViewModel viewModel;
@@ -74,6 +75,9 @@ public class AdminFragment extends Fragment {
     }
 
     private void setupNavigation(View view) {
+        MaterialToolbar toolbar = view.findViewById(R.id.admin_toolbar);
+        toolbar.setNavigationOnClickListener(v ->
+                requireActivity().getSupportFragmentManager().popBackStack());
         view.findViewById(R.id.back_button).setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
     }

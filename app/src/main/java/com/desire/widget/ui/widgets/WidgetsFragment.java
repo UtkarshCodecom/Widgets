@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -93,7 +94,7 @@ public class WidgetsFragment extends Fragment {
     }
 
     private void setupWidgetRecycler() {
-        widgetAdapter = new WidgetAdapter();
+        widgetAdapter = new WidgetAdapter(2);
         widgetAdapter.setOnWidgetClickListener(widget -> {
             WidgetPreviewDialog dialog = WidgetPreviewDialog.newInstance(widget);
             dialog.show(getChildFragmentManager(), "widget_preview");
@@ -101,7 +102,14 @@ public class WidgetsFragment extends Fragment {
         widgetAdapter.setOnFavoriteClickListener((widget, isFavorite) -> {
             viewModel.toggleFavorite(widget.getId(), isFavorite);
         });
-        widgetRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return widgetAdapter.getSpanSize(position);
+            }
+        });
+        widgetRecycler.setLayoutManager(layoutManager);
         widgetRecycler.setAdapter(widgetAdapter);
     }
 

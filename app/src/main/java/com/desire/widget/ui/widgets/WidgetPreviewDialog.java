@@ -1,20 +1,15 @@
 package com.desire.widget.ui.widgets;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.bumptech.glide.Glide;
 import com.desire.widget.R;
 import com.desire.widget.data.local.entity.WidgetEntity;
 import com.desire.widget.data.remote.FirebaseService;
@@ -50,39 +45,43 @@ public class WidgetPreviewDialog extends DialogFragment {
         View view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.dialog_widget_preview, null);
 
-        ImageView previewImage = view.findViewById(R.id.preview_image);
-        TextView widgetName = view.findViewById(R.id.widget_name);
-        TextView widgetDescription = view.findViewById(R.id.widget_description);
-        TextView categoryBadge = view.findViewById(R.id.category_badge);
-        View proBadge = view.findViewById(R.id.pro_badge);
-        Button addToHomeBtn = view.findViewById(R.id.add_to_home_btn);
-
-        widgetName.setText(widget.getName());
-        widgetDescription.setText(widget.getDescription());
-        categoryBadge.setText(widget.getCategoryName());
-        proBadge.setVisibility(widget.isPro() ? View.VISIBLE : View.GONE);
-
-        if (widget.getPreviewUrl() != null && !widget.getPreviewUrl().isEmpty()) {
-            Glide.with(requireContext())
-                    .load(widget.getPreviewUrl())
-                    .placeholder(R.drawable.placeholder_widget)
-                    .error(R.drawable.placeholder_widget)
-                    .centerCrop()
-                    .into(previewImage);
-        }
-
-        addToHomeBtn.setOnClickListener(v -> {
-            AppExecutors.getInstance().networkIO().execute(() -> {
-                try {
-                    Tasks.await(FirebaseService.getInstance().incrementWidgetDownload(widget.getId()));
-                } catch (Exception ignored) {}
-            });
-            Snackbar.make(view, "Widget added to home screen", Snackbar.LENGTH_SHORT).show();
-            dismiss();
-        });
+        view.findViewById(R.id.mode_responsive).setOnClickListener(v -> showSystemHomeDialog(view, "Responsive"));
+        view.findViewById(R.id.mode_fixed).setOnClickListener(v -> showSystemHomeDialog(view, "Fixed"));
 
         return new MaterialAlertDialogBuilder(requireContext())
                 .setView(view)
                 .create();
+    }
+
+    private void showSystemHomeDialog(View anchor, String mode) {
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            try {
+                Tasks.await(FirebaseService.getInstance().incrementWidgetDownload(widget.getId()));
+            } catch (Exception ignored) {}
+        });
+
+        View systemView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.dialog_widget_system_home, null);
+        TextView previewTitle = systemView.findViewById(R.id.system_widget_title);
+        TextView previewSize = systemView.findViewById(R.id.system_widget_size);
+        previewTitle.setText("Widget " + widget.getName());
+        previewSize.setText(displaySize(widget.getWidgetSize()));
+
+        Dialog systemDialog = new MaterialAlertDialogBuilder(requireContext())
+                .setView(systemView)
+                .create();
+
+        systemView.findViewById(R.id.add_auto_btn).setOnClickListener(v -> {
+            Snackbar.make(anchor, mode + " widget added", Snackbar.LENGTH_SHORT).show();
+            systemDialog.dismiss();
+            dismiss();
+        });
+        systemView.findViewById(R.id.cancel_btn).setOnClickListener(v -> systemDialog.dismiss());
+        systemDialog.show();
+    }
+
+    private String displaySize(String size) {
+        if (size == null || size.trim().isEmpty()) return "2x2";
+        return size.trim().toUpperCase();
     }
 }
