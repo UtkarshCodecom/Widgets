@@ -32,6 +32,13 @@ public class Widget {
     @SerializedName("configJson")
     private String configJson;
 
+    @SerializedName("widgetHtml")
+    private String htmlContent;
+
+    /** Native JSON-engine widget definition (WidgetSpec). */
+    @SerializedName("specJson")
+    private String specJson;
+
     @SerializedName("widgetSize")
     private String widgetSize;
 
@@ -99,6 +106,12 @@ public class Widget {
 
     public String getConfigJson() { return configJson; }
     public void setConfigJson(String configJson) { this.configJson = configJson; }
+
+    public String getHtmlContent() { return htmlContent; }
+    public void setHtmlContent(String htmlContent) { this.htmlContent = htmlContent; }
+
+    public String getSpecJson() { return specJson; }
+    public void setSpecJson(String specJson) { this.specJson = specJson; }
 
     public String getWidgetSize() { return widgetSize; }
     public void setWidgetSize(String widgetSize) { this.widgetSize = widgetSize; }

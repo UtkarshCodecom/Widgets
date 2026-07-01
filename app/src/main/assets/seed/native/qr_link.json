@@ -1,0 +1,20 @@
+{
+  "id": "qr_link",
+  "name": "QR Link",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#FFFFFF",
+    "gradientEnd": "#F5F5F5",
+    "gradientAngle": 180,
+    "cornerRadius": 0.18
+  },
+  "action": { "type": "open_url", "data": "https://github.com" },
+  "components": [
+    { "type": "qr_code", "frame": { "x": 0.15, "y": 0.08, "w": 0.7, "h": 0.6 },
+      "props": { "data": "https://github.com", "darkColor": "#1A1A2E", "lightColor": "#FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.7, "w": 0.8, "h": 0.14 },
+      "props": { "text": "Scan me", "fontSize": 0.7, "align": "center", "bold": true, "color": "#1A1A2E" } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.84, "w": 0.8, "h": 0.1 },
+      "props": { "text": "github.com", "fontSize": 0.5, "align": "center", "color": "#808080" } }
+  ]
+}

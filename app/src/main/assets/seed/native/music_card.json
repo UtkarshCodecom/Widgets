@@ -1,0 +1,20 @@
+{
+  "id": "music_card",
+  "name": "Now Playing",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#1A0A2E",
+    "gradientEnd": "#0D0520",
+    "gradientAngle": 135,
+    "cornerRadius": 0.12
+  },
+  "action": { "type": "launch_app", "packageName": "com.google.android.apps.youtube.music" },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.03, "y": 0.12, "w": 0.26, "h": 0.76 },
+      "props": { "shape": "rounded", "fill": "#7C4DFF", "cornerRadius": 0.18 } },
+    { "type": "text", "frame": { "x": 0.07, "y": 0.35, "w": 0.18, "h": 0.26 },
+      "props": { "text": "♪", "fontSize": 1.0, "align": "center", "bold": true, "color": "#FFFFFF" } },
+    { "type": "music", "frame": { "x": 0.32, "y": 0.08, "w": 0.65, "h": 0.84 },
+      "props": { "title": "Midnight City", "artist": "M83", "playing": true, "progress": 0.42, "accentColor": "#E040FB", "textColor": "#FFFFFF", "subColor": "#CE93D8" } }
+  ]
+}

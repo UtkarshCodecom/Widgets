@@ -42,6 +42,10 @@ public class WidgetRepository {
         firebaseService = FirebaseService.getInstance();
         executors = AppExecutors.getInstance();
         gson = new Gson();
+        final Context appContext = context.getApplicationContext();
+        executors.diskIO().execute(() -> {
+            com.desire.widget.data.local.LocalSeeder.seedIfEmpty(appContext, widgetDao, categoryDao, themeDao);
+        });
     }
 
     public static synchronized WidgetRepository getInstance(Context context) {
@@ -85,10 +89,26 @@ public class WidgetRepository {
         executors.diskIO().execute(() -> widgetDao.setFavorite(id, isFavorite));
     }
 
+    /** Persist a user-created/edited native widget so it appears in the gallery. */
+    public void saveUserWidget(WidgetEntity widget) {
+        executors.diskIO().execute(() -> widgetDao.insert(widget));
+    }
+
     public void syncWidgetsFromFirebase() {
         executors.diskIO().execute(() -> {
             try {
                 List<Widget> firebaseWidgets = Tasks.await(firebaseService.getAllWidgets());
+                // Don't wipe the bundled seed when Firestore has no content yet.
+                if (firebaseWidgets == null || firebaseWidgets.isEmpty()) return;
+                
+                // Sort locally (descending by updatedAt) since Firestore query ordering 
+                // might exclude documents with missing fields.
+                firebaseWidgets.sort((w1, w2) -> {
+                    long t1 = w1.getUpdatedAt() > 0 ? w1.getUpdatedAt() : w1.getCreatedAt();
+                    long t2 = w2.getUpdatedAt() > 0 ? w2.getUpdatedAt() : w2.getCreatedAt();
+                    return Long.compare(t2, t1);
+                });
+
                 List<WidgetEntity> entities = new ArrayList<>();
                 for (Widget w : firebaseWidgets) {
                     WidgetEntity entity = new WidgetEntity();
@@ -100,6 +120,8 @@ public class WidgetRepository {
                     entity.setThumbnailUrl(w.getThumbnailUrl());
                     entity.setPreviewUrl(w.getPreviewUrl());
                     entity.setConfigJson(w.getConfigJson());
+                    entity.setHtmlContent(w.getHtmlContent());
+                    entity.setSpecJson(w.getSpecJson());
                     entity.setWidgetSize(w.getWidgetSize());
                     entity.setPreviewStyle(w.getPreviewStyle());
                     entity.setPro(w.isPro());
@@ -107,7 +129,9 @@ public class WidgetRepository {
                     entity.setTrending(w.isTrending());
                     entity.setDownloadCount(w.getDownloadCount());
                     entity.setVersion(w.getVersion());
-                    entity.setUpdatedAt(w.getUpdatedAt());
+                    
+                    long timestamp = w.getUpdatedAt() > 0 ? w.getUpdatedAt() : w.getCreatedAt();
+                    entity.setUpdatedAt(timestamp);
                     entity.setActive(w.isActive());
 
                     WidgetEntity existing = widgetDao.getWidgetByIdSync(w.getId());
@@ -117,7 +141,8 @@ public class WidgetRepository {
 
                     entities.add(entity);
                 }
-                widgetDao.deleteAll();
+                // Merge (upsert) rather than wipe, so the bundled seed and user-created
+                // ("My Widgets") entries are preserved alongside published widgets.
                 widgetDao.insertAll(entities);
             } catch (Exception e) {
                 android.util.Log.e("WidgetRepository", "Sync failed", e);
@@ -135,6 +160,7 @@ public class WidgetRepository {
         executors.diskIO().execute(() -> {
             try {
                 List<Category> firebaseCategories = Tasks.await(firebaseService.getAllCategories());
+                if (firebaseCategories == null || firebaseCategories.isEmpty()) return;
                 List<CategoryEntity> entities = new ArrayList<>();
                 for (Category c : firebaseCategories) {
                     CategoryEntity entity = new CategoryEntity();
@@ -168,6 +194,7 @@ public class WidgetRepository {
         executors.diskIO().execute(() -> {
             try {
                 List<Theme> firebaseThemes = Tasks.await(firebaseService.getAllThemes());
+                if (firebaseThemes == null) return;
                 List<ThemeEntity> entities = new ArrayList<>();
                 for (Theme t : firebaseThemes) {
                     ThemeEntity entity = new ThemeEntity();
@@ -192,7 +219,15 @@ public class WidgetRepository {
 
     // ==================== FIREBASE HELPERS ====================
 
+    /**
+     * Admin-only: sync from Firestore. Not called from the normal user flow.
+     * The app is fully local-first; LocalSeeder seeds everything on first run.
+     */
     public void syncAll() {
+        // No-op in normal user flow. Call syncAllFromFirebase() from AdminFragment only.
+    }
+
+    public void syncAllFromFirebase() {
         syncWidgetsFromFirebase();
         syncCategoriesFromFirebase();
         syncThemesFromFirebase();

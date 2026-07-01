@@ -1,0 +1,24 @@
+{
+  "categories": [
+    { "id": "clock", "name": "Clock", "icon": "clock", "color": "#FFD700", "order": 1 },
+    { "id": "weather", "name": "Weather", "icon": "weather", "color": "#00D4FF", "order": 2 },
+    { "id": "calendar", "name": "Calendar", "icon": "calendar", "color": "#FF6B9D", "order": 3 },
+    { "id": "health", "name": "Health", "icon": "health", "color": "#00E676", "order": 4 },
+    { "id": "media", "name": "Media", "icon": "media", "color": "#AB47BC", "order": 5 },
+    { "id": "utility", "name": "Utility", "icon": "utility", "color": "#FF8C00", "order": 6 }
+  ],
+  "widgets": [
+    { "id": "clock_minimal", "name": "Minimal Clock", "description": "Elegant digital time with glassmorphic design", "categoryId": "clock", "categoryName": "Clock", "widgetSize": "2x2", "isFeatured": true, "specAsset": "clock_minimal.json" },
+    { "id": "clock_analog", "name": "Analog Clock", "description": "Classic analog face with golden accents", "categoryId": "clock", "categoryName": "Clock", "widgetSize": "2x2", "specAsset": "clock_analog.json" },
+    { "id": "clock_world", "name": "World Clock", "description": "Three time zones at a glance", "categoryId": "clock", "categoryName": "Clock", "widgetSize": "4x1", "specAsset": "clock_world.json" },
+    { "id": "weather_now", "name": "Weather Now", "description": "Current conditions with quick access", "categoryId": "weather", "categoryName": "Weather", "widgetSize": "2x2", "isFeatured": true, "specAsset": "weather_now.json" },
+    { "id": "weather_wide", "name": "Weather Wide", "description": "Detailed forecast with humidity and wind", "categoryId": "weather", "categoryName": "Weather", "widgetSize": "4x2", "specAsset": "weather_wide.json" },
+    { "id": "calendar_month", "name": "Month Calendar", "description": "Full month view with today highlighted", "categoryId": "calendar", "categoryName": "Calendar", "widgetSize": "4x2", "isTrending": true, "specAsset": "calendar_month.json" },
+    { "id": "battery_status", "name": "Battery", "description": "Live battery level with settings access", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "battery_status.json" },
+    { "id": "fitness_ring", "name": "Activity Ring", "description": "Daily step goal progress tracker", "categoryId": "health", "categoryName": "Health", "widgetSize": "2x2", "isPro": true, "specAsset": "fitness_ring.json" },
+    { "id": "countdown_event", "name": "Countdown", "description": "Time remaining until your event", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "countdown_event.json" },
+    { "id": "music_card", "name": "Now Playing", "description": "Current track with playback controls", "categoryId": "media", "categoryName": "Media", "widgetSize": "4x2", "isTrending": true, "specAsset": "music_card.json" },
+    { "id": "qr_link", "name": "QR Link", "description": "Scannable QR code shortcut", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "qr_link.json" },
+    { "id": "quote_card", "name": "Daily Quote", "description": "Inspirational quote of the day", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "quote_card.json" }
+  ]
+}

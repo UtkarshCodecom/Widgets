@@ -82,6 +82,9 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.datastore.preferences)
 
+    // QR code generation for the native qr_code widget component (pure-Java, no UI deps).
+    implementation("com.google.zxing:core:3.5.3")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

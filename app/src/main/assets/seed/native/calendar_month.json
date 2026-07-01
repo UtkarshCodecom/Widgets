@@ -1,0 +1,20 @@
+{
+  "id": "calendar_month",
+  "name": "Month Calendar",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#1A1A2E",
+    "gradientEnd": "#0F0F1A",
+    "gradientAngle": 160,
+    "cornerRadius": 0.12
+  },
+  "action": { "type": "launch_app", "packageName": "com.google.android.calendar" },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.02, "y": 0.04, "w": 0.96, "h": 0.92 },
+      "props": { "shape": "rounded", "fill": "#10FFFFFF", "cornerRadius": 0.08 } },
+    { "type": "clock", "frame": { "x": 0.04, "y": 0.06, "w": 0.5, "h": 0.14 },
+      "props": { "format": "MMMM yyyy", "fontSize": 0.82, "align": "left", "bold": true, "color": "#FFD700" } },
+    { "type": "calendar", "frame": { "x": 0.03, "y": 0.22, "w": 0.94, "h": 0.74 },
+      "props": { "accentColor": "#FFD700", "textColor": "#FFFFFF", "headerColor": "#80FFFFFF", "onAccentColor": "#000000", "showHeader": true } }
+  ]
+}

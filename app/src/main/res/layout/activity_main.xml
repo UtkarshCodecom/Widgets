@@ -4,7 +4,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="?android:colorBackground"
     android:orientation="vertical">
 
     <FrameLayout
@@ -17,9 +17,13 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_surface"
-        app:itemIconTint="@color/yellow_accent"
-        app:itemTextColor="@color/text_secondary"
+        android:background="@drawable/bg_bottom_nav"
+        android:elevation="12dp"
+        app:elevation="12dp"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:itemActiveIndicatorStyle="@style/Widget.Widgets.NavIndicator"
+        app:itemRippleColor="@color/yellow_accent_alpha_20"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation" />
 

@@ -1,0 +1,18 @@
+{
+  "id": "clock_analog",
+  "name": "Analog Clock",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#0D1117",
+    "gradientEnd": "#161B22",
+    "gradientAngle": 180,
+    "cornerRadius": 0.18
+  },
+  "action": { "type": "open_activity", "packageName": "com.google.android.deskclock", "className": "com.android.deskclock.DeskClockTabActivity" },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.08, "y": 0.08, "w": 0.84, "h": 0.84 },
+      "props": { "shape": "circle", "fill": "#0AFFFFFF", "stroke": "#25FFD700", "strokeWidth": 0.012 } },
+    { "type": "analog_clock", "frame": { "x": 0.12, "y": 0.12, "w": 0.76, "h": 0.76 },
+      "props": { "faceColor": "#08FFFFFF", "tickColor": "#60FFFFFF", "handColor": "#FFFFFF", "secondColor": "#FFD700", "showSeconds": true } }
+  ]
+}

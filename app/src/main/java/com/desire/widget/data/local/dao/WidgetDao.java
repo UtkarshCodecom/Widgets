@@ -37,6 +37,9 @@ public interface WidgetDao {
     @Query("SELECT * FROM widgets WHERE id = :id")
     WidgetEntity getWidgetByIdSync(String id);
 
+    @Query("SELECT COUNT(*) FROM widgets")
+    int getWidgetCountSync();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<WidgetEntity> widgets);
 

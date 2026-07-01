@@ -23,7 +23,9 @@ public class SyncWorker extends Worker {
         Log.d(TAG, "Starting sync work");
         try {
             WidgetRepository repository = WidgetRepository.getInstance(getApplicationContext());
-            repository.syncAll();
+            // Pull published widgets/categories/themes from Firestore and merge into Room.
+            // Each sync is a no-op when its Firestore collection is empty, so this is safe.
+            repository.syncAllFromFirebase();
 
             PreferenceManager.getInstance(getApplicationContext())
                     .setLastSyncTime(System.currentTimeMillis());

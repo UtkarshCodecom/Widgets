@@ -13,7 +13,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,6 +24,7 @@ import com.desire.widget.ui.settings.SettingsFragment;
 import com.desire.widget.ui.settings.SettingsViewModel;
 import com.desire.widget.ui.widgets.WidgetsFragment;
 import com.desire.widget.util.AppExecutors;
+import com.desire.widget.util.ThemeManager;
 import com.desire.widget.util.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply selected app theme BEFORE super.onCreate so the theme takes effect from the start.
+        ThemeManager.apply(this);
         super.onCreate(savedInstanceState);
 
         // Tell the system we'll handle insets ourselves
@@ -42,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_background));
-        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dark_background));
+        // Status/nav bar colors come from the active theme (set in Theme_Widgets variants).
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
 

@@ -3,8 +3,6 @@ package com.desire.widget.data.remote;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.desire.widget.data.model.Announcement;
 import com.desire.widget.data.model.AppConfig;
 import com.desire.widget.data.model.Category;
@@ -52,7 +50,6 @@ public class FirebaseService {
     public Task<List<Widget>> getAllWidgets() {
         return db.collection("widgets")
                 .whereEqualTo("active", true)
-                .orderBy("updatedAt", Query.Direction.DESCENDING)
                 .get()
                 .continueWith(task -> {
                     List<Widget> widgets = new ArrayList<>();
@@ -61,9 +58,12 @@ public class FirebaseService {
                             Widget widget = doc.toObject(Widget.class);
                             if (widget != null) {
                                 widget.setId(doc.getId());
+                                widget.setHtmlContent(doc.getString("widgetHtml"));
                                 widgets.add(widget);
                             }
                         }
+                    } else if (!task.isSuccessful()) {
+                        Log.e(TAG, "Error getting all widgets", task.getException());
                     }
                     return widgets;
                 });
@@ -73,7 +73,6 @@ public class FirebaseService {
         return db.collection("widgets")
                 .whereEqualTo("active", true)
                 .whereEqualTo("categoryId", categoryId)
-                .orderBy("updatedAt", Query.Direction.DESCENDING)
                 .get()
                 .continueWith(task -> {
                     List<Widget> widgets = new ArrayList<>();
@@ -82,9 +81,12 @@ public class FirebaseService {
                             Widget widget = doc.toObject(Widget.class);
                             if (widget != null) {
                                 widget.setId(doc.getId());
+                                widget.setHtmlContent(doc.getString("widgetHtml"));
                                 widgets.add(widget);
                             }
                         }
+                    } else if (!task.isSuccessful()) {
+                        Log.e(TAG, "Error getting widgets by category", task.getException());
                     }
                     return widgets;
                 });
@@ -97,6 +99,7 @@ public class FirebaseService {
                         Widget widget = task.getResult().toObject(Widget.class);
                         if (widget != null) {
                             widget.setId(task.getResult().getId());
+                            widget.setHtmlContent(task.getResult().getString("widgetHtml"));
                         }
                         return widget;
                     }
@@ -114,6 +117,8 @@ public class FirebaseService {
         data.put("previewUrl", widget.getPreviewUrl());
         data.put("configUrl", widget.getConfigUrl());
         data.put("configJson", widget.getConfigJson());
+        data.put("widgetHtml", widget.getHtmlContent());
+        data.put("specJson", widget.getSpecJson());
         data.put("widgetSize", widget.getWidgetSize());
         data.put("previewStyle", widget.getPreviewStyle());
         data.put("isPro", widget.isPro());

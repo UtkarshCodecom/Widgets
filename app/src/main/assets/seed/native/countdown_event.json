@@ -1,0 +1,22 @@
+{
+  "id": "countdown_event",
+  "name": "Countdown",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#2A0A3E",
+    "gradientEnd": "#0F0520",
+    "gradientAngle": 135,
+    "cornerRadius": 0.18
+  },
+  "action": { "type": "open_activity", "packageName": "com.google.android.calendar", "className": "com.android.calendar.AllInOneActivity" },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.06, "y": 0.06, "w": 0.88, "h": 0.88 },
+      "props": { "shape": "rounded", "fill": "#15FFFFFF", "cornerRadius": 0.12 } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.1, "w": 0.8, "h": 0.14 },
+      "props": { "text": "COUNTDOWN TO", "fontSize": 0.48, "align": "center", "bold": true, "color": "#E040FB" } },
+    { "type": "countdown", "frame": { "x": 0.1, "y": 0.26, "w": 0.8, "h": 0.36 },
+      "props": { "targetDate": "2027-01-01T00:00:00", "label": "New Year", "numberColor": "#FFFFFF", "labelColor": "#B39DDB", "unitColor": "#80FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.7, "w": 0.8, "h": 0.12 },
+      "props": { "text": "Tap to open calendar", "fontSize": 0.5, "align": "center", "color": "#50FFFFFF" } }
+  ]
+}

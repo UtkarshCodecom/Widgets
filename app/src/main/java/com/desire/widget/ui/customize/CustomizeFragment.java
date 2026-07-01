@@ -1,13 +1,13 @@
 package com.desire.widget.ui.customize;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,22 +21,21 @@ import com.desire.widget.R;
 import com.desire.widget.ui.adapters.ThemeAdapter;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Map;
 
 public class CustomizeFragment extends Fragment {
     private CustomizeViewModel viewModel;
     private ThemeAdapter themeAdapter;
-    private View configPanel;
-    private View studioPanel;
+    private LinearLayout studioPanel;
     private boolean isStudioVisible = false;
     private View previewWidget;
+    private TextView previewText;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_customize, container, false);
     }
 
@@ -46,48 +45,55 @@ public class CustomizeFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(CustomizeViewModel.class);
 
         RecyclerView themeRecycler = view.findViewById(R.id.theme_recycler);
-        configPanel = view.findViewById(R.id.config_panel);
         studioPanel = view.findViewById(R.id.studio_panel);
         previewWidget = view.findViewById(R.id.preview_widget);
-        Button toggleStudioBtn = view.findViewById(R.id.toggle_studio_btn);
-        Button saveConfigBtn = view.findViewById(R.id.save_config_btn);
-        Button resetConfigBtn = view.findViewById(R.id.reset_config_btn);
+        previewText = view.findViewById(R.id.preview_text);
+        TextView toggleStudioBtn = view.findViewById(R.id.toggle_studio_btn);
+        TextView saveConfigBtn = view.findViewById(R.id.save_config_btn);
+        TextView resetConfigBtn = view.findViewById(R.id.reset_config_btn);
 
         themeAdapter = new ThemeAdapter();
         themeAdapter.setOnThemeClickListener(theme -> {
+            // Apply the app theme immediately — recreate so Android re-inflates with new theme.
             if (theme.getConfigJson() != null) {
                 viewModel.loadConfigFromJson(theme.getConfigJson());
             }
+            // ThemeAdapter already saved the ID; just recreate the activity.
+            requireActivity().recreate();
         });
-        themeRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        themeRecycler.setLayoutManager(
+                new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         themeRecycler.setAdapter(themeAdapter);
 
         toggleStudioBtn.setOnClickListener(v -> {
             isStudioVisible = !isStudioVisible;
             studioPanel.setVisibility(isStudioVisible ? View.VISIBLE : View.GONE);
-            toggleStudioBtn.setText(isStudioVisible ? "Hide Studio" : "Widget Studio");
+            toggleStudioBtn.setText(isStudioVisible ? "Close" : "Open");
         });
 
         saveConfigBtn.setOnClickListener(v -> {
             viewModel.saveConfig();
+            // Re-render all placed home-screen widgets with the new studio config injected.
+            viewModel.applyStudioToWidgets(requireContext());
             com.google.android.material.snackbar.Snackbar.make(view,
-                    "Configuration saved", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show();
+                    "Style saved and applied to widgets", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show();
         });
 
-        resetConfigBtn.setOnClickListener(v -> {
-            viewModel.loadDefaultConfig();
-        });
+        resetConfigBtn.setOnClickListener(v -> viewModel.loadDefaultConfig());
 
         setupStudioControls(view);
-
         observeData();
-        viewModel.refresh();
     }
 
     private void setupStudioControls(View view) {
-        TextInputEditText textColorInput = view.findViewById(R.id.text_color_input);
-        TextInputEditText bgColorInput = view.findViewById(R.id.bg_color_input);
-        TextInputEditText accentColorInput = view.findViewById(R.id.accent_color_input);
+        EditText textColorInput = view.findViewById(R.id.text_color_input);
+        EditText bgColorInput = view.findViewById(R.id.bg_color_input);
+        EditText accentColorInput = view.findViewById(R.id.accent_color_input);
+        EditText borderColorInput = view.findViewById(R.id.border_color_input);
+        EditText shadowColorInput = view.findViewById(R.id.shadow_color_input);
+        EditText fontFamilyInput = view.findViewById(R.id.font_family_input);
+        EditText gradientStartInput = view.findViewById(R.id.gradient_start_input);
+        EditText gradientEndInput = view.findViewById(R.id.gradient_end_input);
 
         Slider fontSizeSlider = view.findViewById(R.id.font_size_slider);
         Slider cornerRadiusSlider = view.findViewById(R.id.corner_radius_slider);
@@ -99,33 +105,52 @@ public class CustomizeFragment extends Fragment {
 
         SwitchMaterial glassEffectSwitch = view.findViewById(R.id.glass_effect_switch);
         SwitchMaterial gradientSwitch = view.findViewById(R.id.gradient_switch);
-        TextInputEditText gradientStartInput = view.findViewById(R.id.gradient_start_input);
-        TextInputEditText gradientEndInput = view.findViewById(R.id.gradient_end_input);
 
-        TextInputEditText borderColorInput = view.findViewById(R.id.border_color_input);
-        TextInputEditText shadowColorInput = view.findViewById(R.id.shadow_color_input);
-        TextInputEditText fontFamilyInput = view.findViewById(R.id.font_family_input);
+        TextView fontSizeLabel = view.findViewById(R.id.font_size_label);
+        TextView cornerRadiusLabel = view.findViewById(R.id.corner_radius_label);
+        TextView paddingLabel = view.findViewById(R.id.padding_label);
+        TextView opacityLabel = view.findViewById(R.id.opacity_label);
+        TextView borderWidthLabel = view.findViewById(R.id.border_width_label);
+        TextView shadowRadiusLabel = view.findViewById(R.id.shadow_radius_label);
+        TextView glassOpacityLabel = view.findViewById(R.id.glass_opacity_label);
 
         viewModel.getCurrentConfig().observe(getViewLifecycleOwner(), config -> {
             if (config == null) return;
+            textColorInput.setText(str(config, "textColor"));
+            bgColorInput.setText(str(config, "backgroundColor"));
+            accentColorInput.setText(str(config, "accentColor"));
+            borderColorInput.setText(str(config, "borderColor"));
+            shadowColorInput.setText(str(config, "shadowColor"));
+            fontFamilyInput.setText(str(config, "fontFamily"));
+            gradientStartInput.setText(str(config, "gradientStart"));
+            gradientEndInput.setText(str(config, "gradientEnd"));
 
-            textColorInput.setText(getStringConfig(config, "textColor"));
-            bgColorInput.setText(getStringConfig(config, "backgroundColor"));
-            accentColorInput.setText(getStringConfig(config, "accentColor"));
-            fontSizeSlider.setValue(getIntConfig(config, "fontSize", 14));
-            cornerRadiusSlider.setValue(getIntConfig(config, "cornerRadius", 16));
-            paddingSlider.setValue(getIntConfig(config, "padding", 16));
-            opacitySlider.setValue(getFloatConfig(config, "opacity", 1.0f));
-            borderWidthSlider.setValue(getIntConfig(config, "borderWidth", 0));
-            borderColorInput.setText(getStringConfig(config, "borderColor"));
-            shadowRadiusSlider.setValue(getIntConfig(config, "shadowRadius", 8));
-            shadowColorInput.setText(getStringConfig(config, "shadowColor"));
-            glassEffectSwitch.setChecked(getBoolConfig(config, "glassEffect", false));
-            glassOpacitySlider.setValue(getFloatConfig(config, "glassOpacity", 0.2f));
-            gradientSwitch.setChecked(getBoolConfig(config, "gradientEnabled", false));
-            gradientStartInput.setText(getStringConfig(config, "gradientStart"));
-            gradientEndInput.setText(getStringConfig(config, "gradientEnd"));
-            fontFamilyInput.setText(getStringConfig(config, "fontFamily"));
+            int fontSize = ints(config, "fontSize", 14);
+            int corner = ints(config, "cornerRadius", 16);
+            int padding = ints(config, "padding", 16);
+            float opacity = floats(config, "opacity", 1.0f);
+            int borderWidth = ints(config, "borderWidth", 0);
+            int shadowRadius = ints(config, "shadowRadius", 8);
+            float glassOpacity = floats(config, "glassOpacity", 0.2f);
+
+            setSliderSafe(fontSizeSlider, fontSize);
+            setSliderSafe(cornerRadiusSlider, corner);
+            setSliderSafe(paddingSlider, padding);
+            setSliderSafe(opacitySlider, opacity);
+            setSliderSafe(borderWidthSlider, borderWidth);
+            setSliderSafe(shadowRadiusSlider, shadowRadius);
+            setSliderSafe(glassOpacitySlider, glassOpacity);
+
+            if (fontSizeLabel != null) fontSizeLabel.setText(String.valueOf(fontSize));
+            if (cornerRadiusLabel != null) cornerRadiusLabel.setText(String.valueOf(corner));
+            if (paddingLabel != null) paddingLabel.setText(String.valueOf(padding));
+            if (opacityLabel != null) opacityLabel.setText(Math.round(opacity * 100) + "%");
+            if (borderWidthLabel != null) borderWidthLabel.setText(String.valueOf(borderWidth));
+            if (shadowRadiusLabel != null) shadowRadiusLabel.setText(String.valueOf(shadowRadius));
+            if (glassOpacityLabel != null) glassOpacityLabel.setText(Math.round(glassOpacity * 100) + "%");
+
+            glassEffectSwitch.setChecked(bools(config, "glassEffect", false));
+            gradientSwitch.setChecked(bools(config, "gradientEnabled", false));
 
             updatePreview(config);
         });
@@ -139,38 +164,14 @@ public class CustomizeFragment extends Fragment {
         accentColorInput.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) viewModel.updateConfig("accentColor", accentColorInput.getText().toString());
         });
-        fontSizeSlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("fontSize", (int) value);
-        });
-        cornerRadiusSlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("cornerRadius", (int) value);
-        });
-        paddingSlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("padding", (int) value);
-        });
-        opacitySlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("opacity", value);
-        });
-        borderWidthSlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("borderWidth", (int) value);
-        });
         borderColorInput.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) viewModel.updateConfig("borderColor", borderColorInput.getText().toString());
-        });
-        shadowRadiusSlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("shadowRadius", (int) value);
         });
         shadowColorInput.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) viewModel.updateConfig("shadowColor", shadowColorInput.getText().toString());
         });
-        glassEffectSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            viewModel.updateConfig("glassEffect", isChecked);
-        });
-        glassOpacitySlider.addOnChangeListener((slider, value, fromUser) -> {
-            if (fromUser) viewModel.updateConfig("glassOpacity", value);
-        });
-        gradientSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            viewModel.updateConfig("gradientEnabled", isChecked);
+        fontFamilyInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) viewModel.updateConfig("fontFamily", fontFamilyInput.getText().toString());
         });
         gradientStartInput.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) viewModel.updateConfig("gradientStart", gradientStartInput.getText().toString());
@@ -178,111 +179,107 @@ public class CustomizeFragment extends Fragment {
         gradientEndInput.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) viewModel.updateConfig("gradientEnd", gradientEndInput.getText().toString());
         });
-        fontFamilyInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) viewModel.updateConfig("fontFamily", fontFamilyInput.getText().toString());
+
+        fontSizeSlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("fontSize", (int) v); if (fontSizeLabel != null) fontSizeLabel.setText(String.valueOf((int) v)); }
         });
+        cornerRadiusSlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("cornerRadius", (int) v); if (cornerRadiusLabel != null) cornerRadiusLabel.setText(String.valueOf((int) v)); }
+        });
+        paddingSlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("padding", (int) v); if (paddingLabel != null) paddingLabel.setText(String.valueOf((int) v)); }
+        });
+        opacitySlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("opacity", v); if (opacityLabel != null) opacityLabel.setText(Math.round(v * 100) + "%"); }
+        });
+        borderWidthSlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("borderWidth", (int) v); if (borderWidthLabel != null) borderWidthLabel.setText(String.valueOf((int) v)); }
+        });
+        shadowRadiusSlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("shadowRadius", (int) v); if (shadowRadiusLabel != null) shadowRadiusLabel.setText(String.valueOf((int) v)); }
+        });
+        glassOpacitySlider.addOnChangeListener((s, v, fromUser) -> {
+            if (fromUser) { viewModel.updateConfig("glassOpacity", v); if (glassOpacityLabel != null) glassOpacityLabel.setText(Math.round(v * 100) + "%"); }
+        });
+        glassEffectSwitch.setOnCheckedChangeListener((btn, checked) -> viewModel.updateConfig("glassEffect", checked));
+        gradientSwitch.setOnCheckedChangeListener((btn, checked) -> viewModel.updateConfig("gradientEnabled", checked));
     }
 
     private void updatePreview(Map<String, Object> config) {
         if (previewWidget == null) return;
-        // Apply config to preview widget
         try {
-            String bgColor = getStringConfig(config, "backgroundColor");
-            String textColor = getStringConfig(config, "textColor");
-            int cornerRadius = getIntConfig(config, "cornerRadius", 16);
-            int padding = getIntConfig(config, "padding", 16);
-            float opacity = getFloatConfig(config, "opacity", 1.0f);
+            int corner = ints(config, "cornerRadius", 20);
+            float opacity = floats(config, "opacity", 1f);
+            boolean gradient = bools(config, "gradientEnabled", false);
 
             previewWidget.setAlpha(opacity);
-            previewWidget.setPadding(
-                    dpToPx(padding), dpToPx(padding),
-                    dpToPx(padding), dpToPx(padding));
 
-            android.graphics.drawable.GradientDrawable drawable = new android.graphics.drawable.GradientDrawable();
-            drawable.setCornerRadius(dpToPx(cornerRadius));
+            GradientDrawable bg = new GradientDrawable();
+            bg.setCornerRadius(dpToPx(corner));
 
-            boolean hasGradient = getBoolConfig(config, "gradientEnabled", false);
-            if (hasGradient) {
-                String startColor = getStringConfig(config, "gradientStart");
-                String endColor = getStringConfig(config, "gradientEnd");
+            if (gradient) {
+                String s = str(config, "gradientStart");
+                String e = str(config, "gradientEnd");
                 try {
-                    int start = android.graphics.Color.parseColor(startColor);
-                    int end = android.graphics.Color.parseColor(endColor);
-                    drawable.setOrientation(android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM);
-                    drawable.setColors(new int[]{start, end});
-                } catch (Exception e) {
-                    drawable.setColor(android.graphics.Color.parseColor(bgColor));
-                }
+                    bg.setOrientation(GradientDrawable.Orientation.TL_BR);
+                    bg.setColors(new int[]{Color.parseColor(s.isEmpty() ? "#FFD700" : s),
+                            Color.parseColor(e.isEmpty() ? "#FF8C00" : e)});
+                } catch (Exception ignored) { bg.setColor(0xFF1A1A1A); }
             } else {
                 try {
-                    drawable.setColor(android.graphics.Color.parseColor(bgColor));
-                } catch (Exception e) {
-                    drawable.setColor(0xFF1A1A1A);
-                }
+                    String bgHex = str(config, "backgroundColor");
+                    bg.setColor(Color.parseColor(bgHex.isEmpty() ? "#1A1A1A" : bgHex));
+                } catch (Exception ignored) { bg.setColor(0xFF1A1A1A); }
             }
 
-            int borderWidth = getIntConfig(config, "borderWidth", 0);
-            if (borderWidth > 0) {
-                String borderColor = getStringConfig(config, "borderColor");
-                try {
-                    drawable.setStroke(dpToPx(borderWidth), android.graphics.Color.parseColor(borderColor));
-                } catch (Exception ignored) {}
+            int bw = ints(config, "borderWidth", 0);
+            if (bw > 0) {
+                try { bg.setStroke(bw, Color.parseColor(str(config, "borderColor"))); }
+                catch (Exception ignored) {}
             }
 
-            boolean glassEffect = getBoolConfig(config, "glassEffect", false);
-            if (glassEffect) {
-                previewWidget.setBackgroundResource(R.drawable.bg_glass);
-            } else {
-                previewWidget.setBackground(drawable);
-            }
+            boolean glass = bools(config, "glassEffect", false);
+            previewWidget.setBackground(glass ? null : bg);
+            if (glass) previewWidget.setBackgroundResource(R.drawable.bg_glass);
+            previewWidget.setElevation(dpToPx(ints(config, "shadowRadius", 8)) / 2f);
 
-            int shadowRadius = getIntConfig(config, "shadowRadius", 8);
-            previewWidget.setElevation(dpToPx(shadowRadius) / 4f);
-
-            TextView previewText = previewWidget.findViewById(R.id.preview_text);
             if (previewText != null) {
-                try {
-                    previewText.setTextColor(android.graphics.Color.parseColor(textColor));
-                } catch (Exception e) {
-                    previewText.setTextColor(0xFFFFFFFF);
-                }
-                int fontSize = getIntConfig(config, "fontSize", 14);
-                previewText.setTextSize(fontSize);
+                try { previewText.setTextColor(Color.parseColor(str(config, "accentColor"))); }
+                catch (Exception ignored) { previewText.setTextColor(Color.WHITE); }
             }
-
         } catch (Exception ignored) {}
     }
 
     private void observeData() {
-        viewModel.getThemes().observe(getViewLifecycleOwner(), themes -> {
-            themeAdapter.setThemes(themes);
-        });
+        viewModel.getThemes().observe(getViewLifecycleOwner(), themes -> themeAdapter.setThemes(themes));
+    }
+
+    private void setSliderSafe(Slider slider, float value) {
+        float from = slider.getValueFrom();
+        float to = slider.getValueTo();
+        float step = slider.getStepSize();
+        float v = Math.max(from, Math.min(to, value));
+        if (step > 0f) {
+            v = from + Math.round((v - from) / step) * step;
+            v = Math.max(from, Math.min(to, v));
+        }
+        slider.setValue(v);
     }
 
     private int dpToPx(int dp) {
-        return (int) (dp * getResources().getDisplayMetrics().density);
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
-    private String getStringConfig(Map<String, Object> config, String key) {
-        Object val = config.get(key);
-        return val != null ? val.toString() : "";
+    private String str(Map<String, Object> c, String key) {
+        Object v = c.get(key); return v != null ? v.toString() : "";
     }
-
-    private int getIntConfig(Map<String, Object> config, String key, int def) {
-        Object val = config.get(key);
-        if (val instanceof Number) return ((Number) val).intValue();
-        return def;
+    private int ints(Map<String, Object> c, String key, int def) {
+        Object v = c.get(key); return v instanceof Number ? ((Number) v).intValue() : def;
     }
-
-    private float getFloatConfig(Map<String, Object> config, String key, float def) {
-        Object val = config.get(key);
-        if (val instanceof Number) return ((Number) val).floatValue();
-        return def;
+    private float floats(Map<String, Object> c, String key, float def) {
+        Object v = c.get(key); return v instanceof Number ? ((Number) v).floatValue() : def;
     }
-
-    private boolean getBoolConfig(Map<String, Object> config, String key, boolean def) {
-        Object val = config.get(key);
-        if (val instanceof Boolean) return (Boolean) val;
-        return def;
+    private boolean bools(Map<String, Object> c, String key, boolean def) {
+        Object v = c.get(key); return v instanceof Boolean ? (Boolean) v : def;
     }
 }

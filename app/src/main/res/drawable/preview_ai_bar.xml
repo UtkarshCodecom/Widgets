@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="60dp"
+    android:viewportWidth="240"
+    android:viewportHeight="60">
+
+    <path android:fillColor="#FF0E0E0E"
+        android:pathData="M10,4 L230,4 A10,10 0 0 1 240,14 L240,46 A10,10 0 0 1 230,56 L10,56 A10,10 0 0 1 0,46 L0,14 A10,10 0 0 1 10,4 Z" />
+    <!-- brand pill -->
+    <path android:fillColor="#FF10A37F"
+        android:pathData="M18,12 L96,12 A18,18 0 0 1 96,48 L18,48 A18,18 0 0 1 18,12 Z" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M30,30 m-11,0 a11,11 0 1,0 22,0 a11,11 0 1,0 -22,0" />
+    <path android:fillColor="#FF10A37F" android:pathData="M52,24 h36 v5 h-36 z" />
+    <path android:fillColor="#FFCDEFE3" android:pathData="M52,33 h26 v4 h-26 z" />
+    <!-- ask pill -->
+    <path android:fillColor="#FF1C1C1C"
+        android:pathData="M112,16 L186,16 A14,14 0 0 1 186,44 L112,44 A14,14 0 0 1 112,16 Z" />
+    <path android:fillColor="#FF6A6A6A" android:pathData="M124,27 h44 v6 h-44 z" />
+    <!-- icon tiles -->
+    <path android:fillColor="#FF1C1C1C" android:pathData="M196,16 h28 v28 h-28 z M196,16 A6,6 0 0 1 202,16 M218,16 A6,6 0 0 1 224,22" />
+    <path android:fillColor="#FFFFD700" android:pathData="M205,25 h10 v10 h-10 z" />
+</vector>

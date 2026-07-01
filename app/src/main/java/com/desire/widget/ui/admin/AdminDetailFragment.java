@@ -10,9 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +30,7 @@ import com.desire.widget.data.model.Category;
 import com.desire.widget.data.model.Offer;
 import com.desire.widget.data.model.Theme;
 import com.desire.widget.data.model.Widget;
+import com.desire.widget.widget.WidgetSchema;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -303,7 +308,7 @@ public class AdminDetailFragment extends Fragment {
         Button deleteBtn = view.findViewById(R.id.delete_button);
 
         title.setText(w.getName());
-        subtitle.setText(widgetSize(w.getWidgetSize()) + " \u2022 " + (w.isPro() ? "PRO" : "FREE") + " \u2022 Downloads: " + w.getDownloadCount()
+        subtitle.setText(WidgetSchema.normalizeSize(w.getWidgetSize()) + " \u2022 " + (w.isPro() ? "PRO" : "FREE") + " \u2022 Downloads: " + w.getDownloadCount()
                 + " \u2022 " + (w.isActive() ? "Active" : "Inactive"));
 
         editBtn.setOnClickListener(v -> showWidgetForm(w));
@@ -450,12 +455,20 @@ public class AdminDetailFragment extends Fragment {
 
         View view = LayoutInflater.from(requireContext())
                 .inflate(R.layout.form_widget, formContainer, false);
+        setupWidgetDesignControls(view);
         showForm("Widget", view, () -> {
             Widget w = existing != null ? existing : new Widget();
 
             String name = ((EditText) view.findViewById(R.id.input_name)).getText().toString().trim();
+            String html = ((EditText) view.findViewById(R.id.input_widget_html)).getText().toString().trim();
+            String htmlError = WidgetSchema.htmlValidationError(html);
             if (name.isEmpty()) {
                 Toast.makeText(requireContext(), "Please enter a widget name", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (htmlError != null) {
+                showHtmlError(view, htmlError);
+                Toast.makeText(requireContext(), htmlError, Toast.LENGTH_LONG).show();
                 return false;
             }
             if (isThumbnailUploading || isPreviewUploading) {
@@ -473,11 +486,12 @@ public class AdminDetailFragment extends Fragment {
             w.setName(name);
             w.setDescription(((EditText) view.findViewById(R.id.input_description)).getText().toString().trim());
             w.setCategoryName(((EditText) view.findViewById(R.id.input_category_name)).getText().toString().trim());
-            w.setWidgetSize(widgetSize(((EditText) view.findViewById(R.id.input_widget_size)).getText().toString()));
-            w.setPreviewStyle(previewStyle(((EditText) view.findViewById(R.id.input_preview_style)).getText().toString()));
+            w.setWidgetSize(selectedSpinnerValue(view, R.id.input_widget_size, WidgetSchema.SIZE_2X2));
+            w.setPreviewStyle(selectedSpinnerValue(view, R.id.input_preview_style, WidgetSchema.STYLE_ICON));
             if (pendingThumbnailUrl != null) w.setThumbnailUrl(pendingThumbnailUrl);
             if (pendingPreviewUrl != null) w.setPreviewUrl(pendingPreviewUrl);
             w.setConfigJson(((EditText) view.findViewById(R.id.input_config_json)).getText().toString());
+            w.setHtmlContent(html);
             w.setPro(((Switch) view.findViewById(R.id.input_is_pro)).isChecked());
             w.setFeatured(((Switch) view.findViewById(R.id.input_is_featured)).isChecked());
             w.setTrending(((Switch) view.findViewById(R.id.input_is_trending)).isChecked());
@@ -490,6 +504,8 @@ public class AdminDetailFragment extends Fragment {
             Toast.makeText(requireContext(), "Widget saved!", Toast.LENGTH_SHORT).show();
             return true;
         }, existing);
+
+        view.findViewById(R.id.btn_preview_html).setOnClickListener(v -> renderAdminHtmlPreview(view));
 
         view.findViewById(R.id.btn_upload_thumbnail).setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -648,9 +664,10 @@ public class AdminDetailFragment extends Fragment {
             setText(formView, R.id.input_name, w.getName());
             setText(formView, R.id.input_description, w.getDescription());
             setText(formView, R.id.input_category_name, w.getCategoryName());
-            setText(formView, R.id.input_widget_size, widgetSize(w.getWidgetSize()));
-            setText(formView, R.id.input_preview_style, previewStyle(w.getPreviewStyle()));
+            setSpinnerValue(formView, R.id.input_widget_size, WidgetSchema.normalizeSize(w.getWidgetSize()));
+            setSpinnerValue(formView, R.id.input_preview_style, WidgetSchema.normalizeStyle(w.getPreviewStyle()));
             setText(formView, R.id.input_config_json, w.getConfigJson());
+            setText(formView, R.id.input_widget_html, w.getHtmlContent());
             setChecked(formView, R.id.input_is_pro, w.isPro());
             setChecked(formView, R.id.input_is_featured, w.isFeatured());
             setChecked(formView, R.id.input_is_trending, w.isTrending());
@@ -658,6 +675,7 @@ public class AdminDetailFragment extends Fragment {
             pendingPreviewUrl = w.getPreviewUrl();
             if (pendingThumbnailUrl != null) updateUploadLabel(R.id.txt_thumbnail_name, "Has image", R.color.status_free);
             if (pendingPreviewUrl != null) updateUploadLabel(R.id.txt_preview_name, "Has image", R.color.status_free);
+            renderAdminHtmlPreview(formView);
         } else if (item instanceof Category) {
             Category c = (Category) item;
             setText(formView, R.id.input_name, c.getName());
@@ -716,37 +734,74 @@ public class AdminDetailFragment extends Fragment {
         contentContainer.addView(tv);
     }
 
-    private String widgetSize(String value) {
-        if (value == null || value.trim().isEmpty()) return "2x2";
-        String normalized = value.trim().toLowerCase().replace(" ", "");
-        switch (normalized) {
-            case "1x1":
-            case "2x2":
-            case "1x2":
-            case "2x1":
-            case "1x4":
-            case "4x1":
-            case "4x2":
-            case "2x4":
-                return normalized;
-            default:
-                return "2x2";
+    private void setupWidgetDesignControls(View view) {
+        setupSpinner(view, R.id.input_widget_size, WidgetSchema.SIZE_OPTIONS);
+        setupSpinner(view, R.id.input_preview_style, WidgetSchema.STYLE_OPTIONS);
+        setSpinnerValue(view, R.id.input_widget_size, WidgetSchema.SIZE_2X2);
+        setSpinnerValue(view, R.id.input_preview_style, WidgetSchema.STYLE_ICON);
+        configureAdminWebView(view.findViewById(R.id.admin_html_preview));
+    }
+
+    private void setupSpinner(View parent, int id, String[] values) {
+        Spinner spinner = parent.findViewById(id);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.item_admin_spinner, values);
+        adapter.setDropDownViewResource(R.layout.item_admin_spinner);
+        spinner.setAdapter(adapter);
+    }
+
+    private void setSpinnerValue(View parent, int id, String value) {
+        Spinner spinner = parent.findViewById(id);
+        if (spinner == null) return;
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (String.valueOf(spinner.getItemAtPosition(i)).equals(value)) {
+                spinner.setSelection(i);
+                return;
+            }
         }
     }
 
-    private String previewStyle(String value) {
-        if (value == null || value.trim().isEmpty()) return "icon";
-        String normalized = value.trim().toLowerCase().replace(" ", "_");
-        switch (normalized) {
-            case "ai_bar":
-            case "folder":
-            case "icon":
-            case "clock_digital":
-            case "clock_analog":
-                return normalized;
-            default:
-                return "icon";
+    private String selectedSpinnerValue(View parent, int id, String fallback) {
+        Spinner spinner = parent.findViewById(id);
+        if (spinner == null || spinner.getSelectedItem() == null) return fallback;
+        return String.valueOf(spinner.getSelectedItem());
+    }
+
+    private void renderAdminHtmlPreview(View parent) {
+        EditText htmlInput = parent.findViewById(R.id.input_widget_html);
+        WebView preview = parent.findViewById(R.id.admin_html_preview);
+        String html = htmlInput != null ? htmlInput.getText().toString().trim() : "";
+        String error = WidgetSchema.htmlValidationError(html);
+        if (error != null) {
+            showHtmlError(parent, error);
+            if (preview != null) {
+                preview.loadDataWithBaseURL(null, WidgetSchema.errorHtml(error), "text/html", "UTF-8", null);
+            }
+            return;
         }
+        showHtmlError(parent, null);
+        if (preview != null) {
+            preview.loadDataWithBaseURL(null, WidgetSchema.documentForWebView(html), "text/html", "UTF-8", null);
+        }
+    }
+
+    private void showHtmlError(View parent, @Nullable String error) {
+        TextView errorView = parent.findViewById(R.id.txt_html_error);
+        if (errorView == null) return;
+        errorView.setText(error != null ? error : "");
+        errorView.setVisibility(error != null ? View.VISIBLE : View.GONE);
+    }
+
+    private void configureAdminWebView(WebView webView) {
+        if (webView == null) return;
+        webView.setBackgroundColor(android.graphics.Color.BLACK);
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setTextZoom(100);
     }
 
     private void confirmDelete(String type, String id, Runnable deleteAction) {
