@@ -1,96 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_card"
     android:layout_width="120dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="12dp"
-    app:cardBackgroundColor="@color/dark_card"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="0dp"
-    app:contentPadding="0dp">
+    android:layout_marginEnd="10dp"
+    android:orientation="vertical"
+    android:foreground="?selectableItemBackground"
+    android:padding="4dp">
 
-    <LinearLayout
+    <!-- Color preview card with 4-color grid -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_neumorphic_small"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:layout_height="88dp"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="4dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp">
 
-        <com.google.android.material.card.MaterialCardView
+        <!-- BG fills the whole card -->
+        <View
+            android:id="@+id/theme_swatch"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            app:cardBackgroundColor="@color/dark_surface_variant"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp"
-            app:contentPadding="0dp">
+            android:layout_height="match_parent" />
 
-            <ImageView
-                android:id="@+id/theme_thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_neumorphic_inset"
-                android:scaleType="centerCrop"
-                android:contentDescription="@string/cd_widget_thumbnail" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:id="@+id/theme_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/text_primary"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/theme_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/text_tertiary"
-            android:textSize="11sp" />
-
+        <!-- 4-color row at the bottom -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical"
+            android:weightSum="3">
 
-            <TextView
-                android:id="@+id/default_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:background="@drawable/bg_badge"
-                android:gravity="center"
-                android:paddingHorizontal="8dp"
-                android:text="Default"
-                android:textColor="@color/yellow_accent"
-                android:textSize="9sp"
-                android:visibility="gone" />
+            <!-- Accent (primary) - largest dot -->
+            <View
+                android:id="@+id/theme_swatch_accent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="6dp" />
 
-            <TextView
-                android:id="@+id/pro_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_marginStart="4dp"
-                android:background="@drawable/bg_badge_pro"
-                android:gravity="center"
-                android:paddingHorizontal="8dp"
-                android:text="@string/pro"
-                android:textColor="@color/black"
-                android:textSize="9sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+            <!-- Secondary -->
+            <View
+                android:id="@+id/theme_swatch_secondary"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="6dp" />
+
+            <!-- Surface -->
+            <View
+                android:id="@+id/theme_swatch_surface"
+                android:layout_width="16dp"
+                android:layout_height="16dp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-</com.google.android.material.card.MaterialCardView>
+    <!-- Selected indicator bar -->
+    <View
+        android:id="@+id/theme_selected_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="4dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/theme_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/theme_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_tertiary"
+        android:textSize="10sp" />
+
+</LinearLayout>

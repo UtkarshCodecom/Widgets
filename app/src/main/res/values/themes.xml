@@ -39,7 +39,72 @@
         <item name="cardViewStyle">@style/Widget.Widgets.Card.Neumorphic</item>
     </style>
 
-    <style name="Theme.Widgets" parent="Base.Theme.Widgets" />
+    <!-- ===== THEME VARIANTS ===== -->
+
+    <!-- Default: Dark Gold -->
+    <style name="Theme.Widgets" parent="Base.Theme.Widgets">
+        <item name="colorPrimary">#FFD700</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#33FFD700</item>
+        <item name="colorSecondary">#FF8C00</item>
+        <item name="android:colorBackground">#0D0D0D</item>
+        <item name="colorSurface">#1A1A1A</item>
+        <item name="colorOnSurface">#FFFFFFFF</item>
+        <item name="android:statusBarColor">#0D0D0D</item>
+        <item name="android:navigationBarColor">#0D0D0D</item>
+    </style>
+
+    <!-- Midnight Blue -->
+    <style name="Theme.Widgets.MidnightBlue" parent="Base.Theme.Widgets">
+        <item name="colorPrimary">#00D4FF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#2200D4FF</item>
+        <item name="colorSecondary">#448AFF</item>
+        <item name="android:colorBackground">#050D14</item>
+        <item name="colorSurface">#0D1B2A</item>
+        <item name="colorOnSurface">#FFFFFFFF</item>
+        <item name="android:statusBarColor">#050D14</item>
+        <item name="android:navigationBarColor">#050D14</item>
+    </style>
+
+    <!-- Rose Quartz -->
+    <style name="Theme.Widgets.Rose" parent="Base.Theme.Widgets">
+        <item name="colorPrimary">#FF6B9D</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#22FF6B9D</item>
+        <item name="colorSecondary">#AB47BC</item>
+        <item name="android:colorBackground">#0F0709</item>
+        <item name="colorSurface">#1C1214</item>
+        <item name="colorOnSurface">#FFFFFFFF</item>
+        <item name="android:statusBarColor">#0F0709</item>
+        <item name="android:navigationBarColor">#0F0709</item>
+    </style>
+
+    <!-- Forest Green -->
+    <style name="Theme.Widgets.Forest" parent="Base.Theme.Widgets">
+        <item name="colorPrimary">#00E676</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#2200E676</item>
+        <item name="colorSecondary">#1DE9B6</item>
+        <item name="android:colorBackground">#040F08</item>
+        <item name="colorSurface">#0A1A0F</item>
+        <item name="colorOnSurface">#FFFFFFFF</item>
+        <item name="android:statusBarColor">#040F08</item>
+        <item name="android:navigationBarColor">#040F08</item>
+    </style>
+
+    <!-- AMOLED Black -->
+    <style name="Theme.Widgets.AMOLED" parent="Base.Theme.Widgets">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#22FFFFFF</item>
+        <item name="colorSecondary">#B0BEC5</item>
+        <item name="android:colorBackground">#000000</item>
+        <item name="colorSurface">#0A0A0A</item>
+        <item name="colorOnSurface">#FFFFFFFF</item>
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:navigationBarColor">#000000</item>
+    </style>
 
     <style name="Theme.Widgets.Translucent" parent="Theme.Widgets">
         <item name="android:windowIsTranslucent">true</item>
@@ -75,14 +140,14 @@
     </style>
 
     <style name="Widget.Widgets.Button.Yellow" parent="Widget.Material3.Button">
-        <item name="backgroundTint">@color/yellow_accent</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="cornerRadius">12dp</item>
     </style>
 
     <style name="Widget.Widgets.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="strokeColor">@color/yellow_accent</item>
-        <item name="android:textColor">@color/yellow_accent</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="cornerRadius">12dp</item>
     </style>
 
@@ -91,5 +156,30 @@
         <item name="chipStrokeColor">@color/divider</item>
         <item name="android:textColor">@color/text_secondary</item>
         <item name="chipCornerRadius">20dp</item>
+    </style>
+
+    <style name="OnboardStep">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">10dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="CwSectionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Widgets.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="android:width">64dp</item>
+        <item name="android:height">34dp</item>
+        <item name="marginHorizontal">8dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
     </style>
 </resources>

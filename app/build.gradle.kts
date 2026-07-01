@@ -82,6 +82,15 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.datastore.preferences)
 
+    // QR code generation for the native qr_code widget component (pure-Java, no UI deps).
+    implementation("com.google.zxing:core:3.5.3")
+
+    // Device location for the weather widget (Open-Meteo fetch by lat/lon).
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+
+    // Play Billing for the one-time Pro unlock.
+    implementation("com.android.billingclient:billing:7.1.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

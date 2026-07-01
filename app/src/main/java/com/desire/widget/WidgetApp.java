@@ -3,10 +3,14 @@ package com.desire.widget;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 
 import com.desire.widget.data.repository.WidgetRepository;
 import com.desire.widget.util.PreferenceManager;
+import com.desire.widget.widget.ClockTickReceiver;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -21,6 +25,7 @@ import androidx.work.WorkManager;
 
 public class WidgetApp extends Application {
     private static WidgetApp instance;
+    private ClockTickReceiver screenReceiver;
 
     public static WidgetApp getInstance() {
         return instance;
@@ -39,6 +44,42 @@ public class WidgetApp extends Application {
         initRemoteConfig();
         initNotificationChannel();
         scheduleSyncWork();
+        scheduleWeatherWork();
+        com.desire.widget.billing.BillingManager.getInstance(this); // connect + restore Pro
+        ClockTickReceiver.ensureScheduled(this);
+        registerScreenReceiver();
+    }
+
+    private void scheduleWeatherWork() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                .build();
+
+        // Refresh shortly after launch, then every few hours.
+        WorkManager.getInstance(this).enqueue(
+                new androidx.work.OneTimeWorkRequest.Builder(com.desire.widget.worker.WeatherWorker.class)
+                        .setConstraints(constraints)
+                        .build());
+
+        PeriodicWorkRequest weatherRequest = new PeriodicWorkRequest.Builder(
+                com.desire.widget.worker.WeatherWorker.class, 3, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "weather_refresh", ExistingPeriodicWorkPolicy.KEEP, weatherRequest);
+    }
+
+    private void registerScreenReceiver() {
+        screenReceiver = new ClockTickReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(screenReceiver, filter);
+        }
     }
 
     private void initRemoteConfig() {

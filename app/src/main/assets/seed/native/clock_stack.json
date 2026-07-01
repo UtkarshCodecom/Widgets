@@ -1,0 +1,48 @@
+{
+  "id": "clock_stack",
+  "name": "Stacked Time",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#101014",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.14,
+        "w": 0.8,
+        "h": 0.4
+      },
+      "props": {
+        "format": "HH",
+        "fontSize": 1.0,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.5,
+        "w": 0.8,
+        "h": 0.4
+      },
+      "props": {
+        "format": "mm",
+        "fontSize": 1.0,
+        "align": "center",
+        "color": "#FFD700",
+        "bold": true
+      }
+    }
+  ],
+  "action": {
+    "type": "open_activity",
+    "packageName": "com.google.android.deskclock",
+    "className": "com.android.deskclock.DeskClockTabActivity"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "clock_gradient",
+  "name": "Gradient Clock",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#6A0572",
+    "gradientEnd": "#0D1B2A",
+    "gradientAngle": 150,
+    "cornerRadius": 0.18
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.22,
+        "w": 0.84,
+        "h": 0.4
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.95,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.62,
+        "w": 0.84,
+        "h": 0.14
+      },
+      "props": {
+        "format": "EEEE",
+        "fontSize": 0.62,
+        "align": "center",
+        "color": "#E0B0FF",
+        "bold": false
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.76,
+        "w": 0.84,
+        "h": 0.12
+      },
+      "props": {
+        "format": "MMM d",
+        "fontSize": 0.55,
+        "align": "center",
+        "color": "#A080C0",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "open_activity",
+    "packageName": "com.google.android.deskclock",
+    "className": "com.android.deskclock.DeskClockTabActivity"
+  }
+}

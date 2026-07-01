@@ -18,6 +18,9 @@ public interface CategoryDao {
     @Query("SELECT * FROM categories WHERE id = :id")
     LiveData<CategoryEntity> getCategoryById(String id);
 
+    @Query("SELECT COUNT(*) FROM categories")
+    int getCountSync();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CategoryEntity> categories);
 

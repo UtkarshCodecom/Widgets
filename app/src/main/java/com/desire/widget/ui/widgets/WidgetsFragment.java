@@ -56,6 +56,9 @@ public class WidgetsFragment extends Fragment {
         emptyState = view.findViewById(R.id.empty_state);
         loadingView = view.findViewById(R.id.loading_view);
 
+        View createBtn = view.findViewById(R.id.create_widget_btn);
+        if (createBtn != null) createBtn.setOnClickListener(v -> openNewInStudio());
+
         setupSearch();
         setupFavoritesToggle();
         setupCategoryRecycler();
@@ -95,10 +98,8 @@ public class WidgetsFragment extends Fragment {
 
     private void setupWidgetRecycler() {
         widgetAdapter = new WidgetAdapter(2);
-        widgetAdapter.setOnWidgetClickListener(widget -> {
-            WidgetPreviewDialog dialog = WidgetPreviewDialog.newInstance(widget);
-            dialog.show(getChildFragmentManager(), "widget_preview");
-        });
+        widgetAdapter.setOnWidgetClickListener(this::openCustomizer);
+        widgetAdapter.setOnWidgetLongClickListener(this::openInStudio);
         widgetAdapter.setOnFavoriteClickListener((widget, isFavorite) -> {
             viewModel.toggleFavorite(widget.getId(), isFavorite);
         });
@@ -111,6 +112,52 @@ public class WidgetsFragment extends Fragment {
         });
         widgetRecycler.setLayoutManager(layoutManager);
         widgetRecycler.setAdapter(widgetAdapter);
+    }
+
+    private void openCustomizer(WidgetEntity widget) {
+        String specJson = widget.getSpecJson();
+        if (specJson == null || specJson.trim().isEmpty()) {
+            // No native definition (e.g. thumbnail-only legacy entry) — fall back to direct install.
+            WidgetInstaller.installToHome(requireView(), widget);
+            return;
+        }
+        if (widget.isPro() && !com.desire.widget.billing.BillingManager.getInstance(requireContext()).isPro()) {
+            showProUpsell();
+            return;
+        }
+        android.content.Intent intent = new android.content.Intent(
+                requireContext(), com.desire.widget.ui.customize.CustomizeWidgetActivity.class);
+        intent.putExtra(com.desire.widget.ui.customize.CustomizeWidgetActivity.EXTRA_SPEC_JSON, specJson);
+        intent.putExtra(com.desire.widget.ui.customize.CustomizeWidgetActivity.EXTRA_NAME, widget.getName());
+        intent.putExtra(com.desire.widget.ui.customize.CustomizeWidgetActivity.EXTRA_SIZE, widget.getWidgetSize());
+        intent.putExtra(com.desire.widget.ui.customize.CustomizeWidgetActivity.EXTRA_WIDGET_ID, widget.getId());
+        startActivity(intent);
+    }
+
+    private void openNewInStudio() {
+        startActivity(new android.content.Intent(
+                requireContext(), com.desire.widget.ui.studio.StudioActivity.class));
+    }
+
+    private void showProUpsell() {
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Pro widget")
+                .setMessage("Unlock all Pro widgets, fonts, and backgrounds with a one-time purchase.")
+                .setNegativeButton("Not now", null)
+                .setPositiveButton("Unlock Pro", (d, w) ->
+                        com.desire.widget.billing.BillingManager.getInstance(requireContext())
+                                .launchPurchase(requireActivity()))
+                .show();
+    }
+
+    private void openInStudio(WidgetEntity widget) {
+        android.content.Intent intent = new android.content.Intent(
+                requireContext(), com.desire.widget.ui.studio.StudioActivity.class);
+        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_SPEC_JSON, widget.getSpecJson());
+        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_NAME, widget.getName());
+        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_SIZE, widget.getWidgetSize());
+        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_WIDGET_ID, widget.getId());
+        startActivity(intent);
     }
 
     private void observeData() {

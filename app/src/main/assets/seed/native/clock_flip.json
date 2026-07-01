@@ -1,0 +1,44 @@
+{
+  "id": "clock_flip",
+  "name": "Flip Clock",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#0B0B10",
+    "cornerRadius": 0.16
+  },
+  "action": {
+    "type": "open_activity",
+    "packageName": "com.google.android.deskclock",
+    "className": "com.android.deskclock.DeskClockTabActivity"
+  },
+  "components": [
+    {
+      "type": "flip_clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.16,
+        "w": 0.84,
+        "h": 0.5
+      },
+      "props": {
+        "cardColor": "#1C1C24",
+        "textColor": "#FFFFFF"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.72,
+        "w": 0.8,
+        "h": 0.14
+      },
+      "props": {
+        "format": "EEE, MMM d",
+        "fontSize": 0.6,
+        "align": "center",
+        "color": "#FFD700"
+      }
+    }
+  ]
+}

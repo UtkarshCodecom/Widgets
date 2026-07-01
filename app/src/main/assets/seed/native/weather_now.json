@@ -1,0 +1,22 @@
+{
+  "id": "weather_now",
+  "name": "Weather Now",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#0F2027",
+    "gradientEnd": "#203A43",
+    "gradientAngle": 135,
+    "cornerRadius": 0.18
+  },
+  "action": { "type": "launch_app", "packageName": "com.google.android.apps.weatherradar" },
+  "components": [
+    { "type": "weather", "frame": { "x": 0.06, "y": 0.08, "w": 0.88, "h": 0.55 },
+      "props": { "condition": "clear", "temp": 24, "location": "Your City", "high": 27, "low": 18, "unit": "°", "iconColor": "#FFD166", "textColor": "#FFFFFF", "subColor": "#90CAF9" } },
+    { "type": "shape", "frame": { "x": 0.06, "y": 0.68, "w": 0.88, "h": 0.005 },
+      "props": { "shape": "rect", "fill": "#20FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.06, "y": 0.72, "w": 0.5, "h": 0.12 },
+      "props": { "text": "Updated now", "fontSize": 0.6, "align": "left", "color": "#80FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.5, "y": 0.72, "w": 0.44, "h": 0.12 },
+      "props": { "text": "Open Weather →", "fontSize": 0.6, "align": "right", "color": "#FFD700" } }
+  ]
+}

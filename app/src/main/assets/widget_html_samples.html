@@ -1,0 +1,56 @@
+<!-- Copy one complete document into Firestore widgetHtml or the admin HTML field. -->
+
+<!-- AI 4x1 Bar -->
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+    body{display:flex;align-items:center;justify-content:center;gap:14px;font-family:system-ui,sans-serif}
+    .brand{background:#ffd700;color:#151515;border-radius:10px;padding:18px 42px;font-weight:800;font-size:28px}
+    .tile{width:64px;height:64px;border-radius:12px;background:#242424;color:#fff;display:grid;place-items:center;font-size:30px;font-weight:800}
+  </style>
+</head>
+<body>
+  <div class="brand">ChatGPT</div>
+  <div class="tile">✦</div>
+  <div class="tile">◎</div>
+  <div class="tile">◒</div>
+</body>
+</html>
+
+<!-- AI 2x2 Folder -->
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+    body{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:28px;box-sizing:border-box;font-family:system-ui,sans-serif}
+    span{border-radius:18px;background:#242424;color:#fff;display:grid;place-items:center;font-size:42px;font-weight:800}
+  </style>
+</head>
+<body>
+  <span>✦</span><span>◎</span><span>◒</span><span>✺</span>
+</body>
+</html>
+
+<!-- Digital Clock 2x1 -->
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+    body{color:#fff;display:grid;place-items:center;font:900 25vw system-ui,sans-serif;letter-spacing:.02em}
+  </style>
+</head>
+<body>
+  <div id="clock">12:36</div>
+  <script>
+    function tick(){const d=new Date();clock.textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+    tick(); setInterval(tick,1000);
+  </script>
+</body>
+</html>

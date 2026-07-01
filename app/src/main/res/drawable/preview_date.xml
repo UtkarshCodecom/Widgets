@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="100dp"
+    android:viewportWidth="200"
+    android:viewportHeight="100">
+
+    <path android:fillColor="#FF141414"
+        android:pathData="M12,6 L188,6 A12,12 0 0 1 200,18 L200,82 A12,12 0 0 1 188,94 L12,94 A12,12 0 0 1 0,82 L0,18 A12,12 0 0 1 12,6 Z" />
+    <!-- date badge -->
+    <path android:fillColor="#FFFFD700"
+        android:pathData="M22,22 L78,22 A10,10 0 0 1 88,32 L88,68 A10,10 0 0 1 78,78 L22,78 A10,10 0 0 1 12,68 L12,32 A10,10 0 0 1 22,22 Z" />
+    <path android:fillColor="#FF171717" android:pathData="M30,36 h40 v8 h-40 z" />
+    <path android:fillColor="#FF171717" android:pathData="M34,50 h32 v16 h-32 z" />
+    <!-- weekday line -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M108,38 h66 v9 h-66 z" />
+    <path android:fillColor="#FF6E6E6E" android:pathData="M108,56 h44 v8 h-44 z" />
+</vector>

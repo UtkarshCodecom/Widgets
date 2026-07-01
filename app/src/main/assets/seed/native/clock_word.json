@@ -1,0 +1,46 @@
+{
+  "id": "clock_word",
+  "name": "Word Clock",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#141E30",
+    "gradientEnd": "#243B55",
+    "gradientAngle": 160,
+    "cornerRadius": 0.18
+  },
+  "action": {
+    "type": "open_activity",
+    "packageName": "com.google.android.deskclock",
+    "className": "com.android.deskclock.DeskClockTabActivity"
+  },
+  "components": [
+    {
+      "type": "word_clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.12,
+        "w": 0.8,
+        "h": 0.62
+      },
+      "props": {
+        "color": "#FFFFFF",
+        "font": "light"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.78,
+        "w": 0.8,
+        "h": 0.12
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.5,
+        "align": "center",
+        "color": "#7FB0FF"
+      }
+    }
+  ]
+}

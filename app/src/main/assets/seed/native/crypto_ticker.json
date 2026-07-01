@@ -1,0 +1,108 @@
+{
+  "id": "crypto_ticker",
+  "name": "Crypto",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#0D1117",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.04,
+        "y": 0.15,
+        "w": 0.3,
+        "h": 0.3
+      },
+      "props": {
+        "text": "BTC",
+        "fontSize": 0.4,
+        "align": "left",
+        "color": "#F7931A",
+        "bold": true
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.04,
+        "y": 0.5,
+        "w": 0.3,
+        "h": 0.35
+      },
+      "props": {
+        "text": "$64,200",
+        "fontSize": 0.36,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": false
+      }
+    },
+    {
+      "type": "divider",
+      "frame": {
+        "x": 0.36,
+        "y": 0.2,
+        "w": 0.004,
+        "h": 0.6
+      },
+      "props": {
+        "color": "#30FFFFFF",
+        "thickness": 0.06
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.4,
+        "y": 0.15,
+        "w": 0.3,
+        "h": 0.3
+      },
+      "props": {
+        "text": "ETH",
+        "fontSize": 0.4,
+        "align": "left",
+        "color": "#627EEA",
+        "bold": true
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.4,
+        "y": 0.5,
+        "w": 0.3,
+        "h": 0.35
+      },
+      "props": {
+        "text": "$3,120",
+        "fontSize": 0.36,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": false
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.72,
+        "y": 0.3,
+        "w": 0.26,
+        "h": 0.4
+      },
+      "props": {
+        "text": "▲ 2.4%",
+        "fontSize": 0.34,
+        "align": "right",
+        "color": "#00E676",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "open_url",
+    "data": "https://www.coinbase.com"
+  }
+}

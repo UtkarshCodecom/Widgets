@@ -1,0 +1,27 @@
+{
+  "id": "calendar_mini",
+  "name": "Mini Month",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#14141C",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "calendar",
+      "frame": {
+        "x": 0.06,
+        "y": 0.06,
+        "w": 0.88,
+        "h": 0.88
+      },
+      "props": {
+        "accentColor": "@primary"
+      }
+    }
+  ],
+  "action": {
+    "type": "launch_app",
+    "packageName": "com.google.android.calendar"
+  }
+}

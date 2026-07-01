@@ -1,0 +1,53 @@
+{
+  "id": "photo_frame",
+  "name": "Photo Frame",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#000000",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "image",
+      "frame": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 1.0
+      },
+      "props": {
+        "source": "",
+        "cornerRadius": 0.16
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.0,
+        "y": 0.66,
+        "w": 1.0,
+        "h": 0.34
+      },
+      "props": {
+        "shape": "rect",
+        "fill": "#66000000"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.7,
+        "w": 0.88,
+        "h": 0.2
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.7,
+        "align": "left",
+        "bold": true,
+        "color": "#FFFFFF"
+      }
+    }
+  ]
+}

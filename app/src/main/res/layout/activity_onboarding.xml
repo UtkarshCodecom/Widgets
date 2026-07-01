@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="28dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="Widgets"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Beautiful home screen widgets, made yours."
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="15sp"
+            android:alpha="0.8" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="40dp">
+
+            <TextView style="@style/OnboardStep" android:text="① Browse a design from the gallery" />
+            <TextView style="@style/OnboardStep" android:text="② Tap it to customize colors, background, font and opacity — with a live preview" />
+            <TextView style="@style/OnboardStep" android:text="③ Add to Home — your launcher drops it on the home screen" />
+            <TextView style="@style/OnboardStep" android:text="④ Long-press a placed widget → Reconfigure to restyle it anytime" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ob_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Enable Now-Playing access (optional)"
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:textColor="?attr/colorOnSurface"
+            android:background="@drawable/bg_widget_tile" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Lets the music widget show the current track. You can grant this later in Settings."
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="12sp"
+            android:alpha="0.6" />
+
+        <TextView
+            android:id="@+id/ob_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Get Started"
+            android:gravity="center"
+            android:paddingVertical="16dp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnPrimary"
+            android:background="@drawable/bg_premium_pill" />
+
+    </LinearLayout>
+</ScrollView>

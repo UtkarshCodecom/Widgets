@@ -84,6 +84,14 @@ public class PreferenceManager {
         putBoolean("developer_mode", unlocked);
     }
 
+    public String getThemeId() {
+        return getString("app_theme_id", "dark_gold");
+    }
+
+    public void setThemeId(String themeId) {
+        putString("app_theme_id", themeId);
+    }
+
     public String getSavedConfigJson() {
         return getString("saved_config", null);
     }

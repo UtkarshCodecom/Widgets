@@ -1,6 +1,7 @@
 package com.desire.widget.ui.customize;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -8,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.desire.widget.data.local.entity.ThemeEntity;
 import com.desire.widget.data.repository.WidgetRepository;
+import com.desire.widget.engine.runtime.EngineRenderer;
+import com.desire.widget.engine.runtime.EngineWidgetStore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -99,6 +102,16 @@ public class CustomizeViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
-        repository.syncAll();
+        // No-op in local-first mode; data comes from LocalSeeder.
+    }
+
+    /**
+     * Re-renders every placed home-screen widget so a theme/style change is reflected immediately.
+     * Styling now flows through the native engine + ThemeEngine (theme tokens), so there is no HTML
+     * or CSS injection — just a re-render with the current theme.
+     */
+    public void applyStudioToWidgets(Context context) {
+        int[] ids = EngineWidgetStore.allPlacedIds(context);
+        if (ids.length > 0) EngineRenderer.render(context, ids, null);
     }
 }

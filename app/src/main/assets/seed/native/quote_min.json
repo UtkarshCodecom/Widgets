@@ -1,0 +1,45 @@
+{
+  "id": "quote_min",
+  "name": "Daily Quote",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#232526",
+    "gradientEnd": "#000000",
+    "gradientAngle": 160,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.08,
+        "y": 0.2,
+        "w": 0.84,
+        "h": 0.4
+      },
+      "props": {
+        "text": "“The secret of getting ahead is getting started.”",
+        "fontSize": 0.16,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.08,
+        "y": 0.7,
+        "w": 0.84,
+        "h": 0.12
+      },
+      "props": {
+        "text": "— Mark Twain",
+        "fontSize": 0.13,
+        "align": "right",
+        "color": "#FFD700",
+        "bold": false
+      }
+    }
+  ]
+}

@@ -36,6 +36,13 @@ public class WidgetEntity implements Serializable {
     @ColumnInfo(name = "config_json")
     private String configJson;
 
+    @ColumnInfo(name = "html_content")
+    private String htmlContent;
+
+    /** Native JSON-engine widget definition (WidgetSpec). Replaces html_content. */
+    @ColumnInfo(name = "spec_json")
+    private String specJson;
+
     @ColumnInfo(name = "widget_size")
     private String widgetSize;
 
@@ -91,6 +98,12 @@ public class WidgetEntity implements Serializable {
 
     public String getConfigJson() { return configJson; }
     public void setConfigJson(String configJson) { this.configJson = configJson; }
+
+    public String getHtmlContent() { return htmlContent; }
+    public void setHtmlContent(String htmlContent) { this.htmlContent = htmlContent; }
+
+    public String getSpecJson() { return specJson; }
+    public void setSpecJson(String specJson) { this.specJson = specJson; }
 
     public String getWidgetSize() { return widgetSize; }
     public void setWidgetSize(String widgetSize) { this.widgetSize = widgetSize; }

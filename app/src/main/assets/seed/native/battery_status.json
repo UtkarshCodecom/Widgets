@@ -1,0 +1,24 @@
+{
+  "id": "battery_status",
+  "name": "Battery",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#1A1A2E",
+    "gradientEnd": "#0F0F1A",
+    "gradientAngle": 160,
+    "cornerRadius": 0.18
+  },
+  "action": { "type": "open_activity", "packageName": "com.android.settings", "className": "com.android.settings.fuelgauge.PowerUsageSummary" },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.08, "y": 0.06, "w": 0.84, "h": 0.88 },
+      "props": { "shape": "rounded", "fill": "#12FFFFFF", "cornerRadius": 0.1 } },
+    { "type": "battery", "frame": { "x": 0.15, "y": 0.15, "w": 0.7, "h": 0.42 },
+      "props": { "bodyColor": "#40FFFFFF", "fillColor": "#FFD700", "lowColor": "#FF5252", "textColor": "#FFFFFF", "showPercent": true } },
+    { "type": "shape", "frame": { "x": 0.25, "y": 0.62, "w": 0.5, "h": 0.005 },
+      "props": { "shape": "rect", "fill": "#20FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.66, "w": 0.8, "h": 0.12 },
+      "props": { "text": "Battery Status", "fontSize": 0.65, "align": "center", "bold": true, "color": "#FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.8, "w": 0.8, "h": 0.1 },
+      "props": { "text": "Tap to open settings", "fontSize": 0.5, "align": "center", "color": "#50FFFFFF" } }
+  ]
+}

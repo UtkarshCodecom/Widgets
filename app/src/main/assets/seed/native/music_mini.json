@@ -1,0 +1,32 @@
+{
+  "id": "music_mini",
+  "name": "Mini Player",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#AB47BC",
+    "gradientEnd": "#2A0A33",
+    "gradientAngle": 155,
+    "cornerRadius": 0.18
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0.06,
+        "y": 0.06,
+        "w": 0.88,
+        "h": 0.88
+      },
+      "props": {
+        "title": "Song Title",
+        "artist": "Artist",
+        "playing": true,
+        "progress": 0.42
+      }
+    }
+  ],
+  "action": {
+    "type": "open_url",
+    "data": "https://music.youtube.com"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "weather_glass",
+  "name": "Weather Glass",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#4CA1AF",
+    "gradientEnd": "#2C3E50",
+    "gradientAngle": 150,
+    "cornerRadius": 0.2
+  },
+  "components": [
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.06,
+        "y": 0.06,
+        "w": 0.88,
+        "h": 0.88
+      },
+      "props": {
+        "shape": "rounded",
+        "fill": "#18FFFFFF",
+        "cornerRadius": 0.14,
+        "stroke": "#25FFFFFF",
+        "strokeWidth": 0.008
+      }
+    },
+    {
+      "type": "weather",
+      "frame": {
+        "x": 0.06,
+        "y": 0.1,
+        "w": 0.88,
+        "h": 0.6
+      },
+      "props": {
+        "condition": "clear",
+        "temp": 26,
+        "location": "City",
+        "high": 29,
+        "low": 19
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.1,
+        "y": 0.76,
+        "w": 0.8,
+        "h": 0.12
+      },
+      "props": {
+        "text": "Tap for forecast",
+        "fontSize": 0.5,
+        "align": "center",
+        "color": "#80FFFFFF",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "open_url",
+    "data": "https://weather.com"
+  }
+}

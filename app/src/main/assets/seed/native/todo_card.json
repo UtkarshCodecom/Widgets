@@ -1,0 +1,91 @@
+{
+  "id": "todo_card",
+  "name": "Today’s Tasks",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#12121A",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.08,
+        "w": 0.88,
+        "h": 0.14
+      },
+      "props": {
+        "text": "TODAY",
+        "fontSize": 0.44,
+        "align": "left",
+        "color": "#FFD700",
+        "bold": true
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.28,
+        "w": 0.88,
+        "h": 0.14
+      },
+      "props": {
+        "text": "○  Design review",
+        "fontSize": 0.4,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": false
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.46,
+        "w": 0.88,
+        "h": 0.14
+      },
+      "props": {
+        "text": "○  Ship widget update",
+        "fontSize": 0.4,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": false
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.64,
+        "w": 0.88,
+        "h": 0.14
+      },
+      "props": {
+        "text": "●  Standup 10am",
+        "fontSize": 0.4,
+        "align": "left",
+        "color": "#80FFFFFF",
+        "bold": false
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.82,
+        "w": 0.88,
+        "h": 0.12
+      },
+      "props": {
+        "text": "3 tasks left",
+        "fontSize": 0.34,
+        "align": "left",
+        "color": "#FFD700",
+        "bold": false
+      }
+    }
+  ]
+}

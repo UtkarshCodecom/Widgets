@@ -1,0 +1,65 @@
+{
+  "id": "date_big",
+  "name": "Big Date",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#232526",
+    "gradientEnd": "#414345",
+    "gradientAngle": 160,
+    "cornerRadius": 0.18
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.1,
+        "w": 0.84,
+        "h": 0.16
+      },
+      "props": {
+        "format": "EEEE",
+        "fontSize": 0.7,
+        "align": "center",
+        "color": "#FFD700",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.24,
+        "w": 0.84,
+        "h": 0.5
+      },
+      "props": {
+        "format": "d",
+        "fontSize": 1.1,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.76,
+        "w": 0.84,
+        "h": 0.14
+      },
+      "props": {
+        "format": "MMMM yyyy",
+        "fontSize": 0.55,
+        "align": "center",
+        "color": "#B0B0B0",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "launch_app",
+    "packageName": "com.google.android.calendar"
+  }
+}

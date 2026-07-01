@@ -1,11 +1,13 @@
 package com.desire.widget.ui.adapters;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,16 +20,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.desire.widget.R;
 import com.desire.widget.data.local.entity.WidgetEntity;
+import com.desire.widget.engine.RenderContext;
+import com.desire.widget.engine.WidgetEngine;
+import com.desire.widget.engine.data.CachedLiveDataSource;
+import com.desire.widget.engine.model.WidgetSpec;
+import com.desire.widget.engine.runtime.ThemeEngine;
+import com.desire.widget.util.AppExecutors;
+import com.desire.widget.widget.WidgetSchema;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetViewHolder> {
+    private static final WidgetEngine ENGINE = new WidgetEngine();
+    private static final Gson GSON = new Gson();
+
     private final int gridSpanCount;
     private List<WidgetEntity> widgets = new ArrayList<>();
     private OnWidgetClickListener listener;
     private OnFavoriteClickListener favoriteListener;
+    private OnWidgetLongClickListener longClickListener;
 
     public WidgetAdapter() {
         this(2);
@@ -45,12 +59,20 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
         void onFavoriteClick(WidgetEntity widget, boolean isFavorite);
     }
 
+    public interface OnWidgetLongClickListener {
+        void onWidgetLongClick(WidgetEntity widget);
+    }
+
     public void setOnWidgetClickListener(OnWidgetClickListener listener) {
         this.listener = listener;
     }
 
     public void setOnFavoriteClickListener(OnFavoriteClickListener listener) {
         this.favoriteListener = listener;
+    }
+
+    public void setOnWidgetLongClickListener(OnWidgetLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public void setWidgets(List<WidgetEntity> widgets) {
@@ -64,7 +86,7 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
 
     public int getSpanSize(int position) {
         if (position < 0 || position >= widgets.size()) return 1;
-        return isWide(widgets.get(position).getWidgetSize()) ? gridSpanCount : 1;
+        return WidgetSchema.isWide(widgets.get(position).getWidgetSize()) ? gridSpanCount : 1;
     }
 
     @NonNull
@@ -84,18 +106,6 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
     @Override
     public int getItemCount() {
         return widgets.size();
-    }
-
-    private boolean isWide(String size) {
-        String normalized = normalizeSize(size);
-        return normalized.equals("4x1") || normalized.equals("1x4")
-                || normalized.equals("4x2") || normalized.equals("2x1")
-                || normalized.equals("1x2");
-    }
-
-    private String normalizeSize(String size) {
-        if (size == null || size.trim().isEmpty()) return "2x2";
-        return size.trim().toLowerCase(Locale.US).replace(" ", "");
     }
 
     class WidgetViewHolder extends RecyclerView.ViewHolder {
@@ -123,10 +133,9 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
         }
 
         void bind(WidgetEntity widget) {
-            String size = normalizeSize(widget.getWidgetSize());
+            String size = WidgetSchema.normalizeSize(widget.getWidgetSize());
             String style = normalizeStyle(widget);
-            boolean wide = isWide(size);
-            applyCardHeight(size, wide);
+            applyCardHeight(size);
 
             name.setText(widget.getName());
             meta.setText(size.toUpperCase(Locale.US) + "  " + (widget.isPro() ? "PRO" : "FREE"));
@@ -138,8 +147,16 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
                     ? R.drawable.ic_heart_filled
                     : R.drawable.ic_heart_outline);
 
+            String specJson = widget.getSpecJson();
             String imageUrl = widget.getThumbnailUrl();
-            if (imageUrl != null && !imageUrl.isEmpty()) {
+            if (specJson != null && !specJson.trim().isEmpty()) {
+                // Render the native spec into a bitmap using the SAME engine that draws the
+                // installed widget, so the gallery preview is pixel-identical.
+                generatedPreview.setVisibility(View.GONE);
+                thumbnail.setVisibility(View.VISIBLE);
+                thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
+                renderSpecPreview(specJson, size);
+            } else if (imageUrl != null && !imageUrl.isEmpty()) {
                 generatedPreview.setVisibility(View.GONE);
                 thumbnail.setVisibility(View.VISIBLE);
                 Glide.with(itemView.getContext())
@@ -158,6 +175,14 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
                 if (listener != null) listener.onWidgetClick(widget);
             });
 
+            itemView.setOnLongClickListener(v -> {
+                if (longClickListener != null) {
+                    longClickListener.onWidgetLongClick(widget);
+                    return true;
+                }
+                return false;
+            });
+
             favoriteIcon.setOnClickListener(v -> {
                 boolean newState = !widget.isFavorite();
                 widget.setFavorite(newState);
@@ -171,16 +196,61 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
             });
         }
 
-        private void applyCardHeight(String size, boolean wide) {
-            ViewGroup.LayoutParams params = previewArea.getLayoutParams();
-            if (wide) {
-                params.height = dp(size.equals("4x2") ? 210 : 142);
-            } else if (size.equals("1x1")) {
-                params.height = dp(122);
+        private void renderSpecPreview(String specJson, String size) {
+            // Tag guards against RecyclerView view recycling: only apply the bitmap if this holder
+            // is still bound to the same spec when the async render finishes.
+            final String tag = Integer.toHexString(specJson.hashCode()) + "_" + size;
+            thumbnail.setTag(tag);
+            thumbnail.setImageBitmap(null);
+
+            int[] ratio = WidgetSchema.previewRatio(size);
+            final int w = 640;
+            final int h = Math.max(1, w * ratio[1] / ratio[0]);
+            final android.content.Context appCtx = itemView.getContext().getApplicationContext();
+
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                Bitmap bmp;
+                try {
+                    WidgetSpec spec = GSON.fromJson(specJson, WidgetSpec.class);
+                    RenderContext rc = new RenderContext(appCtx, w, h, ThemeEngine.current(appCtx),
+                            System.currentTimeMillis(), new CachedLiveDataSource(appCtx));
+                    bmp = ENGINE.render(spec, rc);
+                } catch (Exception e) {
+                    bmp = null;
+                }
+                final Bitmap result = bmp;
+                AppExecutors.getInstance().mainThread().execute(() -> {
+                    if (result != null && tag.equals(thumbnail.getTag())) {
+                        thumbnail.setImageBitmap(result);
+                    }
+                });
+            });
+        }
+
+        private void applyCardHeight(String size) {
+            int[] ratio = WidgetSchema.previewRatio(size);
+            // Use the view's current width if already laid out; fall back to dp estimate.
+            if (previewArea.getWidth() > 0) {
+                ViewGroup.LayoutParams params = previewArea.getLayoutParams();
+                params.height = previewArea.getWidth() * ratio[1] / ratio[0];
+                previewArea.setLayoutParams(params);
             } else {
-                params.height = dp(168);
+                // Set dp-based estimate now; correct via global layout listener after measure.
+                ViewGroup.LayoutParams params = previewArea.getLayoutParams();
+                params.height = dp(WidgetSchema.previewHeightDp(size));
+                previewArea.setLayoutParams(params);
+                previewArea.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override public void onGlobalLayout() {
+                        previewArea.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        if (previewArea.getWidth() > 0) {
+                            ViewGroup.LayoutParams p = previewArea.getLayoutParams();
+                            p.height = previewArea.getWidth() * ratio[1] / ratio[0];
+                            previewArea.setLayoutParams(p);
+                        }
+                    }
+                });
             }
-            previewArea.setLayoutParams(params);
         }
 
         private void renderGeneratedPreview(WidgetEntity widget, String size, String style) {
@@ -305,7 +375,7 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
         private String normalizeStyle(WidgetEntity widget) {
             String style = widget.getPreviewStyle();
             if (style != null && !style.trim().isEmpty()) {
-                return style.trim().toLowerCase(Locale.US);
+                return WidgetSchema.normalizeStyle(style);
             }
             String category = widget.getCategoryName() != null ? widget.getCategoryName().toLowerCase(Locale.US) : "";
             String nameValue = widget.getName() != null ? widget.getName().toLowerCase(Locale.US) : "";

@@ -32,4 +32,7 @@ public interface ThemeDao {
 
     @Query("DELETE FROM themes")
     void deleteAll();
+
+    @Query("SELECT COUNT(*) FROM themes")
+    int getCountSync();
 }

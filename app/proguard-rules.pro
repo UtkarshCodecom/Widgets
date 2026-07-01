@@ -22,3 +22,17 @@
 # Gson
 -keep class com.google.gson.** { *; }
 -keepattributes EnclosingMethod
+
+# Native engine spec models are (de)serialized by Gson via reflection — keep their fields.
+-keep class com.desire.widget.engine.model.** { *; }
+-keep class com.desire.widget.engine.data.** { *; }
+
+# ZXing (QR generation)
+-dontwarn com.google.zxing.**
+-keep class com.google.zxing.** { *; }
+
+# Play Billing
+-keep class com.android.billingclient.** { *; }
+
+# Play services location
+-dontwarn com.google.android.gms.**

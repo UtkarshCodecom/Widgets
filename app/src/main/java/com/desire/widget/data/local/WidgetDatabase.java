@@ -16,7 +16,7 @@ import com.desire.widget.data.local.entity.WidgetEntity;
         WidgetEntity.class,
         CategoryEntity.class,
         ThemeEntity.class
-}, version = 2, exportSchema = false)
+}, version = 7, exportSchema = false)
 public abstract class WidgetDatabase extends RoomDatabase {
     private static volatile WidgetDatabase INSTANCE;
 

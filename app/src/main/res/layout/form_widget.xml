@@ -205,28 +205,22 @@
             android:orientation="vertical"
             android:padding="14dp">
 
-            <EditText
+            <Spinner
                 android:id="@+id/input_widget_size"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_neumorphic_input"
-                android:hint="Widget Size: 1x1, 2x2, 1x2, 1x4, 4x1, 4x2"
                 android:paddingHorizontal="14dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_tertiary"
-                android:textSize="14sp" />
+                android:popupBackground="@color/dark_surface" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/input_preview_style"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_neumorphic_input"
-                android:hint="Preview Style: ai_bar, folder, icon, clock_digital, clock_analog"
                 android:paddingHorizontal="14dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_tertiary"
-                android:textSize="14sp" />
+                android:popupBackground="@color/dark_surface" />
 
         </LinearLayout>
 
@@ -319,6 +313,48 @@
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_tertiary"
                 android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/input_widget_html"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_neumorphic_input"
+                android:gravity="top"
+                android:hint="Complete HTML document with doctype, html, head, and body"
+                android:inputType="textMultiLine"
+                android:padding="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_tertiary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_preview_html"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_admin_panel"
+                android:gravity="center"
+                android:text="Preview HTML"
+                android:textColor="@color/yellow_accent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_html_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/error"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <WebView
+                android:id="@+id/admin_html_preview"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"

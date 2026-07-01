@@ -1,0 +1,42 @@
+{
+  "id": "clock_world",
+  "name": "World Clock",
+  "designSize": "4x1",
+  "background": {
+    "gradientStart": "#0F2027",
+    "gradientEnd": "#1A1A2E",
+    "gradientAngle": 180,
+    "cornerRadius": 0.14
+  },
+  "action": { "type": "open_activity", "packageName": "com.google.android.deskclock", "className": "com.android.deskclock.DeskClockTabActivity" },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.02, "y": 0.08, "w": 0.3, "h": 0.84 },
+      "props": { "shape": "rounded", "fill": "#12FFFFFF", "cornerRadius": 0.1 } },
+    { "type": "text", "frame": { "x": 0.04, "y": 0.1, "w": 0.26, "h": 0.16 },
+      "props": { "text": "LOCAL", "fontSize": 0.45, "align": "center", "bold": true, "color": "#FFD700" } },
+    { "type": "clock", "frame": { "x": 0.04, "y": 0.28, "w": 0.26, "h": 0.38 },
+      "props": { "format": "HH:mm", "fontSize": 0.85, "align": "center", "bold": true, "color": "#FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.04, "y": 0.68, "w": 0.26, "h": 0.16 },
+      "props": { "text": "EEE, MMM d", "fontSize": 0.55, "align": "center", "color": "#80FFFFFF" } },
+    { "type": "divider", "frame": { "x": 0.33, "y": 0.15, "w": 0.005, "h": 0.7 },
+      "props": { "color": "#20FFFFFF", "thickness": 0.5 } },
+    { "type": "shape", "frame": { "x": 0.35, "y": 0.08, "w": 0.3, "h": 0.84 },
+      "props": { "shape": "rounded", "fill": "#12FFFFFF", "cornerRadius": 0.1 } },
+    { "type": "text", "frame": { "x": 0.37, "y": 0.1, "w": 0.26, "h": 0.16 },
+      "props": { "text": "NEW YORK", "fontSize": 0.42, "align": "center", "bold": true, "color": "#90CAF9" } },
+    { "type": "clock", "frame": { "x": 0.37, "y": 0.28, "w": 0.26, "h": 0.38 },
+      "props": { "format": "HH:mm", "fontSize": 0.85, "align": "center", "bold": true, "color": "#FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.37, "y": 0.68, "w": 0.26, "h": 0.16 },
+      "props": { "text": "EEE, MMM d", "fontSize": 0.55, "align": "center", "color": "#80FFFFFF" } },
+    { "type": "divider", "frame": { "x": 0.66, "y": 0.15, "w": 0.005, "h": 0.7 },
+      "props": { "color": "#20FFFFFF", "thickness": 0.5 } },
+    { "type": "shape", "frame": { "x": 0.68, "y": 0.08, "w": 0.3, "h": 0.84 },
+      "props": { "shape": "rounded", "fill": "#12FFFFFF", "cornerRadius": 0.1 } },
+    { "type": "text", "frame": { "x": 0.7, "y": 0.1, "w": 0.26, "h": 0.16 },
+      "props": { "text": "TOKYO", "fontSize": 0.42, "align": "center", "bold": true, "color": "#FF6B9D" } },
+    { "type": "clock", "frame": { "x": 0.7, "y": 0.28, "w": 0.26, "h": 0.38 },
+      "props": { "format": "HH:mm", "fontSize": 0.85, "align": "center", "bold": true, "color": "#FFFFFF" } },
+    { "type": "text", "frame": { "x": 0.7, "y": 0.68, "w": 0.26, "h": 0.16 },
+      "props": { "text": "EEE, MMM d", "fontSize": 0.55, "align": "center", "color": "#80FFFFFF" } }
+  ]
+}
