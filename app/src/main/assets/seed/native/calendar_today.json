@@ -1,0 +1,65 @@
+{
+  "id": "calendar_today",
+  "name": "Today Card",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#FF6B9D",
+    "gradientEnd": "#7A1F3D",
+    "gradientAngle": 160,
+    "cornerRadius": 0.18
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.12,
+        "w": 0.84,
+        "h": 0.14
+      },
+      "props": {
+        "format": "EEEE",
+        "fontSize": 0.62,
+        "align": "center",
+        "color": "#FFE0EC",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.26,
+        "w": 0.84,
+        "h": 0.44
+      },
+      "props": {
+        "format": "d",
+        "fontSize": 1.0,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.72,
+        "w": 0.84,
+        "h": 0.14
+      },
+      "props": {
+        "format": "MMMM",
+        "fontSize": 0.55,
+        "align": "center",
+        "color": "#FFD0E0",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "launch_app",
+    "packageName": "com.google.android.calendar"
+  }
+}

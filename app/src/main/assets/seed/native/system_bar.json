@@ -1,0 +1,42 @@
+{
+  "id": "system_bar",
+  "name": "Clock + Battery",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#0A0A0A",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.05,
+        "y": 0.2,
+        "w": 0.5,
+        "h": 0.6
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.66,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.55,
+        "y": 0.24,
+        "w": 0.42,
+        "h": 0.52
+      },
+      "props": {}
+    }
+  ],
+  "action": {
+    "type": "open_activity",
+    "packageName": "com.google.android.deskclock",
+    "className": "com.android.deskclock.DeskClockTabActivity"
+  }
+}

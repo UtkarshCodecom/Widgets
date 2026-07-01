@@ -19,6 +19,7 @@ public final class EngineWidgetStore {
     private static final String P_NAME = "pending_name";
     private static final String P_SPEC = "pending_spec";
     private static final String P_SIZE = "pending_size";
+    private static final String P_STYLE = "pending_style";
 
     private EngineWidgetStore() {}
 
@@ -31,11 +32,17 @@ public final class EngineWidgetStore {
     }
 
     public static void savePending(Context c, String widgetId, String name, String specJson, String size) {
+        savePending(c, widgetId, name, specJson, size, null);
+    }
+
+    public static void savePending(Context c, String widgetId, String name, String specJson,
+                                   String size, String styleJson) {
         prefs(c).edit()
                 .putString(P_ID, widgetId)
                 .putString(P_NAME, name != null ? name : "Widget")
                 .putString(P_SPEC, specJson != null ? specJson : "")
                 .putString(P_SIZE, WidgetSchema.normalizeSize(size))
+                .putString(P_STYLE, styleJson != null ? styleJson : "")
                 .apply();
     }
 
@@ -45,17 +52,28 @@ public final class EngineWidgetStore {
                 p.getString(P_ID, ""),
                 p.getString(P_NAME, "Widget"),
                 p.getString(P_SPEC, ""),
-                p.getString(P_SIZE, WidgetSchema.SIZE_2X2));
+                p.getString(P_SIZE, WidgetSchema.SIZE_2X2),
+                p.getString(P_STYLE, ""));
     }
 
     public static void saveWidget(Context c, int appWidgetId, String widgetId, String name,
                                   String specJson, String size) {
+        saveWidget(c, appWidgetId, widgetId, name, specJson, size, null);
+    }
+
+    public static void saveWidget(Context c, int appWidgetId, String widgetId, String name,
+                                  String specJson, String size, String styleJson) {
         prefs(c).edit()
                 .putString(key(appWidgetId, "id"), widgetId)
                 .putString(key(appWidgetId, "name"), name)
                 .putString(key(appWidgetId, "spec"), specJson != null ? specJson : "")
                 .putString(key(appWidgetId, "size"), WidgetSchema.normalizeSize(size))
+                .putString(key(appWidgetId, "style"), styleJson != null ? styleJson : "")
                 .apply();
+    }
+
+    public static String getStyleJson(Context c, int appWidgetId) {
+        return prefs(c).getString(key(appWidgetId, "style"), "");
     }
 
     public static String getSpecJson(Context c, int appWidgetId) {
@@ -76,6 +94,7 @@ public final class EngineWidgetStore {
                 .remove(key(appWidgetId, "name"))
                 .remove(key(appWidgetId, "spec"))
                 .remove(key(appWidgetId, "size"))
+                .remove(key(appWidgetId, "style"))
                 .apply();
     }
 

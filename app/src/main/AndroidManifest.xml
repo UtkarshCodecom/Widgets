@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -69,6 +70,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Widgets" />
+
+        <activity
+            android:name=".ui.customize.CustomizeWidgetActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Widgets" />
 
         <activity
             android:name=".ui.studio.StudioActivity"
@@ -140,6 +151,17 @@
         <receiver
             android:name=".engine.action.EngineActionReceiver"
             android:exported="false" />
+
+        <!-- Reads active media session for the now-playing widget. User must grant access. -->
+        <service
+            android:name=".service.MediaNotificationListener"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".widget.ClockTickReceiver"

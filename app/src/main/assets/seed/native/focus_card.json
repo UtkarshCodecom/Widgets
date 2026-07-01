@@ -1,0 +1,61 @@
+{
+  "id": "focus_card",
+  "name": "Focus",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#FF512F",
+    "gradientEnd": "#DD2476",
+    "gradientAngle": 150,
+    "cornerRadius": 0.18
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.08,
+        "y": 0.12,
+        "w": 0.84,
+        "h": 0.16
+      },
+      "props": {
+        "text": "FOCUS",
+        "fontSize": 0.5,
+        "align": "center",
+        "color": "#FFD9CF",
+        "bold": true
+      }
+    },
+    {
+      "type": "progress_ring",
+      "frame": {
+        "x": 0.24,
+        "y": 0.26,
+        "w": 0.52,
+        "h": 0.52
+      },
+      "props": {
+        "progress": 0.75,
+        "progressColor": "#FFFFFF",
+        "thickness": 0.12,
+        "textSize": 0.22,
+        "centerText": "25:00"
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.08,
+        "y": 0.82,
+        "w": 0.84,
+        "h": 0.12
+      },
+      "props": {
+        "text": "Pomodoro",
+        "fontSize": 0.5,
+        "align": "center",
+        "color": "#FFD9CF",
+        "bold": false
+      }
+    }
+  ]
+}

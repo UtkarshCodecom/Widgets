@@ -1,24 +1,387 @@
 {
   "categories": [
-    { "id": "clock", "name": "Clock", "icon": "clock", "color": "#FFD700", "order": 1 },
-    { "id": "weather", "name": "Weather", "icon": "weather", "color": "#00D4FF", "order": 2 },
-    { "id": "calendar", "name": "Calendar", "icon": "calendar", "color": "#FF6B9D", "order": 3 },
-    { "id": "health", "name": "Health", "icon": "health", "color": "#00E676", "order": 4 },
-    { "id": "media", "name": "Media", "icon": "media", "color": "#AB47BC", "order": 5 },
-    { "id": "utility", "name": "Utility", "icon": "utility", "color": "#FF8C00", "order": 6 }
+    {
+      "id": "clock",
+      "name": "Clock",
+      "icon": "clock",
+      "color": "#FFD700",
+      "order": 1
+    },
+    {
+      "id": "weather",
+      "name": "Weather",
+      "icon": "weather",
+      "color": "#00D4FF",
+      "order": 2
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "icon": "calendar",
+      "color": "#FF6B9D",
+      "order": 3
+    },
+    {
+      "id": "health",
+      "name": "Health",
+      "icon": "health",
+      "color": "#00E676",
+      "order": 4
+    },
+    {
+      "id": "media",
+      "name": "Media",
+      "icon": "media",
+      "color": "#AB47BC",
+      "order": 5
+    },
+    {
+      "id": "utility",
+      "name": "Utility",
+      "icon": "utility",
+      "color": "#FF8C00",
+      "order": 6
+    },
+    {
+      "id": "finance",
+      "name": "Finance",
+      "icon": "finance",
+      "color": "#F7931A",
+      "order": 7
+    },
+    {
+      "id": "productivity",
+      "name": "Productivity",
+      "icon": "productivity",
+      "color": "#FF512F",
+      "order": 8
+    },
+    {
+      "id": "photo",
+      "name": "Photo",
+      "icon": "photo",
+      "color": "#FF8C00",
+      "order": 9
+    }
   ],
   "widgets": [
-    { "id": "clock_minimal", "name": "Minimal Clock", "description": "Elegant digital time with glassmorphic design", "categoryId": "clock", "categoryName": "Clock", "widgetSize": "2x2", "isFeatured": true, "specAsset": "clock_minimal.json" },
-    { "id": "clock_analog", "name": "Analog Clock", "description": "Classic analog face with golden accents", "categoryId": "clock", "categoryName": "Clock", "widgetSize": "2x2", "specAsset": "clock_analog.json" },
-    { "id": "clock_world", "name": "World Clock", "description": "Three time zones at a glance", "categoryId": "clock", "categoryName": "Clock", "widgetSize": "4x1", "specAsset": "clock_world.json" },
-    { "id": "weather_now", "name": "Weather Now", "description": "Current conditions with quick access", "categoryId": "weather", "categoryName": "Weather", "widgetSize": "2x2", "isFeatured": true, "specAsset": "weather_now.json" },
-    { "id": "weather_wide", "name": "Weather Wide", "description": "Detailed forecast with humidity and wind", "categoryId": "weather", "categoryName": "Weather", "widgetSize": "4x2", "specAsset": "weather_wide.json" },
-    { "id": "calendar_month", "name": "Month Calendar", "description": "Full month view with today highlighted", "categoryId": "calendar", "categoryName": "Calendar", "widgetSize": "4x2", "isTrending": true, "specAsset": "calendar_month.json" },
-    { "id": "battery_status", "name": "Battery", "description": "Live battery level with settings access", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "battery_status.json" },
-    { "id": "fitness_ring", "name": "Activity Ring", "description": "Daily step goal progress tracker", "categoryId": "health", "categoryName": "Health", "widgetSize": "2x2", "isPro": true, "specAsset": "fitness_ring.json" },
-    { "id": "countdown_event", "name": "Countdown", "description": "Time remaining until your event", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "countdown_event.json" },
-    { "id": "music_card", "name": "Now Playing", "description": "Current track with playback controls", "categoryId": "media", "categoryName": "Media", "widgetSize": "4x2", "isTrending": true, "specAsset": "music_card.json" },
-    { "id": "qr_link", "name": "QR Link", "description": "Scannable QR code shortcut", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "qr_link.json" },
-    { "id": "quote_card", "name": "Daily Quote", "description": "Inspirational quote of the day", "categoryId": "utility", "categoryName": "Utility", "widgetSize": "2x2", "specAsset": "quote_card.json" }
+    {
+      "id": "clock_minimal",
+      "name": "Minimal Clock",
+      "description": "Elegant digital time with glassmorphic design",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "isFeatured": true,
+      "specAsset": "clock_minimal.json"
+    },
+    {
+      "id": "clock_analog",
+      "name": "Analog Clock",
+      "description": "Classic analog face with golden accents",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_analog.json"
+    },
+    {
+      "id": "clock_world",
+      "name": "World Clock",
+      "description": "Three time zones at a glance",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "4x1",
+      "specAsset": "clock_world.json"
+    },
+    {
+      "id": "weather_now",
+      "name": "Weather Now",
+      "description": "Current conditions with quick access",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "2x2",
+      "isFeatured": true,
+      "specAsset": "weather_now.json"
+    },
+    {
+      "id": "weather_wide",
+      "name": "Weather Wide",
+      "description": "Detailed forecast with humidity and wind",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "4x2",
+      "specAsset": "weather_wide.json"
+    },
+    {
+      "id": "calendar_month",
+      "name": "Month Calendar",
+      "description": "Full month view with today highlighted",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "4x2",
+      "isTrending": true,
+      "specAsset": "calendar_month.json"
+    },
+    {
+      "id": "battery_status",
+      "name": "Battery",
+      "description": "Live battery level with settings access",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "2x2",
+      "specAsset": "battery_status.json"
+    },
+    {
+      "id": "fitness_ring",
+      "name": "Activity Ring",
+      "description": "Daily step goal progress tracker",
+      "categoryId": "health",
+      "categoryName": "Health",
+      "widgetSize": "2x2",
+      "isPro": true,
+      "specAsset": "fitness_ring.json"
+    },
+    {
+      "id": "countdown_event",
+      "name": "Countdown",
+      "description": "Time remaining until your event",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "2x2",
+      "specAsset": "countdown_event.json"
+    },
+    {
+      "id": "music_card",
+      "name": "Now Playing",
+      "description": "Current track with playback controls",
+      "categoryId": "media",
+      "categoryName": "Media",
+      "widgetSize": "4x2",
+      "isTrending": true,
+      "specAsset": "music_card.json"
+    },
+    {
+      "id": "qr_link",
+      "name": "QR Link",
+      "description": "Scannable QR code shortcut",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "2x2",
+      "specAsset": "qr_link.json"
+    },
+    {
+      "id": "quote_card",
+      "name": "Daily Quote",
+      "description": "Inspirational quote of the day",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "2x2",
+      "specAsset": "quote_card.json"
+    },
+    {
+      "id": "clock_gradient",
+      "name": "Gradient Clock",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_gradient.json",
+      "description": "Vibrant gradient time and day",
+      "isFeatured": true
+    },
+    {
+      "id": "clock_stack",
+      "name": "Stacked Time",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_stack.json",
+      "description": "Bold stacked hours and minutes"
+    },
+    {
+      "id": "date_big",
+      "name": "Big Date",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "date_big.json",
+      "description": "Large day number with month",
+      "isTrending": true
+    },
+    {
+      "id": "clock_mono",
+      "name": "Mono Clock",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x1",
+      "specAsset": "clock_mono.json",
+      "description": "Wide minimal mono time bar"
+    },
+    {
+      "id": "weather_compact",
+      "name": "Weather Bar",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "4x1",
+      "specAsset": "weather_compact.json",
+      "description": "Compact current conditions bar"
+    },
+    {
+      "id": "weather_glass",
+      "name": "Weather Glass",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "2x2",
+      "specAsset": "weather_glass.json",
+      "description": "Glassy weather card",
+      "isFeatured": true
+    },
+    {
+      "id": "calendar_today",
+      "name": "Today Card",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "2x2",
+      "specAsset": "calendar_today.json",
+      "description": "Todays date highlight card"
+    },
+    {
+      "id": "calendar_mini",
+      "name": "Mini Month",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "2x2",
+      "specAsset": "calendar_mini.json",
+      "description": "Compact month grid"
+    },
+    {
+      "id": "steps_goal",
+      "name": "Step Goal",
+      "categoryId": "health",
+      "categoryName": "Health",
+      "widgetSize": "2x2",
+      "specAsset": "steps_goal.json",
+      "description": "Daily step goal ring",
+      "isPro": true
+    },
+    {
+      "id": "water_track",
+      "name": "Hydration",
+      "categoryId": "health",
+      "categoryName": "Health",
+      "widgetSize": "2x2",
+      "specAsset": "water_track.json",
+      "description": "Water intake tracker"
+    },
+    {
+      "id": "music_mini",
+      "name": "Mini Player",
+      "categoryId": "media",
+      "categoryName": "Media",
+      "widgetSize": "2x2",
+      "specAsset": "music_mini.json",
+      "description": "Compact now playing"
+    },
+    {
+      "id": "countdown_big",
+      "name": "Big Countdown",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "4x2",
+      "specAsset": "countdown_big.json",
+      "description": "Large event countdown"
+    },
+    {
+      "id": "qr_wifi",
+      "name": "WiFi QR",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "2x2",
+      "specAsset": "qr_wifi.json",
+      "description": "Share WiFi via QR"
+    },
+    {
+      "id": "quote_min",
+      "name": "Daily Quote",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "4x2",
+      "specAsset": "quote_min.json",
+      "description": "Inspirational quote of the day"
+    },
+    {
+      "id": "system_bar",
+      "name": "Clock + Battery",
+      "categoryId": "utility",
+      "categoryName": "Utility",
+      "widgetSize": "4x1",
+      "specAsset": "system_bar.json",
+      "description": "Time and battery at a glance"
+    },
+    {
+      "id": "crypto_ticker",
+      "name": "Crypto",
+      "categoryId": "finance",
+      "categoryName": "Finance",
+      "widgetSize": "4x1",
+      "specAsset": "crypto_ticker.json",
+      "description": "Crypto price ticker"
+    },
+    {
+      "id": "focus_card",
+      "name": "Focus",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "focus_card.json",
+      "description": "Pomodoro focus timer"
+    },
+    {
+      "id": "todo_card",
+      "name": "Today’s Tasks",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "4x2",
+      "specAsset": "todo_card.json",
+      "description": "Simple task list"
+    },
+    {
+      "id": "clock_flip",
+      "name": "Flip Clock",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_flip.json",
+      "isFeatured": true,
+      "description": "Retro flip-card clock"
+    },
+    {
+      "id": "clock_word",
+      "name": "Word Clock",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_word.json",
+      "description": "Time spelled out in words"
+    },
+    {
+      "id": "music_viz",
+      "name": "Music Bars",
+      "categoryId": "media",
+      "categoryName": "Media",
+      "widgetSize": "4x2",
+      "specAsset": "music_viz.json",
+      "isTrending": true,
+      "description": "Now playing with equalizer bars"
+    },
+    {
+      "id": "photo_frame",
+      "name": "Photo Frame",
+      "categoryId": "photo",
+      "categoryName": "Photo",
+      "widgetSize": "2x2",
+      "specAsset": "photo_frame.json",
+      "isFeatured": true,
+      "description": "Your photo with a clock overlay"
+    }
   ]
 }

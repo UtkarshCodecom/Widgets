@@ -44,8 +44,30 @@ public class WidgetApp extends Application {
         initRemoteConfig();
         initNotificationChannel();
         scheduleSyncWork();
+        scheduleWeatherWork();
+        com.desire.widget.billing.BillingManager.getInstance(this); // connect + restore Pro
         ClockTickReceiver.ensureScheduled(this);
         registerScreenReceiver();
+    }
+
+    private void scheduleWeatherWork() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                .build();
+
+        // Refresh shortly after launch, then every few hours.
+        WorkManager.getInstance(this).enqueue(
+                new androidx.work.OneTimeWorkRequest.Builder(com.desire.widget.worker.WeatherWorker.class)
+                        .setConstraints(constraints)
+                        .build());
+
+        PeriodicWorkRequest weatherRequest = new PeriodicWorkRequest.Builder(
+                com.desire.widget.worker.WeatherWorker.class, 3, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "weather_refresh", ExistingPeriodicWorkPolicy.KEEP, weatherRequest);
     }
 
     private void registerScreenReceiver() {

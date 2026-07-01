@@ -1,0 +1,43 @@
+{
+  "id": "countdown_big",
+  "name": "Big Countdown",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#8E2DE2",
+    "gradientEnd": "#4A00E0",
+    "gradientAngle": 150,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.14,
+        "w": 0.88,
+        "h": 0.16
+      },
+      "props": {
+        "text": "NEW YEAR",
+        "fontSize": 0.5,
+        "align": "center",
+        "color": "#E0C0FF",
+        "bold": true
+      }
+    },
+    {
+      "type": "countdown",
+      "frame": {
+        "x": 0.06,
+        "y": 0.3,
+        "w": 0.88,
+        "h": 0.5
+      },
+      "props": {
+        "label": "",
+        "targetDate": "2027-01-01 00:00",
+        "showProgress": true
+      }
+    }
+  ]
+}

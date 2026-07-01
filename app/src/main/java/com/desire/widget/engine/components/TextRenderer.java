@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import com.desire.widget.engine.ComponentRenderer;
 import com.desire.widget.engine.RenderContext;
 import com.desire.widget.engine.model.ComponentSpec;
+import com.desire.widget.engine.util.FontResolver;
 import com.desire.widget.engine.util.SpecColors;
 import com.desire.widget.engine.util.SpecProps;
 
@@ -42,7 +43,8 @@ public class TextRenderer implements ComponentRenderer {
         TextPaint tp = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         tp.setColor(color);
         tp.setTextSize(Math.max(1f, px));
-        tp.setTypeface(bold ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+        String font = SpecProps.str(p, "font", ctx.theme.fontFamily);
+        tp.setTypeface(FontResolver.resolve(font, bold));
 
         Layout.Alignment la = "center".equals(align) ? Layout.Alignment.ALIGN_CENTER
                 : "right".equals(align) ? Layout.Alignment.ALIGN_OPPOSITE

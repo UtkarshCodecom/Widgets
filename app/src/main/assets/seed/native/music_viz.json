@@ -1,0 +1,45 @@
+{
+  "id": "music_viz",
+  "name": "Music Bars",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#0F0C29",
+    "gradientEnd": "#302B63",
+    "gradientAngle": 150,
+    "cornerRadius": 0.14
+  },
+  "action": {
+    "type": "open_url",
+    "data": "https://music.youtube.com"
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0.04,
+        "y": 0.08,
+        "w": 0.62,
+        "h": 0.84
+      },
+      "props": {
+        "title": "Now Playing",
+        "artist": "Your Music",
+        "playing": true,
+        "progress": 0.5
+      }
+    },
+    {
+      "type": "music_visualizer",
+      "frame": {
+        "x": 0.68,
+        "y": 0.3,
+        "w": 0.28,
+        "h": 0.5
+      },
+      "props": {
+        "bars": 6,
+        "barColor": "@primary"
+      }
+    }
+  ]
+}

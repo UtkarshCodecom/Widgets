@@ -59,6 +59,14 @@ public final class WidgetInstaller {
      */
     public static void installSpecToHome(View anchor, String widgetId, String name,
                                          String specJson, String sizeRaw) {
+        installSpecToHome(anchor, widgetId, name, specJson, sizeRaw, null);
+    }
+
+    /**
+     * Pins a widget with a per-widget visual style (from the Customize screen).
+     */
+    public static void installSpecToHome(View anchor, String widgetId, String name,
+                                         String specJson, String sizeRaw, String styleJson) {
         Context context = anchor.getContext();
         if (specJson == null || specJson.trim().isEmpty()) {
             Snackbar.make(anchor, "Widget has no definition", Snackbar.LENGTH_LONG).show();
@@ -76,7 +84,7 @@ public final class WidgetInstaller {
         }
 
         String size = WidgetSchema.normalizeSize(sizeRaw);
-        EngineWidgetStore.savePending(context, widgetId, name, specJson, size);
+        EngineWidgetStore.savePending(context, widgetId, name, specJson, size, styleJson);
 
         Intent callbackIntent = new Intent(context, WidgetPinCallback.class);
         callbackIntent.setAction(WidgetPinCallback.ACTION_WIDGET_PINNED);

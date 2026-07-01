@@ -7,8 +7,11 @@ import com.desire.widget.engine.components.CalendarRenderer;
 import com.desire.widget.engine.components.CountdownRenderer;
 import com.desire.widget.engine.components.DigitalClockRenderer;
 import com.desire.widget.engine.components.DividerRenderer;
+import com.desire.widget.engine.components.FlipClockRenderer;
 import com.desire.widget.engine.components.ImageRenderer;
 import com.desire.widget.engine.components.MusicRenderer;
+import com.desire.widget.engine.components.MusicVisualizerRenderer;
+import com.desire.widget.engine.components.WordClockRenderer;
 import com.desire.widget.engine.components.ProgressRingRenderer;
 import com.desire.widget.engine.components.QrCodeRenderer;
 import com.desire.widget.engine.components.ShapeRenderer;
@@ -57,6 +60,10 @@ public class ComponentRegistry {
                 .register(new AppShortcutRenderer())
                 .register(new MusicRenderer())
                 .register(new CountdownRenderer())
-                .register(new QrCodeRenderer());
+                .register(new QrCodeRenderer())
+                // Phase C rich components
+                .register(new FlipClockRenderer())
+                .register(new WordClockRenderer())
+                .register(new MusicVisualizerRenderer());
     }
 }

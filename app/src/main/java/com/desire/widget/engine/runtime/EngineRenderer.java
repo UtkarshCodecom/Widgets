@@ -18,6 +18,7 @@ import com.desire.widget.engine.WidgetEngine;
 import com.desire.widget.engine.action.ActionCompiler;
 import com.desire.widget.engine.data.CachedLiveDataSource;
 import com.desire.widget.engine.model.WidgetSpec;
+import com.desire.widget.engine.model.WidgetStyle;
 import com.desire.widget.util.AppExecutors;
 import com.desire.widget.widget.WidgetSchema;
 import com.google.gson.Gson;
@@ -86,7 +87,16 @@ public final class EngineRenderer {
 
         String size = EngineWidgetStore.getSize(app, appWidgetId);
         int[] px = resolvePixelSize(app, appWidgetId, size);
-        RenderTheme theme = ThemeEngine.current(app);
+
+        // Apply the per-widget visual style (colors / background / opacity chosen in Customize).
+        WidgetStyle style = null;
+        String styleJson = EngineWidgetStore.getStyleJson(app, appWidgetId);
+        if (styleJson != null && !styleJson.isEmpty()) {
+            try {
+                style = GSON.fromJson(styleJson, WidgetStyle.class);
+            } catch (Exception ignored) {}
+        }
+        RenderTheme theme = StyleApplier.apply(spec, style, ThemeEngine.current(app));
 
         RenderContext ctx = new RenderContext(app, px[0], px[1], theme,
                 System.currentTimeMillis(), new CachedLiveDataSource(app));

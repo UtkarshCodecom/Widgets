@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             loadFragment(new WidgetsFragment(), "Widgets");
         }
 
+        maybeShowOnboarding();
         checkAppConfig();
     }
 
@@ -98,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment, tag)
                 .commit();
+    }
+
+    private void maybeShowOnboarding() {
+        if (com.desire.widget.util.PreferenceManager.getInstance(this).isFirstLaunch()) {
+            startActivity(new Intent(this, com.desire.widget.ui.onboarding.OnboardingActivity.class));
+        }
     }
 
     private void checkAppConfig() {

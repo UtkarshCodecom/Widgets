@@ -38,6 +38,19 @@ public class RenderTheme {
         return t;
     }
 
+    public static RenderTheme copy(RenderTheme s) {
+        if (s == null) return defaultDark();
+        RenderTheme t = new RenderTheme();
+        t.primary = s.primary;
+        t.onPrimary = s.onPrimary;
+        t.background = s.background;
+        t.surface = s.surface;
+        t.textPrimary = s.textPrimary;
+        t.textSecondary = s.textSecondary;
+        t.fontFamily = s.fontFamily;
+        return t;
+    }
+
     public static RenderTheme defaultDark() {
         RenderTheme t = new RenderTheme();
         t.primary = 0xFFFFD700;

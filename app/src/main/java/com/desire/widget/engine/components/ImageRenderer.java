@@ -57,6 +57,8 @@ public class ImageRenderer implements ComponentRenderer {
             Object model;
             if (source.startsWith("http")) {
                 model = source;
+            } else if (source.startsWith("content://") || source.startsWith("file://")) {
+                model = android.net.Uri.parse(source);
             } else if (source.startsWith("asset://")) {
                 model = "file:///android_asset/" + source.substring("asset://".length());
             } else {

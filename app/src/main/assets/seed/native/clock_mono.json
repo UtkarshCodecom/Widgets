@@ -1,0 +1,48 @@
+{
+  "id": "clock_mono",
+  "name": "Mono Clock",
+  "designSize": "2x1",
+  "background": {
+    "fill": "#0A0A0A",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.2,
+        "w": 0.6,
+        "h": 0.6
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.7,
+        "align": "left",
+        "color": "#00E676",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.66,
+        "y": 0.3,
+        "w": 0.3,
+        "h": 0.4
+      },
+      "props": {
+        "format": "EEE d",
+        "fontSize": 0.5,
+        "align": "right",
+        "color": "#60FFFFFF",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "open_activity",
+    "packageName": "com.google.android.deskclock",
+    "className": "com.android.deskclock.DeskClockTabActivity"
+  }
+}

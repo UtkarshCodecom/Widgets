@@ -12,7 +12,7 @@
     { "type": "shape", "frame": { "x": 0.06, "y": 0.06, "w": 0.88, "h": 0.88 },
       "props": { "shape": "rounded", "fill": "#12FFFFFF", "cornerRadius": 0.12 } },
     { "type": "text", "frame": { "x": 0.1, "y": 0.08, "w": 0.3, "h": 0.2 },
-      "props": { "text": """, "fontSize": 1.2, "align": "left", "bold": true, "color": "#FFD700" } },
+      "props": { "text": "“", "fontSize": 1.2, "align": "left", "bold": true, "color": "#FFD700" } },
     { "type": "text", "frame": { "x": 0.12, "y": 0.25, "w": 0.76, "h": 0.4 },
       "props": { "text": "The only way to do great work is to love what you do.", "fontSize": 0.65, "align": "center", "color": "#FFFFFF", "maxLines": 4 } },
     { "type": "divider", "frame": { "x": 0.35, "y": 0.68, "w": 0.3, "h": 0.01 },

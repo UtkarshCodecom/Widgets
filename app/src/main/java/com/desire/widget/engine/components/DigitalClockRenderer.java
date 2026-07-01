@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import com.desire.widget.engine.ComponentRenderer;
 import com.desire.widget.engine.RenderContext;
 import com.desire.widget.engine.model.ComponentSpec;
+import com.desire.widget.engine.util.FontResolver;
 import com.desire.widget.engine.util.SpecColors;
 import com.desire.widget.engine.util.SpecProps;
 
@@ -47,7 +48,8 @@ public class DigitalClockRenderer implements ComponentRenderer {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(color);
         paint.setTextSize(Math.max(1f, px));
-        paint.setTypeface(bold ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+        String font = SpecProps.str(p, "font", ctx.theme.fontFamily);
+        paint.setTypeface(FontResolver.resolve(font, bold));
         paint.setTextAlign("left".equals(align) ? Paint.Align.LEFT
                 : "right".equals(align) ? Paint.Align.RIGHT : Paint.Align.CENTER);
 

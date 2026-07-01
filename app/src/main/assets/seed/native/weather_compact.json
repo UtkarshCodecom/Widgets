@@ -1,0 +1,33 @@
+{
+  "id": "weather_compact",
+  "name": "Weather Bar",
+  "designSize": "4x1",
+  "background": {
+    "gradientStart": "#2980B9",
+    "gradientEnd": "#2C3E50",
+    "gradientAngle": 140,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "weather",
+      "frame": {
+        "x": 0.04,
+        "y": 0.1,
+        "w": 0.92,
+        "h": 0.8
+      },
+      "props": {
+        "condition": "clouds",
+        "temp": 22,
+        "location": "Your City",
+        "high": 25,
+        "low": 16
+      }
+    }
+  ],
+  "action": {
+    "type": "open_url",
+    "data": "https://weather.com"
+  }
+}
