@@ -1,0 +1,31 @@
+{
+  "id": "battery_glow",
+  "name": "Battery Glow",
+  "designSize": "4x1",
+  "background": {
+    "gradientStart": "#0B1220",
+    "gradientEnd": "#111A2E",
+    "gradientAngle": 0,
+    "cornerRadius": 0.32
+  },
+  "components": [
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.05,
+        "y": 0.15,
+        "w": 0.9,
+        "h": 0.7
+      },
+      "props": {
+        "style": "glow",
+        "fillColor": "#0A84FF",
+        "bodyColor": "#5E7BA8",
+        "textColor": "#FFFFFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  }
+}

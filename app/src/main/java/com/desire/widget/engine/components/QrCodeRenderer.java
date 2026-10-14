@@ -33,6 +33,10 @@ public class QrCodeRenderer implements ComponentRenderer {
     public void render(Canvas canvas, RectF b, ComponentSpec s, RenderContext ctx) {
         Map<String, Object> props = s.props;
         String data = SpecProps.str(props, "data", "");
+        // "@user" means render the QR payload the user set in the QR editor.
+        if ("@user".equals(data)) {
+            data = com.desire.widget.engine.data.UserDataStore.getQr(ctx.android, ctx.appWidgetId);
+        }
         int fg = SpecColors.resolve(SpecProps.str(props, "foreground", "@textPrimary"), ctx.theme, 0xFF000000);
         int bg = SpecColors.resolve(SpecProps.str(props, "background", ""), ctx.theme, 0);
         int quiet = SpecProps.i(props, "quietZone", 1);

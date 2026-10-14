@@ -1,0 +1,72 @@
+{
+  "id": "memories",
+  "name": "Memories",
+  "designSize": "4x4",
+  "background": {
+    "gradientStart": "#1A1A1E",
+    "gradientEnd": "#0E0E10",
+    "gradientAngle": 270,
+    "cornerRadius": 0.08
+  },
+  "components": [
+    {
+      "type": "image",
+      "frame": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 1.0
+      },
+      "props": {
+        "source": "photo_placeholder",
+        "scaleType": "crop",
+        "cornerRadius": 0
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.0,
+        "y": 0.78,
+        "w": 1.0,
+        "h": 0.22
+      },
+      "props": {
+        "shape": "rect",
+        "fill": "#66000000"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.81,
+        "w": 0.6,
+        "h": 0.1
+      },
+      "props": {
+        "format": "EEEE",
+        "fontSize": 0.8,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.905,
+        "w": 0.6,
+        "h": 0.07
+      },
+      "props": {
+        "format": "d MMMM yyyy",
+        "fontSize": 0.8,
+        "align": "left",
+        "color": "#D1D1D6",
+        "bold": false
+      }
+    }
+  ]
+}

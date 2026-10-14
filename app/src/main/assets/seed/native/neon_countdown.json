@@ -1,0 +1,15 @@
+{
+  "id": "neon_countdown",
+  "name": "Countdown",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#F7971E",
+    "gradientEnd": "#FFD200",
+    "gradientAngle": 315,
+    "cornerRadius": 0.2
+  },
+  "components": [
+    { "type": "countdown", "frame": { "x": 0.1, "y": 0.18, "w": 0.8, "h": 0.64 }, "props": { "targetDate": "2027-01-01 00:00", "label": "New Year", "labelColor": "#5A3D00", "timeColor": "#1A1200", "accentColor": "#FF4E00", "showProgress": true } }
+  ],
+  "action": { "type": "calendar" }
+}

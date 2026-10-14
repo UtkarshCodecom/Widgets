@@ -1,0 +1,48 @@
+{
+  "id": "min_clock",
+  "name": "Minimal",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.26,
+        "w": 0.8,
+        "h": 0.36
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.86,
+        "align": "center",
+        "color": "#ECEDF0",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.66,
+        "w": 0.8,
+        "h": 0.13
+      },
+      "props": {
+        "format": "EEE, MMM d",
+        "fontSize": 0.55,
+        "align": "center",
+        "color": "#A6ABB5",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

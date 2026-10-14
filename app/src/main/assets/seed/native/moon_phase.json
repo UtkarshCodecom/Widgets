@@ -1,0 +1,27 @@
+{
+  "id": "moon_phase",
+  "name": "Moon Phase",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "moon_phase",
+      "frame": {
+        "x": 0.06,
+        "y": 0.06,
+        "w": 0.88,
+        "h": 0.88
+      },
+      "props": {
+        "litColor": "#F0F0E6",
+        "darkColor": "#14171C",
+        "textColor": "#ECEDF0"
+      }
+    }
+  ]
+}

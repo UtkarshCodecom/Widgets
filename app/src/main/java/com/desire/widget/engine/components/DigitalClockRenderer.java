@@ -32,9 +32,12 @@ public class DigitalClockRenderer implements ComponentRenderer {
     public void render(Canvas canvas, RectF b, ComponentSpec s, RenderContext ctx) {
         Map<String, Object> p = s.props;
         String fmt = SpecProps.str(p, "format", "HH:mm");
+        String tz = SpecProps.str(p, "timezone", "");
         String text;
         try {
-            text = new SimpleDateFormat(fmt, Locale.getDefault()).format(new Date(ctx.nowMillis));
+            SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.getDefault());
+            if (tz != null && !tz.isEmpty()) sdf.setTimeZone(java.util.TimeZone.getTimeZone(tz));
+            text = sdf.format(new Date(ctx.nowMillis));
         } catch (Exception e) {
             text = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(ctx.nowMillis));
         }

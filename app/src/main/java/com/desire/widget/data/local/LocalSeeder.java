@@ -23,20 +23,73 @@ public final class LocalSeeder {
     private static final String TAG = "LocalSeeder";
     private static final String CATALOG = "seed/native/catalog.json";
     private static final String WIDGET_DIR = "seed/native/";
+    /** Bump whenever catalog widgets are added/changed so existing installs pick them up. */
+    private static final int SEED_VERSION = 4;
+    private static final String SEED_PREFS = "seed_meta";
+    private static final String KEY_SEED_VERSION = "seed_version";
 
     private LocalSeeder() {}
 
     public static void seedIfEmpty(Context context, WidgetDao widgetDao,
                                    CategoryDao categoryDao, ThemeDao themeDao) {
         try {
-            boolean needWidgets = widgetDao.getWidgetCountSync() == 0;
-            boolean needThemes = themeDao.getCountSync() == 0;
+            if (themeDao.getCountSync() == 0) seedThemes(themeDao);
 
-            if (needWidgets) seedWidgets(context, widgetDao, categoryDao);
-            if (needThemes) seedThemes(themeDao);
+            if (widgetDao.getWidgetCountSync() == 0) {
+                seedWidgets(context, widgetDao, categoryDao);      // fresh install: seed everything
+            } else if (seedVersion(context) < SEED_VERSION) {
+                syncWidgets(context, widgetDao, categoryDao);      // upgrade: add new widgets only
+            }
+            setSeedVersion(context, SEED_VERSION);
         } catch (Exception e) {
             Log.e(TAG, "Seeding failed", e);
         }
+    }
+
+    /**
+     * Additively syncs the catalog into an already-seeded DB: inserts widgets that don't exist yet
+     * and refreshes the content of ones that do — WITHOUT touching user state (favorites, download
+     * counts). This is how new designs reach existing users without a reinstall or data wipe.
+     */
+    private static void syncWidgets(Context context, WidgetDao widgetDao,
+                                    CategoryDao categoryDao) throws Exception {
+        Catalog catalog = new Gson().fromJson(readAsset(context, CATALOG), Catalog.class);
+        if (catalog == null || catalog.widgets == null || catalog.widgets.isEmpty()) return;
+
+        if (catalog.categories != null) categoryDao.insertAll(buildCategories(catalog));
+
+        long now = System.currentTimeMillis();
+        int total = catalog.widgets.size();
+        int added = 0, updated = 0;
+        for (int i = 0; i < total; i++) {
+            Wid w = catalog.widgets.get(i);
+            String spec;
+            try {
+                spec = readAsset(context, WIDGET_DIR + w.specAsset);
+            } catch (Exception ex) {
+                Log.w(TAG, "Missing widget spec asset: " + w.specAsset);
+                continue;
+            }
+            if (widgetDao.getWidgetByIdSync(w.id) == null) {
+                widgetDao.insert(buildEntity(w, spec, now, i, total));
+                added++;
+            } else {
+                widgetDao.syncExisting(w.id, spec, w.name, w.description, w.categoryId,
+                        w.categoryName, w.widgetSize, w.isPro, w.isFeatured, w.isTrending);
+                updated++;
+            }
+        }
+        Log.i(TAG, "Catalog sync: +" + added + " new, " + updated + " refreshed");
+    }
+
+    private static int seedVersion(Context context) {
+        return context.getSharedPreferences(SEED_PREFS, Context.MODE_PRIVATE)
+                .getInt(KEY_SEED_VERSION, 0);
+    }
+
+    private static void setSeedVersion(Context context, int version) {
+        context.getSharedPreferences(SEED_PREFS, Context.MODE_PRIVATE)
+                .edit().putInt(KEY_SEED_VERSION, version).apply();
     }
 
     private static void seedWidgets(Context context, WidgetDao widgetDao,
@@ -44,19 +97,7 @@ public final class LocalSeeder {
         Catalog catalog = new Gson().fromJson(readAsset(context, CATALOG), Catalog.class);
         if (catalog == null || catalog.widgets == null || catalog.widgets.isEmpty()) return;
 
-        List<CategoryEntity> categories = new ArrayList<>();
-        if (catalog.categories != null) {
-            for (Cat c : catalog.categories) {
-                CategoryEntity e = new CategoryEntity();
-                e.setId(c.id);
-                e.setName(c.name);
-                e.setIcon(c.icon);
-                e.setColor(c.color);
-                e.setOrder(c.order);
-                e.setActive(true);
-                categories.add(e);
-            }
-        }
+        List<CategoryEntity> categories = buildCategories(catalog);
 
         long now = System.currentTimeMillis();
         int total = catalog.widgets.size();
@@ -70,28 +111,48 @@ public final class LocalSeeder {
                 Log.w(TAG, "Missing widget spec asset: " + w.specAsset);
                 continue;
             }
-            WidgetEntity e = new WidgetEntity();
-            e.setId(w.id);
-            e.setName(w.name);
-            e.setDescription(w.description);
-            e.setCategoryId(w.categoryId);
-            e.setCategoryName(w.categoryName);
-            e.setSpecJson(spec);
-            e.setWidgetSize(w.widgetSize);
-            e.setPro(w.isPro);
-            e.setFeatured(w.isFeatured);
-            e.setTrending(w.isTrending);
-            e.setConfigJson("{}");
-            e.setUpdatedAt(now - i * 1000L);
-            e.setDownloadCount((total - i) * 250L);
-            e.setVersion(1);
-            e.setActive(true);
-            widgets.add(e);
+            widgets.add(buildEntity(w, spec, now, i, total));
         }
 
         if (!categories.isEmpty()) categoryDao.insertAll(categories);
         widgetDao.insertAll(widgets);
         Log.i(TAG, "Seeded " + widgets.size() + " widgets, " + categories.size() + " categories");
+    }
+
+    private static List<CategoryEntity> buildCategories(Catalog catalog) {
+        List<CategoryEntity> categories = new ArrayList<>();
+        if (catalog.categories == null) return categories;
+        for (Cat c : catalog.categories) {
+            CategoryEntity e = new CategoryEntity();
+            e.setId(c.id);
+            e.setName(c.name);
+            e.setIcon(c.icon);
+            e.setColor(c.color);
+            e.setOrder(c.order);
+            e.setActive(true);
+            categories.add(e);
+        }
+        return categories;
+    }
+
+    private static WidgetEntity buildEntity(Wid w, String spec, long now, int i, int total) {
+        WidgetEntity e = new WidgetEntity();
+        e.setId(w.id);
+        e.setName(w.name);
+        e.setDescription(w.description);
+        e.setCategoryId(w.categoryId);
+        e.setCategoryName(w.categoryName);
+        e.setSpecJson(spec);
+        e.setWidgetSize(w.widgetSize);
+        e.setPro(w.isPro);
+        e.setFeatured(w.isFeatured);
+        e.setTrending(w.isTrending);
+        e.setConfigJson("{}");
+        e.setUpdatedAt(now - i * 1000L);
+        e.setDownloadCount((total - i) * 250L);
+        e.setVersion(1);
+        e.setActive(true);
+        return e;
     }
 
     private static void seedThemes(ThemeDao themeDao) {

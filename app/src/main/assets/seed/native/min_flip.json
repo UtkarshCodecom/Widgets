@@ -1,0 +1,43 @@
+{
+  "id": "min_flip",
+  "name": "Flip",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#161719",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "flip_clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.2,
+        "w": 0.84,
+        "h": 0.44
+      },
+      "props": {
+        "cardColor": "#24272E",
+        "textColor": "#ECEDF0"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.7,
+        "w": 0.8,
+        "h": 0.12
+      },
+      "props": {
+        "format": "EEE, MMM d",
+        "fontSize": 0.52,
+        "align": "center",
+        "color": "#A6ABB5",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

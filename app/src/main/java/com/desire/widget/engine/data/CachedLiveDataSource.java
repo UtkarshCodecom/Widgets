@@ -25,6 +25,9 @@ public class CachedLiveDataSource implements LiveDataSource {
         w.high = prefs.getFloat("weather_high", (float) w.high);
         w.low = prefs.getFloat("weather_low", (float) w.low);
         w.unit = prefs.getString("weather_unit", w.unit);
+        w.sunriseMillis = prefs.getLong("weather_sunrise", w.sunriseMillis);
+        w.sunsetMillis = prefs.getLong("weather_sunset", w.sunsetMillis);
+        w.updatedAtMillis = prefs.getLong("weather_updated_at", 0);
         return w;
     }
 
@@ -35,10 +38,15 @@ public class CachedLiveDataSource implements LiveDataSource {
         n.artist = prefs.getString("np_artist", n.artist);
         n.playing = prefs.getBoolean("np_playing", n.playing);
         n.progress = prefs.getFloat("np_progress", n.progress);
+        n.positionMillis = prefs.getLong("np_position", 0);
+        n.durationMillis = prefs.getLong("np_duration", 0);
+        n.updatedAtMillis = prefs.getLong("np_updated_at", 0);
+        n.albumArtPath = prefs.getString("np_art", null);
         return n;
     }
 
-    /** Write helpers used by the sync job (Phase 6). */
+    /** Write helpers used by the sync job (Phase 6). Both stamp the write time so renderers can
+     *  tell real cached data from never-fetched defaults (and extrapolate track position). */
     public void putWeather(WeatherSnapshot w) {
         prefs.edit()
                 .putFloat("weather_temp", (float) w.temp)
@@ -47,6 +55,9 @@ public class CachedLiveDataSource implements LiveDataSource {
                 .putFloat("weather_high", (float) w.high)
                 .putFloat("weather_low", (float) w.low)
                 .putString("weather_unit", w.unit)
+                .putLong("weather_sunrise", w.sunriseMillis)
+                .putLong("weather_sunset", w.sunsetMillis)
+                .putLong("weather_updated_at", System.currentTimeMillis())
                 .apply();
     }
 
@@ -56,6 +67,10 @@ public class CachedLiveDataSource implements LiveDataSource {
                 .putString("np_artist", n.artist)
                 .putBoolean("np_playing", n.playing)
                 .putFloat("np_progress", n.progress)
+                .putLong("np_position", n.positionMillis)
+                .putLong("np_duration", n.durationMillis)
+                .putLong("np_updated_at", System.currentTimeMillis())
+                .putString("np_art", n.albumArtPath)
                 .apply();
     }
 }

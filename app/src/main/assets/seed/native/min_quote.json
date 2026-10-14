@@ -1,0 +1,47 @@
+{
+  "id": "min_quote",
+  "name": "Quote",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#1A1C20",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.2,
+        "w": 0.88,
+        "h": 0.4
+      },
+      "props": {
+        "text": "Simplicity is the ultimate sophistication.",
+        "fontSize": 0.34,
+        "align": "center",
+        "color": "#ECEDF0",
+        "bold": true
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.7,
+        "w": 0.88,
+        "h": 0.12
+      },
+      "props": {
+        "text": "— Leonardo da Vinci",
+        "fontSize": 0.3,
+        "align": "right",
+        "color": "#6C7BFF",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "open_url",
+    "data": "https://www.brainyquote.com"
+  }
+}

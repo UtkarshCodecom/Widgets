@@ -1,0 +1,25 @@
+{
+  "id": "pomodoro",
+  "name": "Pomodoro",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#161719",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "pomodoro",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {
+        "workColor": "#6C7BFF",
+        "breakColor": "#66BB6A",
+        "textColor": "#ECEDF0"
+      }
+    }
+  ]
+}

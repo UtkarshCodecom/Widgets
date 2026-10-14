@@ -1,0 +1,29 @@
+{
+  "id": "stacked_warm",
+  "name": "Stacked Warm",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#FF7A59",
+    "gradientEnd": "#C2185B",
+    "gradientAngle": 315,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "stacked_clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.08,
+        "w": 0.8,
+        "h": 0.84
+      },
+      "props": {
+        "hourColor": "#FFFFFF",
+        "minuteColor": "#FFE1D6"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

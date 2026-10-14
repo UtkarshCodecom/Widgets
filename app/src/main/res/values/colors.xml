@@ -3,50 +3,50 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Dark Theme -->
-    <color name="dark_background">#FF0D0D0D</color>
-    <color name="dark_surface">#FF1A1A1A</color>
-    <color name="dark_surface_variant">#FF242424</color>
-    <color name="dark_card">#FF2A2A2A</color>
-    <color name="dark_elevated">#FF333333</color>
+    <!-- Dark neumorphism palette (names kept for compatibility across layouts) -->
+    <color name="dark_background">#FF16171B</color>   <!-- near-black backdrop -->
+    <color name="dark_surface">#FF1D1F24</color>      <!-- surface -->
+    <color name="dark_surface_variant">#FF24272E</color>
+    <color name="dark_card">#FF212429</color>         <!-- raised card (slightly lighter than bg) -->
+    <color name="dark_elevated">#FF2A2E36</color>
 
-    <!-- Yellow Accent -->
-    <color name="yellow_accent">#FFFFD700</color>
-    <color name="yellow_accent_light">#FFFFE44D</color>
-    <color name="yellow_accent_dark">#FFCCB100</color>
-    <color name="yellow_accent_alpha_20">#33FFD700</color>
-    <color name="yellow_accent_alpha_10">#1AFFD700</color>
+    <!-- Accent (soft indigo) -->
+    <color name="yellow_accent">#FF6C7BFF</color>
+    <color name="yellow_accent_light">#FF9AA5FF</color>
+    <color name="yellow_accent_dark">#FF4E5CE0</color>
+    <color name="yellow_accent_alpha_20">#336C7BFF</color>
+    <color name="yellow_accent_alpha_10">#1A6C7BFF</color>
 
     <!-- Status Colors -->
-    <color name="status_free">#FF4CAF50</color>
-    <color name="status_pro">#FFFFD700</color>
-    <color name="status_premium">#FFFF9800</color>
+    <color name="status_free">#FF4CAF7A</color>
+    <color name="status_pro">#FF6C7BFF</color>
+    <color name="status_premium">#FFFFB74D</color>
 
-    <!-- Text Colors -->
-    <color name="text_primary">#FFFFFFFF</color>
-    <color name="text_secondary">#B3FFFFFF</color>
-    <color name="text_tertiary">#80FFFFFF</color>
-    <color name="text_disabled">#4DFFFFFF</color>
+    <!-- Text Colors (light on dark) -->
+    <color name="text_primary">#FFECEDF0</color>
+    <color name="text_secondary">#FFA6ABB5</color>
+    <color name="text_tertiary">#FF6C7280</color>
+    <color name="text_disabled">#FF4A4E57</color>
 
     <!-- Functional -->
-    <color name="error">#FFCF6679</color>
-    <color name="error_container">#FF93001A</color>
-    <color name="success">#FF4CAF50</color>
-    <color name="warning">#FFFF9800</color>
-    <color name="info">#FF2196F3</color>
+    <color name="error">#FFEF5A5A</color>
+    <color name="error_container">#FF4A1C1C</color>
+    <color name="success">#FF4CAF7A</color>
+    <color name="warning">#FFFFB74D</color>
+    <color name="info">#FF64B5F6</color>
     <color name="divider">#1FFFFFFF</color>
 
-    <!-- Glass Effect -->
-    <color name="glass_background">#1AFFFFFF</color>
-    <color name="glass_stroke">#33FFFFFF</color>
+    <!-- Soft UI surfaces -->
+    <color name="glass_background">#FF24272E</color>
+    <color name="glass_stroke">#22FFFFFF</color>
 
     <!-- Gradient Colors -->
-    <color name="gradient_start">#FFFFD700</color>
-    <color name="gradient_end">#FFFF8C00</color>
+    <color name="gradient_start">#FF6C7BFF</color>
+    <color name="gradient_end">#FF9AA5FF</color>
 
-    <!-- Neumorphic -->
-    <color name="neu_dark_shadow">#40000000</color>
-    <color name="neu_light_shadow">#1AFFFFFF</color>
-    <color name="neu_dark_shadow_strong">#50000000</color>
-    <color name="neu_light_shadow_strong">#30FFFFFF</color>
+    <!-- Neumorphic soft shadows on the dark backdrop -->
+    <color name="neu_dark_shadow">#FF0C0D10</color>
+    <color name="neu_light_shadow">#FF2E323B</color>
+    <color name="neu_dark_shadow_strong">#FF08090B</color>
+    <color name="neu_light_shadow_strong">#FF34393F</color>
 </resources>

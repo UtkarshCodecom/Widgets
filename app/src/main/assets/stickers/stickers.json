@@ -1,0 +1,12 @@
+{
+  "_comment": "Admin sticker catalog. Add entries here to offer more stickers. 'source' can be a drawable resource name (e.g. sticker_heart), an 'asset://stickers/<file>.png' path for a bundled PNG/GIF, or an 'https://…' URL for a hosted image (e.g. on R2/Firebase). Drop PNG/GIF files next to this file and reference them as asset://stickers/<file>.",
+  "stickers": [
+    { "name": "Shinchan", "source": "asset://stickers/shinchan.png" },
+    { "name": "Heart", "source": "sticker_heart" },
+    { "name": "Star", "source": "sticker_star" },
+    { "name": "Smile", "source": "sticker_smile" },
+    { "name": "Sun", "source": "sticker_sun" },
+    { "name": "Cloud", "source": "sticker_cloud" },
+    { "name": "Crown", "source": "sticker_crown" }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "vinyl_music",
+  "name": "Vinyl",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#1A1A1D",
+    "gradientEnd": "#0B0B0D",
+    "gradientAngle": 270,
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0.05,
+        "y": 0.1,
+        "w": 0.9,
+        "h": 0.8
+      },
+      "props": {
+        "style": "vinyl",
+        "accentColor": "#FF375F",
+        "textColor": "#FFFFFF",
+        "subColor": "#A1A1AA"
+      }
+    }
+  ],
+  "action": {
+    "type": "music"
+  }
+}

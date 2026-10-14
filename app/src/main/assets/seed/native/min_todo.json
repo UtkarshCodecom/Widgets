@@ -1,0 +1,29 @@
+{
+  "id": "min_todo",
+  "name": "To-Do",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#1A1C20",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "todo",
+      "frame": {
+        "x": 0.09,
+        "y": 0.1,
+        "w": 0.82,
+        "h": 0.8
+      },
+      "props": {
+        "title": "TO-DO",
+        "titleColor": "#6C7BFF",
+        "accentColor": "#6C7BFF",
+        "textColor": "#ECEDF0"
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_todo"
+  }
+}

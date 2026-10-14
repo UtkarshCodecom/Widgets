@@ -1,0 +1,19 @@
+{
+  "id": "aurora_clock",
+  "name": "Aurora",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#6A3093",
+    "gradientEnd": "#A044FF",
+    "gradientAngle": 315,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.5, "y": -0.22, "w": 0.78, "h": 0.78 }, "props": { "shape": "circle", "fill": "#30FFFFFF" } },
+    { "type": "shape", "frame": { "x": -0.28, "y": 0.55, "w": 0.72, "h": 0.72 }, "props": { "shape": "circle", "fill": "#22FFFFFF" } },
+    { "type": "clock", "frame": { "x": 0.08, "y": 0.24, "w": 0.84, "h": 0.36 }, "props": { "format": "HH:mm", "fontSize": 0.86, "align": "center", "color": "#FFFFFF", "bold": true } },
+    { "type": "clock", "frame": { "x": 0.08, "y": 0.64, "w": 0.84, "h": 0.12 }, "props": { "format": "EEEE", "fontSize": 0.72, "align": "center", "color": "#F1E4FF", "bold": true } },
+    { "type": "clock", "frame": { "x": 0.08, "y": 0.77, "w": 0.84, "h": 0.1 }, "props": { "format": "d MMMM", "fontSize": 0.6, "align": "center", "color": "#E3CBFF", "bold": false } }
+  ],
+  "action": { "type": "alarms" }
+}

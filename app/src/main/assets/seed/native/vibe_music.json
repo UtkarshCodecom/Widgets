@@ -1,0 +1,16 @@
+{
+  "id": "vibe_music",
+  "name": "Vibe",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#8E2DE2",
+    "gradientEnd": "#4A00E0",
+    "gradientAngle": 300,
+    "cornerRadius": 0.14
+  },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.72, "y": -0.3, "w": 0.52, "h": 1.0 }, "props": { "shape": "circle", "fill": "#22FFFFFF" } },
+    { "type": "music", "frame": { "x": 0.04, "y": 0.1, "w": 0.92, "h": 0.8 }, "props": { "accentColor": "#FFFFFF", "textColor": "#FFFFFF", "subColor": "#D6C8FF" } }
+  ],
+  "action": { "type": "music" }
+}

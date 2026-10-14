@@ -56,8 +56,9 @@ public class WidgetsFragment extends Fragment {
         emptyState = view.findViewById(R.id.empty_state);
         loadingView = view.findViewById(R.id.loading_view);
 
+        // The Studio (JSON editor) has been removed; hide its entry point.
         View createBtn = view.findViewById(R.id.create_widget_btn);
-        if (createBtn != null) createBtn.setOnClickListener(v -> openNewInStudio());
+        if (createBtn != null) createBtn.setVisibility(View.GONE);
 
         setupSearch();
         setupFavoritesToggle();
@@ -99,7 +100,6 @@ public class WidgetsFragment extends Fragment {
     private void setupWidgetRecycler() {
         widgetAdapter = new WidgetAdapter(2);
         widgetAdapter.setOnWidgetClickListener(this::openCustomizer);
-        widgetAdapter.setOnWidgetLongClickListener(this::openInStudio);
         widgetAdapter.setOnFavoriteClickListener((widget, isFavorite) -> {
             viewModel.toggleFavorite(widget.getId(), isFavorite);
         });
@@ -134,11 +134,6 @@ public class WidgetsFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void openNewInStudio() {
-        startActivity(new android.content.Intent(
-                requireContext(), com.desire.widget.ui.studio.StudioActivity.class));
-    }
-
     private void showProUpsell() {
         new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Pro widget")
@@ -148,16 +143,6 @@ public class WidgetsFragment extends Fragment {
                         com.desire.widget.billing.BillingManager.getInstance(requireContext())
                                 .launchPurchase(requireActivity()))
                 .show();
-    }
-
-    private void openInStudio(WidgetEntity widget) {
-        android.content.Intent intent = new android.content.Intent(
-                requireContext(), com.desire.widget.ui.studio.StudioActivity.class);
-        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_SPEC_JSON, widget.getSpecJson());
-        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_NAME, widget.getName());
-        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_SIZE, widget.getWidgetSize());
-        intent.putExtra(com.desire.widget.ui.studio.StudioActivity.EXTRA_WIDGET_ID, widget.getId());
-        startActivity(intent);
     }
 
     private void observeData() {

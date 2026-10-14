@@ -12,10 +12,35 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
+    <!-- Quick-settings toggle widgets: read Wi-Fi / Bluetooth state, flip DND and auto-rotate
+         (the latter two only after the user grants access in system settings). -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- Calendar agenda widget (runtime permission, asked only when that widget is tapped). -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!-- Screen-time widget: today's app usage (user grants in Settings → Usage access). -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
     <!-- So widget taps can resolve the clock / calendar / music / etc. apps on Android 11+ -->
     <queries>
+        <!-- Enumerate launchable apps for the "Tap opens…" picker in Customize. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
         <intent>
             <action android:name="android.intent.action.SHOW_ALARMS" />
+        </intent>
+        <!-- Home launchers, so screen time can exclude them. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -46,6 +71,14 @@
         <package android:name="com.google.android.apps.fitness" />
         <package android:name="com.google.android.apps.youtube.music" />
         <package android:name="com.android.settings" />
+        <!-- Vivo / iQOO stock apps (getLaunchIntentForPackage needs them declared to be visible). -->
+        <package android:name="com.android.BBKClock" />
+        <package android:name="com.vivo.deskclock" />
+        <package android:name="com.iqoo.deskclock" />
+        <package android:name="com.vivo.weather" />
+        <package android:name="com.android.bbkmusic" />
+        <package android:name="com.bbk.calendar" />
+        <package android:name="com.vivo.calendar" />
     </queries>
 
     <application
@@ -77,15 +110,49 @@
             android:theme="@style/Theme.Widgets" />
 
         <activity
+            android:name=".ui.notes.NotesActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Widgets" />
+        <activity
+            android:name=".ui.notes.TodoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Widgets" />
+        <activity
+            android:name=".ui.notes.QrActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Widgets" />
+        <activity
+            android:name=".ui.notes.BmiActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Widgets" />
+        <activity
+            android:name=".ui.notes.HabitActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Widgets" />
+
+        <activity
             android:name=".ui.customize.CustomizeWidgetActivity"
             android:exported="false"
             android:theme="@style/Theme.Widgets" />
 
         <activity
-            android:name=".ui.studio.StudioActivity"
+            android:name=".widget.WidgetTapActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Widgets" />
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.Widgets.Translucent" />
+
+        <!-- Not noHistory: it must survive behind the system permission dialog to get the result. -->
+        <activity
+            android:name=".ui.permission.PermissionRequestActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Widgets.Translucent" />
 
         <activity
             android:name=".widget.WidgetPickerActivity"
@@ -141,6 +208,28 @@
         </receiver>
 
         <receiver
+            android:name=".widget.WidgetProvider1x1"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_1x1" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.WidgetProvider4x4"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_4x4" />
+        </receiver>
+
+        <receiver
             android:name=".widget.WidgetPinCallback"
             android:exported="false">
             <intent-filter>
@@ -163,6 +252,36 @@
             </intent-filter>
         </service>
 
+        <!-- Music widget prev/play-pause/next overlay taps route here to control real playback. -->
+        <receiver
+            android:name=".service.MediaControlReceiver"
+            android:exported="false" />
+
+        <!-- Calendar widget prev/today/next overlay taps route here to change the shown month. -->
+        <receiver
+            android:name=".service.CalendarNavReceiver"
+            android:exported="false" />
+
+        <!-- Stopwatch/Pomodoro widget whole-widget tap routes here to start/pause. -->
+        <receiver
+            android:name=".service.TimerControlReceiver"
+            android:exported="false" />
+
+        <receiver
+            android:name=".service.ToggleReceiver"
+            android:exported="false" />
+
+        <!-- The calendar provider broadcasts this when events change; refreshes agenda widgets. -->
+        <receiver
+            android:name=".service.CalendarChangeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED" />
+                <data android:scheme="content" />
+                <data android:host="com.android.calendar" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".widget.ClockTickReceiver"
             android:exported="true">
@@ -171,6 +290,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 

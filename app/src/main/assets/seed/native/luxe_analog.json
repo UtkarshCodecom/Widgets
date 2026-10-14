@@ -1,0 +1,16 @@
+{
+  "id": "luxe_analog",
+  "name": "Luxe",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#0F2027",
+    "gradientEnd": "#203A43",
+    "gradientAngle": 315,
+    "cornerRadius": 0.2
+  },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.08, "y": 0.08, "w": 0.84, "h": 0.84 }, "props": { "shape": "circle", "fill": "#1AD4AF37", "stroke": "#D4AF37", "strokeWidth": 0.012 } },
+    { "type": "analog_clock", "frame": { "x": 0.14, "y": 0.14, "w": 0.72, "h": 0.72 }, "props": { "faceColor": "#00000000", "tickColor": "#C8B273", "handColor": "#F5E7B8", "secondColor": "#D4AF37", "showSeconds": true } }
+  ],
+  "action": { "type": "alarms" }
+}

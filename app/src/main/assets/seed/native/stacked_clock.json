@@ -1,0 +1,29 @@
+{
+  "id": "stacked_clock",
+  "name": "Stacked",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#101114",
+    "gradientEnd": "#1B1D22",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "stacked_clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.08,
+        "w": 0.8,
+        "h": 0.84
+      },
+      "props": {
+        "hourColor": "#A8C7FA",
+        "minuteColor": "#FFFFFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

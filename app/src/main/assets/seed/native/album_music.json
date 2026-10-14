@@ -1,0 +1,31 @@
+{
+  "id": "album_music",
+  "name": "Album Colour",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#18181B",
+    "gradientEnd": "#0C0C0E",
+    "gradientAngle": 270,
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 1.0
+      },
+      "props": {
+        "theme": "albumArt",
+        "accentColor": "#FFFFFF",
+        "textColor": "#FFFFFF",
+        "subColor": "#C9C9D1"
+      }
+    }
+  ],
+  "action": {
+    "type": "music"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "min_water",
+  "name": "Water",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "progress_ring",
+      "frame": {
+        "x": 0.24,
+        "y": 0.16,
+        "w": 0.52,
+        "h": 0.52
+      },
+      "props": {
+        "progress": 0.5,
+        "progressColor": "#6C7BFF",
+        "trackColor": "#2A2E36",
+        "centerText": "4/8",
+        "textColor": "#ECEDF0",
+        "thickness": 0.1,
+        "textSize": 0.22
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.1,
+        "y": 0.78,
+        "w": 0.8,
+        "h": 0.12
+      },
+      "props": {
+        "text": "Glasses today",
+        "fontSize": 0.46,
+        "align": "center",
+        "color": "#A6ABB5",
+        "bold": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "battery_ring_mini",
+  "name": "Battery Ring",
+  "designSize": "1x1",
+  "background": {
+    "gradientStart": "#1A1A1E",
+    "gradientEnd": "#0D0D10",
+    "gradientAngle": 270,
+    "cornerRadius": 0.26
+  },
+  "components": [
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.1,
+        "y": 0.1,
+        "w": 0.8,
+        "h": 0.8
+      },
+      "props": {
+        "style": "ring",
+        "fillColor": "#FFD60A",
+        "bodyColor": "#8E8E93",
+        "textColor": "#FFFFFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  }
+}

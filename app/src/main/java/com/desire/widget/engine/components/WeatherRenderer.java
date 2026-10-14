@@ -23,6 +23,9 @@ import java.util.Map;
  * textColor, subColor.
  */
 public class WeatherRenderer implements ComponentRenderer {
+    /** PreferenceManager key: show temperatures in °F instead of °C. */
+    public static final String PREF_FAHRENHEIT = "temp_fahrenheit";
+
     @Override
     public String type() {
         return "weather";
@@ -32,13 +35,23 @@ public class WeatherRenderer implements ComponentRenderer {
     public void render(Canvas canvas, RectF b, ComponentSpec s, RenderContext ctx) {
         Map<String, Object> p = s.props;
         WeatherSnapshot w = ctx.live != null ? ctx.live.weather() : new WeatherSnapshot();
-        // Per-component prop overrides
-        w.temp = SpecProps.f(p, "temp", (float) w.temp);
-        w.condition = SpecProps.str(p, "condition", w.condition);
-        w.location = SpecProps.str(p, "location", w.location);
-        w.high = SpecProps.f(p, "high", (float) w.high);
-        w.low = SpecProps.f(p, "low", (float) w.low);
-        w.unit = SpecProps.str(p, "unit", w.unit);
+        // Sample props apply ONLY to gallery/customize previews (appWidgetId < 0). On a placed
+        // widget the fetched snapshot always wins — letting these placeholder props override it
+        // pinned the widget to the fake "24° City" forever (the old bug).
+        if (ctx.appWidgetId < 0) {
+            w.temp = SpecProps.f(p, "temp", (float) w.temp);
+            w.condition = SpecProps.str(p, "condition", w.condition);
+            w.location = SpecProps.str(p, "location", w.location);
+            w.high = SpecProps.f(p, "high", (float) w.high);
+            w.low = SpecProps.f(p, "low", (float) w.low);
+            w.unit = SpecProps.str(p, "unit", w.unit);
+        }
+        // Settings → Temperature unit. Data is fetched in °C; convert for display.
+        if (com.desire.widget.util.PreferenceManager.getInstance(ctx.android).getBoolean(PREF_FAHRENHEIT, false)) {
+            w.temp = w.temp * 9.0 / 5.0 + 32.0;
+            w.high = w.high * 9.0 / 5.0 + 32.0;
+            w.low = w.low * 9.0 / 5.0 + 32.0;
+        }
 
         int iconColor = SpecColors.resolve(SpecProps.str(p, "iconColor", "@primary"), ctx.theme, ctx.theme.primary);
         int textColor = SpecColors.resolve(SpecProps.str(p, "textColor", "@textPrimary"), ctx.theme, ctx.theme.textPrimary);

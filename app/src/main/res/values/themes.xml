@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.Widgets" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/yellow_accent</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryContainer">@color/yellow_accent_alpha_20</item>
         <item name="colorOnPrimaryContainer">@color/yellow_accent_light</item>
         <item name="colorSecondary">@color/yellow_accent_dark</item>
@@ -24,11 +24,14 @@
         <item name="colorOutline">@color/divider</item>
         <item name="colorOutlineVariant">@color/yellow_accent_alpha_20</item>
 
-        <!-- Status bar / nav bar -->
+        <!-- Status bar / nav bar (dark neumorphism → light icons) -->
         <item name="android:statusBarColor">@color/dark_background</item>
         <item name="android:navigationBarColor">@color/dark_background</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+
+        <!-- Soft dark neumorphism backdrop. -->
+        <item name="android:windowBackground">@color/dark_background</item>
 
         <!-- Allow content to draw into cutout area — MainActivity handles insets -->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">shortEdges</item>
@@ -41,17 +44,17 @@
 
     <!-- ===== THEME VARIANTS ===== -->
 
-    <!-- Default: Dark Gold -->
+    <!-- Default: Soft Dark (dark neumorphism, minimalist) -->
     <style name="Theme.Widgets" parent="Base.Theme.Widgets">
-        <item name="colorPrimary">#FFD700</item>
-        <item name="colorOnPrimary">#000000</item>
-        <item name="colorPrimaryContainer">#33FFD700</item>
-        <item name="colorSecondary">#FF8C00</item>
-        <item name="android:colorBackground">#0D0D0D</item>
-        <item name="colorSurface">#1A1A1A</item>
-        <item name="colorOnSurface">#FFFFFFFF</item>
-        <item name="android:statusBarColor">#0D0D0D</item>
-        <item name="android:navigationBarColor">#0D0D0D</item>
+        <item name="colorPrimary">#6C7BFF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#1A6C7BFF</item>
+        <item name="colorSecondary">#9AA5FF</item>
+        <item name="android:colorBackground">#16171B</item>
+        <item name="colorSurface">#1D1F24</item>
+        <item name="colorOnSurface">#ECEDF0</item>
+        <item name="android:statusBarColor">#16171B</item>
+        <item name="android:navigationBarColor">#16171B</item>
     </style>
 
     <!-- Midnight Blue -->
@@ -173,6 +176,17 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SettingsSectionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">22dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:textColor">@color/yellow_accent</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.08</item>
     </style>
 
     <style name="Widget.Widgets.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">

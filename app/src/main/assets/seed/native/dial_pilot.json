@@ -1,0 +1,34 @@
+{
+  "id": "dial_pilot",
+  "name": "Pilot",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#15171A",
+    "gradientEnd": "#050506",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.05,
+        "y": 0.05,
+        "w": 0.9,
+        "h": 0.9
+      },
+      "props": {
+        "dialStyle": "pilot",
+        "faceColor": "#0E0F11",
+        "tickColor": "#C7C7CC",
+        "numeralColor": "#F2F2F7",
+        "handColor": "#F2F2F7",
+        "secondColor": "#FFB000",
+        "accentColor": "#FFB000"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

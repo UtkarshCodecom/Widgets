@@ -1,0 +1,33 @@
+{
+  "id": "dial_square",
+  "name": "Square Dial",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#1C1C1E",
+    "gradientEnd": "#0E0E10",
+    "gradientAngle": 270,
+    "cornerRadius": 0.24
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "dialStyle": "square",
+        "faceColor": "#2C2C2E",
+        "tickColor": "#8E8E93",
+        "numeralColor": "#FFFFFF",
+        "handColor": "#FFFFFF",
+        "secondColor": "#FF453A"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

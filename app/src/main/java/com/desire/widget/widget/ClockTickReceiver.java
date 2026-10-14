@@ -22,20 +22,33 @@ public class ClockTickReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+
+        // Stop the per-second ticker while the screen is off (saves battery).
+        if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+            SecondTicker.stop();
+            return;
+        }
+
         // Always reschedule the next tick so the chain never breaks.
         ensureScheduled(context);
 
-        String action = intent.getAction();
         boolean isTick = ACTION_CLOCK_TICK.equals(action);
         boolean isScreenOn = Intent.ACTION_SCREEN_ON.equals(action);
         boolean isUserPresent = Intent.ACTION_USER_PRESENT.equals(action);
+
+        // Run the per-second ticker while the screen is on so second hands / visualizers animate.
+        if (isScreenOn || isUserPresent) {
+            SecondTicker.start(context);
+        }
 
         // On screen-on / user-present we render immediately (no need to wait for the alarm).
         // On CLOCK_TICK we also render. Time/timezone changes always trigger a re-render.
         if (isTick || isScreenOn || isUserPresent
                 || Intent.ACTION_TIME_CHANGED.equals(action)
                 || Intent.ACTION_TIMEZONE_CHANGED.equals(action)
-                || Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+                || Intent.ACTION_BOOT_COMPLETED.equals(action)
+                || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
 
             int[] ids = allWidgetIds(context);
             if (ids.length == 0) return;
@@ -84,7 +97,8 @@ public class ClockTickReceiver extends BroadcastReceiver {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         Class<?>[] providers = {
                 WidgetProvider.class, WidgetProvider2x1.class,
-                WidgetProvider4x1.class, WidgetProvider4x2.class
+                WidgetProvider4x1.class, WidgetProvider4x2.class,
+                WidgetProvider1x1.class, WidgetProvider4x4.class
         };
         java.util.ArrayList<Integer> all = new java.util.ArrayList<>();
         for (Class<?> provider : providers) {

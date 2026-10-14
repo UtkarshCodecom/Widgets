@@ -1,0 +1,33 @@
+{
+  "id": "screen_time",
+  "name": "Screen Time",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#1C1230",
+    "gradientEnd": "#0F0A1C",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "screen_time",
+      "frame": {
+        "x": 0.09,
+        "y": 0.08,
+        "w": 0.82,
+        "h": 0.86
+      },
+      "props": {
+        "rows": 3,
+        "accentColor": "#FF6482",
+        "barColor": "#FF6482",
+        "textColor": "#FFFFFF",
+        "subColor": "#A99BC2"
+      }
+    }
+  ],
+  "action": {
+    "type": "launch_app",
+    "packageName": "com.google.android.apps.wellbeing"
+  }
+}

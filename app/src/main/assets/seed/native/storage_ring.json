@@ -1,0 +1,30 @@
+{
+  "id": "storage_ring",
+  "name": "Storage",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#062A30",
+    "gradientEnd": "#031418",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "device_info",
+      "frame": {
+        "x": 0.1,
+        "y": 0.08,
+        "w": 0.8,
+        "h": 0.86
+      },
+      "props": {
+        "metric": "storage",
+        "style": "ring",
+        "storageColor": "#64D2FF",
+        "trackColor": "#22FFFFFF",
+        "textColor": "#FFFFFF",
+        "subColor": "#8FB9C4"
+      }
+    }
+  ]
+}

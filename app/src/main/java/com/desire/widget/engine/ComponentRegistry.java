@@ -3,14 +3,22 @@ package com.desire.widget.engine;
 import com.desire.widget.engine.components.AnalogClockRenderer;
 import com.desire.widget.engine.components.AppShortcutRenderer;
 import com.desire.widget.engine.components.BatteryRenderer;
+import com.desire.widget.engine.components.BmiRenderer;
 import com.desire.widget.engine.components.CalendarRenderer;
 import com.desire.widget.engine.components.CountdownRenderer;
 import com.desire.widget.engine.components.DigitalClockRenderer;
 import com.desire.widget.engine.components.DividerRenderer;
 import com.desire.widget.engine.components.FlipClockRenderer;
+import com.desire.widget.engine.components.HabitTrackerRenderer;
 import com.desire.widget.engine.components.ImageRenderer;
+import com.desire.widget.engine.components.MoonPhaseRenderer;
 import com.desire.widget.engine.components.MusicRenderer;
 import com.desire.widget.engine.components.MusicVisualizerRenderer;
+import com.desire.widget.engine.components.NotesRenderer;
+import com.desire.widget.engine.components.PomodoroRenderer;
+import com.desire.widget.engine.components.StopwatchRenderer;
+import com.desire.widget.engine.components.SunriseSunsetRenderer;
+import com.desire.widget.engine.components.TodoRenderer;
 import com.desire.widget.engine.components.WordClockRenderer;
 import com.desire.widget.engine.components.ProgressRingRenderer;
 import com.desire.widget.engine.components.QrCodeRenderer;
@@ -64,6 +72,24 @@ public class ComponentRegistry {
                 // Phase C rich components
                 .register(new FlipClockRenderer())
                 .register(new WordClockRenderer())
-                .register(new MusicVisualizerRenderer());
+                .register(new MusicVisualizerRenderer())
+                // Functional user-content components
+                .register(new NotesRenderer())
+                .register(new TodoRenderer())
+                // New practical widget types
+                .register(new MoonPhaseRenderer())
+                .register(new BmiRenderer())
+                .register(new SunriseSunsetRenderer())
+                .register(new HabitTrackerRenderer())
+                .register(new StopwatchRenderer())
+                .register(new PomodoroRenderer())
+                // Competitive-parity components (dial styles live in AnalogClockRenderer)
+                .register(new com.desire.widget.engine.components.StackedClockRenderer())
+                .register(new com.desire.widget.engine.components.PieClockRenderer())
+                .register(new com.desire.widget.engine.components.DeviceInfoRenderer())
+                .register(new com.desire.widget.engine.components.NextAlarmRenderer())
+                .register(new com.desire.widget.engine.components.ToggleRenderer())
+                .register(new com.desire.widget.engine.components.AgendaRenderer())
+                .register(new com.desire.widget.engine.components.ScreenTimeRenderer());
     }
 }

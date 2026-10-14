@@ -1,0 +1,28 @@
+{
+  "id": "sun_times",
+  "name": "Sunrise & Sunset",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#161719",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "sunrise_sunset",
+      "frame": {
+        "x": 0.04,
+        "y": 0.1,
+        "w": 0.92,
+        "h": 0.8
+      },
+      "props": {
+        "sunColor": "#FFA726",
+        "textColor": "#ECEDF0",
+        "subColor": "#8B92A3"
+      }
+    }
+  ],
+  "action": {
+    "type": "weather"
+  }
+}

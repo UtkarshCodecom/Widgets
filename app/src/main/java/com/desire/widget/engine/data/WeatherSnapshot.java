@@ -12,4 +12,9 @@ public class WeatherSnapshot {
     public double high = 27;
     public double low = 18;
     public String unit = "°";
+    /** Epoch millis for today's sunrise/sunset at the resolved location, or 0 if not yet computed. */
+    public long sunriseMillis = 0;
+    public long sunsetMillis = 0;
+    /** Epoch ms when this snapshot was cached; 0 = no real weather has ever been fetched. */
+    public long updatedAtMillis = 0;
 }

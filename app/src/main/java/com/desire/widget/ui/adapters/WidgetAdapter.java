@@ -154,7 +154,8 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
                 // installed widget, so the gallery preview is pixel-identical.
                 generatedPreview.setVisibility(View.GONE);
                 thumbnail.setVisibility(View.VISIBLE);
-                thumbnail.setScaleType(ImageView.ScaleType.FIT_XY);
+                // FIT_CENTER (not FIT_XY) so previews never stretch if the view/bitmap ratios differ.
+                thumbnail.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 renderSpecPreview(specJson, size);
             } else if (imageUrl != null && !imageUrl.isEmpty()) {
                 generatedPreview.setVisibility(View.GONE);
@@ -228,29 +229,32 @@ public class WidgetAdapter extends RecyclerView.Adapter<WidgetAdapter.WidgetView
         }
 
         private void applyCardHeight(String size) {
-            int[] ratio = WidgetSchema.previewRatio(size);
-            // Use the view's current width if already laid out; fall back to dp estimate.
-            if (previewArea.getWidth() > 0) {
-                ViewGroup.LayoutParams params = previewArea.getLayoutParams();
-                params.height = previewArea.getWidth() * ratio[1] / ratio[0];
-                previewArea.setLayoutParams(params);
-            } else {
-                // Set dp-based estimate now; correct via global layout listener after measure.
-                ViewGroup.LayoutParams params = previewArea.getLayoutParams();
-                params.height = dp(WidgetSchema.previewHeightDp(size));
-                previewArea.setLayoutParams(params);
-                previewArea.getViewTreeObserver().addOnGlobalLayoutListener(
-                        new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override public void onGlobalLayout() {
-                        previewArea.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        if (previewArea.getWidth() > 0) {
-                            ViewGroup.LayoutParams p = previewArea.getLayoutParams();
-                            p.height = previewArea.getWidth() * ratio[1] / ratio[0];
-                            previewArea.setLayoutParams(p);
+            final int[] ratio = WidgetSchema.previewRatio(size);
+
+            // Set a dp estimate immediately to avoid a flash…
+            ViewGroup.LayoutParams params = previewArea.getLayoutParams();
+            params.height = dp(WidgetSchema.previewHeightDp(size));
+            previewArea.setLayoutParams(params);
+
+            // …then correct to exactly width*ratio after THIS bind's layout pass. Attaching the
+            // listener every bind (not only when width==0) is what fixes the distortion when a
+            // ViewHolder is recycled between wide (spanned) and narrow items — the previous code
+            // reused a stale getWidth() synchronously.
+            previewArea.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new android.view.ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            int width = previewArea.getWidth();
+                            if (width <= 0) return;
+                            previewArea.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            int target = width * ratio[1] / ratio[0];
+                            if (previewArea.getHeight() != target) {
+                                ViewGroup.LayoutParams p = previewArea.getLayoutParams();
+                                p.height = target;
+                                previewArea.setLayoutParams(p);
+                            }
                         }
-                    }
-                });
-            }
+                    });
         }
 
         private void renderGeneratedPreview(WidgetEntity widget, String size, String style) {

@@ -1,0 +1,32 @@
+{
+  "id": "dial_dot",
+  "name": "Dot Dial",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#0A0A0A",
+    "gradientEnd": "#000000",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "dialStyle": "minimal",
+        "faceColor": "#00000000",
+        "tickColor": "#FFFFFF",
+        "handColor": "#FFFFFF",
+        "secondColor": "#FF3B30"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "power_glow",
+  "name": "Power",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#00B4DB",
+    "gradientEnd": "#0083B0",
+    "gradientAngle": 315,
+    "cornerRadius": 0.2
+  },
+  "components": [
+    { "type": "shape", "frame": { "x": 0.52, "y": 0.5, "w": 0.75, "h": 0.75 }, "props": { "shape": "circle", "fill": "#26FFFFFF" } },
+    { "type": "battery", "frame": { "x": 0.15, "y": 0.2, "w": 0.7, "h": 0.4 }, "props": { "bodyColor": "#EAF7FF", "fillColor": "#FFFFFF", "textColor": "#FFFFFF", "showPercent": true } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.72, "w": 0.8, "h": 0.14 }, "props": { "text": "⚡ Battery", "fontSize": 0.5, "align": "center", "color": "#EAF7FF", "bold": true } }
+  ],
+  "action": { "type": "battery" }
+}

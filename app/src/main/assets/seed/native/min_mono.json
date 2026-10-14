@@ -1,0 +1,47 @@
+{
+  "id": "min_mono",
+  "name": "Mono",
+  "designSize": "2x1",
+  "background": {
+    "fill": "#161719",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.22,
+        "w": 0.6,
+        "h": 0.56
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.66,
+        "align": "left",
+        "color": "#ECEDF0",
+        "bold": true,
+        "font": "monospace"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.66,
+        "y": 0.32,
+        "w": 0.3,
+        "h": 0.36
+      },
+      "props": {
+        "format": "EEE d",
+        "fontSize": 0.42,
+        "align": "right",
+        "color": "#A6ABB5",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

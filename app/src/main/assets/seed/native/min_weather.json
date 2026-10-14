@@ -1,0 +1,51 @@
+{
+  "id": "min_weather",
+  "name": "Weather",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "weather",
+      "frame": {
+        "x": 0.08,
+        "y": 0.14,
+        "w": 0.84,
+        "h": 0.6
+      },
+      "props": {
+        "condition": "clear",
+        "temp": 24,
+        "location": "City",
+        "high": 27,
+        "low": 18,
+        "iconColor": "#6C7BFF",
+        "textColor": "#ECEDF0",
+        "subColor": "#A6ABB5"
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.1,
+        "y": 0.78,
+        "w": 0.8,
+        "h": 0.12
+      },
+      "props": {
+        "text": "Tap for forecast",
+        "fontSize": 0.44,
+        "align": "center",
+        "color": "#6C7280",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "weather"
+  }
+}

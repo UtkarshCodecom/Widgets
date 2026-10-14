@@ -11,6 +11,7 @@ public final class WidgetSchema {
     public static final String SIZE_2X1 = "2x1";
     public static final String SIZE_4X1 = "4x1";
     public static final String SIZE_4X2 = "4x2";
+    public static final String SIZE_4X4 = "4x4";
 
     public static final String STYLE_ICON = "icon";
     public static final String STYLE_FOLDER = "folder";
@@ -23,7 +24,8 @@ public final class WidgetSchema {
             SIZE_2X2,
             SIZE_2X1,
             SIZE_4X1,
-            SIZE_4X2
+            SIZE_4X2,
+            SIZE_4X4
     };
 
     public static final String[] STYLE_OPTIONS = {
@@ -45,6 +47,7 @@ public final class WidgetSchema {
             case SIZE_2X1:
             case SIZE_4X1:
             case SIZE_4X2:
+            case SIZE_4X4:
                 return normalized;
             case "1x2":
                 return SIZE_2X1;
@@ -68,7 +71,8 @@ public final class WidgetSchema {
 
     public static boolean isWide(String size) {
         String normalized = normalizeSize(size);
-        return SIZE_2X1.equals(normalized) || SIZE_4X1.equals(normalized) || SIZE_4X2.equals(normalized);
+        return SIZE_2X1.equals(normalized) || SIZE_4X1.equals(normalized) || SIZE_4X2.equals(normalized)
+                || SIZE_4X4.equals(normalized);
     }
 
     /**
@@ -77,6 +81,7 @@ public final class WidgetSchema {
      */
     public static int[] previewRatio(String size) {
         String normalized = normalizeSize(size);
+        if (SIZE_4X4.equals(normalized)) return new int[]{1, 1}; // square, spans the full card width
         if (SIZE_4X2.equals(normalized)) return new int[]{4, 2};
         if (SIZE_4X1.equals(normalized)) return new int[]{4, 1};
         if (SIZE_2X1.equals(normalized)) return new int[]{4, 1}; // spans full width like 4x1
@@ -86,6 +91,8 @@ public final class WidgetSchema {
 
     public static int previewHeightDp(String size) {
         String normalized = normalizeSize(size);
+        // 4x4 at full card width ≈ 360dp → square
+        if (SIZE_4X4.equals(normalized)) return 340;
         // 4x2 at full card width ≈ 360dp → height = 360/2 = 180
         if (SIZE_4X2.equals(normalized)) return 180;
         // 4x1 / 2x1 at full card width → height = 360/4 = 90, add padding = 100
@@ -98,14 +105,17 @@ public final class WidgetSchema {
 
     public static int renderWidthPx(String size) {
         String normalized = normalizeSize(size);
-        if (SIZE_4X1.equals(normalized) || SIZE_4X2.equals(normalized)) return 1024;
+        if (SIZE_4X1.equals(normalized) || SIZE_4X2.equals(normalized) || SIZE_4X4.equals(normalized)) return 1024;
         if (SIZE_2X1.equals(normalized)) return 720;
+        if (SIZE_1X1.equals(normalized)) return 256;
         return 512;
     }
 
     public static int renderHeightPx(String size) {
         String normalized = normalizeSize(size);
         if (SIZE_2X1.equals(normalized) || SIZE_4X1.equals(normalized)) return 256;
+        if (SIZE_4X4.equals(normalized)) return 1024;
+        if (SIZE_1X1.equals(normalized)) return 256;
         return 512;
     }
 
@@ -114,6 +124,8 @@ public final class WidgetSchema {
         if (SIZE_2X1.equals(normalized)) return new ComponentName(context, WidgetProvider2x1.class);
         if (SIZE_4X1.equals(normalized)) return new ComponentName(context, WidgetProvider4x1.class);
         if (SIZE_4X2.equals(normalized)) return new ComponentName(context, WidgetProvider4x2.class);
+        if (SIZE_4X4.equals(normalized)) return new ComponentName(context, WidgetProvider4x4.class);
+        if (SIZE_1X1.equals(normalized)) return new ComponentName(context, WidgetProvider1x1.class);
         return new ComponentName(context, WidgetProvider.class);
     }
 

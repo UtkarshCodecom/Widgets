@@ -1,0 +1,30 @@
+{
+  "id": "min_notes",
+  "name": "Notes",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "notes",
+      "frame": {
+        "x": 0.09,
+        "y": 0.1,
+        "w": 0.82,
+        "h": 0.8
+      },
+      "props": {
+        "title": "NOTES",
+        "titleColor": "#6C7BFF",
+        "textColor": "#ECEDF0"
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_notes"
+  }
+}

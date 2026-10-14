@@ -49,6 +49,13 @@ public interface WidgetDao {
     @Update
     void update(WidgetEntity widget);
 
+    /** Refreshes a catalog widget's content/metadata WITHOUT touching user state (favorite, downloads). */
+    @Query("UPDATE widgets SET spec_json = :spec, name = :name, description = :desc, "
+            + "category_id = :catId, category_name = :catName, widget_size = :size, "
+            + "is_pro = :pro, is_featured = :featured, is_trending = :trending, active = 1 WHERE id = :id")
+    void syncExisting(String id, String spec, String name, String desc, String catId,
+                      String catName, String size, boolean pro, boolean featured, boolean trending);
+
     @Query("UPDATE widgets SET is_favorite = :isFavorite WHERE id = :id")
     void setFavorite(String id, boolean isFavorite);
 
