@@ -34,6 +34,7 @@ public class WidgetApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        com.desire.widget.engine.runtime.StyleApplier.init(this); // "@wallpaper" colours
         instance = this;
 
         FirebaseApp.initializeApp(this);

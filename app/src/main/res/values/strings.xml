@@ -118,4 +118,8 @@
     <string name="todo_clear_done">Clear</string>
     <string name="notes_title">Note</string>
     <string name="notes_hint">Write anything…\n\nTip: start a line with “- ” for a bullet or “[ ] ” for a checkbox.</string>
+    <string name="add_to_home_screen">✓  ADD TO HOME SCREEN</string>
+    <string name="edit_look">Edit this look</string>
+    <string name="new_look">New look</string>
+    <string name="detail_hint">Pick a look, then add it — or tap ✎ to make your own</string>
 </resources>

@@ -1,109 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Editor: the live preview floats over the user's wallpaper (the window shows it); below it a
+     solid sheet with the widget's own tabs ("Clock Style", "Hour Color"…), the tab's controls and
+     the ✕ / ↻ / ADD NEW bar. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cw_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/transparent"
-    android:fitsSystemWindows="true">
+    android:background="@android:color/transparent">
 
-    <!-- Large live preview -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:minHeight="200dp">
-
-        <ImageView
-            android:id="@+id/cw_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="24dp"
-            android:contentDescription="Widget preview"
-            android:scaleType="fitCenter" />
-
-        <TextView
-            android:id="@+id/cw_advanced"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:layout_margin="8dp"
-            android:text="Advanced"
-            android:padding="8dp"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurface"
-            android:alpha="0.7"
-            android:background="?selectableItemBackground" />
-    </FrameLayout>
-
-    <!-- Tab bar -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:background="#14FFFFFF">
-
-        <LinearLayout
-            android:id="@+id/cw_tabs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="6dp" />
-    </HorizontalScrollView>
-
-    <!-- Tab content (built per tab) -->
-    <FrameLayout
-        android:id="@+id/cw_content"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="#0AFFFFFF" />
-
-    <!-- Bottom action bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/cw_close"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="12dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:contentDescription="Close"
-            android:background="?selectableItemBackgroundBorderless"
-            app:tint="?attr/colorOnSurface"
-            xmlns:app="http://schemas.android.com/apk/res-auto" />
+        <FrameLayout
+            android:id="@+id/cw_preview_area"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="200dp">
 
-        <ImageView
-            android:id="@+id/cw_reset"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="6dp"
-            android:padding="12dp"
-            android:src="@android:drawable/ic_menu_rotate"
-            android:contentDescription="Reset"
-            android:background="?selectableItemBackgroundBorderless"
-            app:tint="?attr/colorOnSurface"
-            xmlns:app="http://schemas.android.com/apk/res-auto" />
+            <ImageView
+                android:id="@+id/cw_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="36dp"
+                android:layout_marginBottom="28dp"
+                android:contentDescription="Widget preview"
+                android:scaleType="fitCenter" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/cw_add_home"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/cw_sheet"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="＋ ADD NEW"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="12dp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnPrimary"
-            android:background="@drawable/bg_premium_pill" />
+            android:background="@drawable/bg_editor_sheet"
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:id="@+id/cw_tabs_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/cw_tabs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp" />
+            </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider" />
+
+            <FrameLayout
+                android:id="@+id/cw_content"
+                android:layout_width="match_parent"
+                android:layout_height="290dp" />
+
+            <LinearLayout
+                android:id="@+id/cw_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="14dp">
+
+                <TextView
+                    android:id="@+id/cw_close"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_round_glass"
+                    android:contentDescription="Close"
+                    android:gravity="center"
+                    android:text="✕"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cw_reset"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_round_glass"
+                    android:contentDescription="Reset"
+                    android:gravity="center"
+                    android:text="↻"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/cw_add_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_premium_pill"
+                    android:gravity="center"
+                    android:letterSpacing="0.06"
+                    android:paddingHorizontal="24dp"
+                    android:text="＋  ADD NEW"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/cw_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="@drawable/bg_top_scrim" />
+
+</FrameLayout>

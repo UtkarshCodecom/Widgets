@@ -149,6 +149,9 @@ public class WidgetsFragment extends Fragment implements GalleryAdapter.Listener
             boolean on = !viewModel.isFavoritesOnly();
             viewModel.setShowFavoritesOnly(on);
             favoritesToggle.setImageResource(on ? R.drawable.ic_heart_filled : R.drawable.ic_heart_outline);
+            // White outline when off; the heart's own red when showing favourites.
+            favoritesToggle.setImageTintList(on ? null
+                    : android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.text_primary)));
             widgetRecycler.scrollToPosition(0);
         });
     }
@@ -230,7 +233,8 @@ public class WidgetsFragment extends Fragment implements GalleryAdapter.Listener
             showProUpsell();
             return;
         }
-        Intent intent = new Intent(requireContext(), CustomizeWidgetActivity.class);
+        // The widget page (looks, saved variants, wallpaper preview) leads into customizing.
+        Intent intent = new Intent(requireContext(), com.desire.widget.ui.customize.WidgetDetailActivity.class);
         intent.putExtra(CustomizeWidgetActivity.EXTRA_SPEC_JSON, specJson);
         intent.putExtra(CustomizeWidgetActivity.EXTRA_NAME, widget.getName());
         intent.putExtra(CustomizeWidgetActivity.EXTRA_SIZE, widget.getWidgetSize());

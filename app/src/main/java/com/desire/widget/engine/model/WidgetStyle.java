@@ -44,6 +44,15 @@ public class WidgetStyle {
     public String tapPackage;
     /** Stickers the user placed on this widget (admin-provided art, positioned by dragging). */
     public java.util.List<Sticker> stickers;
+    /**
+     * Per-component prop overrides from the editor's widget-specific tabs ("Hour Color",
+     * "Clock Style"…), keyed {@code "<componentIndex>.<prop>"} → value (String, Boolean, Number or
+     * List, as in the spec JSON). Indices refer to the design's own component list. Colour values
+     * may be gradients (see SpecPaint) or "@wallpaper".
+     */
+    public java.util.Map<String, Object> props;
+    /** Which built-in "Style N" option is active (-1 = the design's own look). UI state only. */
+    public int styleOption = -1;
 
     /**
      * A placed sticker: an admin-provided image drawn on top of the widget at a user-chosen
@@ -74,7 +83,8 @@ public class WidgetStyle {
                 && (photoUris == null || photoUris.isEmpty())
                 && contentScale == 1f && alignX == 0 && alignY == 0
                 && styleVariant == 0 && isBlank(cityName) && isBlank(tapPackage)
-                && (stickers == null || stickers.isEmpty());
+                && (stickers == null || stickers.isEmpty())
+                && (props == null || props.isEmpty());
     }
 
     /** The photo to show right now: the current slideshow frame, else the single photo. */

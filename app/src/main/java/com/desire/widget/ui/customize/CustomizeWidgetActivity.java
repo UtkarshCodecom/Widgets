@@ -59,6 +59,10 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
     public static final String EXTRA_SIZE = "size";
     public static final String EXTRA_WIDGET_ID = "widget_id";
     public static final String EXTRA_APPWIDGET_ID = "app_widget_id";
+    /** Optional: the look to start from (a WidgetStyle as JSON). */
+    public static final String EXTRA_STYLE_JSON = "style_json";
+    /** Optional: the saved look being edited; also returned when a look is saved. */
+    public static final String EXTRA_VARIANT_ID = "variant_id";
 
     private static final WidgetEngine ENGINE = new WidgetEngine();
     private static final Gson GSON = new Gson();
@@ -72,7 +76,13 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
     };
 
     private final AtomicInteger renderToken = new AtomicInteger();
-    private final WidgetStyle style = new WidgetStyle();
+    private WidgetStyle style = new WidgetStyle();
+    /** The saved look being edited (from the widget page), or null for a new one. */
+    private String variantId;
+    /** Widget-specific tabs: the "Clock Style" looks and one colour tab per part. */
+    private com.desire.widget.engine.runtime.EditorSchema.StyleAxis axis;
+    private List<com.desire.widget.engine.runtime.EditorSchema.ColorSlot> slots = new ArrayList<>();
+    private final List<java.util.function.Supplier<View>> panels = new ArrayList<>();
 
     private ImageView preview;
     private LinearLayout tabsRow;
@@ -125,6 +135,7 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ThemeManager.apply(this);
         super.onCreate(savedInstanceState);
+        WidgetDetailActivity.showWallpaperBehind(this); // preview over the user's own wallpaper
         setContentView(R.layout.activity_customize_widget);
 
         specJson = getIntent().getStringExtra(EXTRA_SPEC_JSON);
@@ -132,6 +143,7 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         size = WidgetSchema.normalizeSize(getIntent().getStringExtra(EXTRA_SIZE));
         widgetId = getIntent().getStringExtra(EXTRA_WIDGET_ID);
         appWidgetId = getIntent().getIntExtra(EXTRA_APPWIDGET_ID, -1);
+        variantId = getIntent().getStringExtra(EXTRA_VARIANT_ID);
 
         if (specJson == null || specJson.trim().isEmpty()) {
             finish();
@@ -144,6 +156,7 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         }
 
         preloadStyleIfReconfigure();
+        seedStyle(getIntent().getStringExtra(EXTRA_STYLE_JSON));
 
         preview = findViewById(R.id.cw_preview);
         tabsRow = findViewById(R.id.cw_tabs);
@@ -170,9 +183,8 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         buildTabs();
         setupActions();
 
-        if (appWidgetId != -1) {
-            ((TextView) findViewById(R.id.cw_add_home)).setText("APPLY");
-        }
+        ((TextView) findViewById(R.id.cw_add_home)).setText(primaryLabel());
+        applyInsets();
 
         selectTab(0);
         preview.post(this::render);
@@ -180,97 +192,115 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
 
     private void preloadStyleIfReconfigure() {
         if (appWidgetId == -1) return;
-        String saved = com.desire.widget.engine.runtime.EngineWidgetStore.getStyleJson(this, appWidgetId);
-        if (saved == null || saved.isEmpty()) return;
+        seedStyle(com.desire.widget.engine.runtime.EngineWidgetStore.getStyleJson(this, appWidgetId));
+    }
+
+    /** Starts editing from a saved style (a placed widget's, or a look from the widget page). */
+    private void seedStyle(String json) {
+        if (json == null || json.isEmpty()) return;
         try {
-            WidgetStyle s = GSON.fromJson(saved, WidgetStyle.class);
-            if (s == null) return;
-            style.accentColor = s.accentColor;
-            style.textColor = s.textColor;
-            style.backgroundColor = s.backgroundColor;
-            style.gradientEndColor = s.gradientEndColor;
-            style.backgroundMode = s.backgroundMode;
-            style.cornerRadius = s.cornerRadius;
-            style.backgroundOpacity = s.backgroundOpacity;
-            style.fontFamily = s.fontFamily;
-            style.photoUri = s.photoUri;
-            style.photoUris = s.photoUris;
-            style.photoIntervalMin = s.photoIntervalMin;
-            style.contentScale = s.contentScale;
-            style.alignX = s.alignX;
-            style.alignY = s.alignY;
-            style.styleVariant = s.styleVariant;
-            style.cityName = s.cityName;
-            style.stickers = s.stickers;
+            WidgetStyle s = GSON.fromJson(json, WidgetStyle.class);
+            if (s != null) style = s;
         } catch (Exception ignored) {}
+    }
+
+    /** Status bar above the preview, navigation bar below the action row. */
+    private void applyInsets() {
+        View area = findViewById(R.id.cw_preview_area);
+        View actions = findViewById(R.id.cw_actions);
+        int areaTop = area.getPaddingTop();
+        int actionsBottom = actions.getPaddingBottom();
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cw_root), (v, insets) -> {
+            androidx.core.graphics.Insets bars = insets.getInsets(
+                    androidx.core.view.WindowInsetsCompat.Type.systemBars()
+                            | androidx.core.view.WindowInsetsCompat.Type.ime());
+            area.setPadding(area.getPaddingLeft(), areaTop + bars.top, area.getPaddingRight(), area.getPaddingBottom());
+            actions.setPadding(actions.getPaddingLeft(), actions.getPaddingTop(), actions.getPaddingRight(),
+                    actionsBottom + bars.bottom);
+            return insets;
+        });
+    }
+
+    /** Opened from the widget page → saves a look there; otherwise pins/applies directly. */
+    private boolean savesLook() {
+        return appWidgetId == -1 && getCallingActivity() != null && widgetId != null;
+    }
+
+    private String primaryLabel() {
+        if (appWidgetId != -1) return "✓  APPLY";
+        if (savesLook()) return variantId != null ? "✓  SAVE" : "＋  ADD NEW";
+        return "＋  ADD TO HOME";
     }
 
     // ---------------------------------------------------------------- Tabs
 
     private void buildTabs() {
         tabs.clear();
-        tabs.add("Style");
-        if (StyleApplier.hasWeather(parsedSpec)) tabs.add("City");
-        tabs.add("Color 1");
-        tabs.add("Color 2");
-        tabs.add("Color 3");
-        tabs.add("Background");
-        tabs.add("Font");
-        tabs.add("Size");
-        tabs.add("Alignment");
-        tabs.add("Transparency");
-        tabs.add("Tap");
-        tabs.add("Photo");
-        tabs.add("Stickers");
+        panels.clear();
+        axis = com.desire.widget.engine.runtime.EditorSchema.styleAxis(parsedSpec, specJson);
+        slots = com.desire.widget.engine.runtime.EditorSchema.colorSlots(parsedSpec);
+
+        if (axis != null) addTab(axis.label, this::stylePanel);
+        for (com.desire.widget.engine.runtime.EditorSchema.ColorSlot slot : slots) {
+            addTab(slot.label, () -> colorPanel(new SlotTarget(slot)));
+        }
+        if (slots.isEmpty()) {
+            addTab("Accent Color", () -> colorPanel(new ThemeTarget(true)));
+            addTab("Text Color", () -> colorPanel(new ThemeTarget(false)));
+        }
+        addTab("Background", this::backgroundPanel);
+        addTab("Font", this::fontPanel);
+        addTab("Size", this::sizePanel);
+        addTab("Alignment", this::alignmentPanel);
+        addTab("Transparency", this::transparencyPanel);
+        addTab("Themes", this::themesPanel);
+        if (StyleApplier.hasWeather(parsedSpec)) addTab("City", this::cityPanel);
+        addTab("Photo", this::photoPanel);
+        addTab("Stickers", this::stickersPanel);
+        addTab("Tap", this::tapPanel);
 
         tabsRow.removeAllViews();
         for (int i = 0; i < tabs.size(); i++) {
             final int idx = i;
             TextView tab = new TextView(this);
             tab.setText(tabs.get(i));
-            tab.setPadding(dp(14), dp(14), dp(14), dp(14));
-            tab.setTextSize(14f);
-            tab.setBackgroundResource(0);
+            tab.setPadding(dp(16), dp(14), dp(16), dp(16));
+            tab.setTextSize(15f);
+            tab.setLetterSpacing(0.02f);
             tab.setOnClickListener(v -> selectTab(idx));
             tabsRow.addView(tab);
         }
     }
 
+    private void addTab(String label, java.util.function.Supplier<View> panel) {
+        tabs.add(label);
+        panels.add(panel);
+    }
+
     private void selectTab(int index) {
+        if (index < 0 || index >= panels.size()) index = 0;
         selectedTab = index;
         for (int i = 0; i < tabsRow.getChildCount(); i++) {
             TextView tab = (TextView) tabsRow.getChildAt(i);
             boolean sel = i == index;
-            tab.setTextColor(sel ? themeColor(androidx.appcompat.R.attr.colorPrimary, 0xFF00D4FF)
-                    : withAlpha(onSurface(), 0.55f));
+            tab.setTextColor(sel ? onSurface() : withAlpha(onSurface(), 0.5f));
             tab.setTypeface(null, sel ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
+            tab.setBackgroundResource(sel ? R.drawable.bg_tab_selected : 0);
+        }
+        View tab = tabsRow.getChildAt(index);
+        if (tab != null) {
+            View scroller = findViewById(R.id.cw_tabs_scroll);
+            scroller.post(() -> ((HorizontalScrollView) scroller).smoothScrollTo(
+                    Math.max(0, tab.getLeft() - dp(40)), 0));
         }
         content.removeAllViews();
-        content.addView(buildPanel(tabs.get(index)));
-    }
-
-    private View buildPanel(String name) {
-        switch (name) {
-            case "Style": return stylePanel();
-            case "City": return cityPanel();
-            case "Color 1": return colorPanel(1);
-            case "Color 2": return colorPanel(2);
-            case "Color 3": return colorPanel(3);
-            case "Background": return backgroundPanel();
-            case "Font": return fontPanel();
-            case "Size": return sizePanel();
-            case "Alignment": return alignmentPanel();
-            case "Transparency": return transparencyPanel();
-            case "Tap": return tapPanel();
-            case "Photo": return photoPanel();
-            case "Stickers": return stickersPanel();
-            default: return new View(this);
-        }
+        content.addView(panels.get(index).get());
     }
 
     // ---------------------------------------------------------------- Panels
 
-    private View stylePanel() {
+    /** Our colour themes: wallpaper / Material You, built-in palettes and the user's saved ones. */
+    private View themesPanel() {
         ScrollView scroll = new ScrollView(this);
         scroll.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -296,6 +326,7 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
             chip.setLayoutParams(lp);
             chip.setOnClickListener(v -> {
                 copyStyle(style, p.style);
+                clearSlotColors(); // a theme recolours everything; drop per-part colours
                 render();
                 selectTab(selectedTab);
             });
@@ -327,6 +358,7 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         chip.setLayoutParams(lp);
         chip.setOnClickListener(v -> {
             apply.run();
+            clearSlotColors();
             render();
             selectTab(selectedTab);
         });
@@ -440,64 +472,506 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         // keep dst.photoUri / cityName / tapPackage (per-widget bits)
     }
 
+    // ---------------------------------------------------------------- Style looks ("Style 1…N")
+
+    /** The design's own looks as live thumbnails, like Muviz's "Style 1 … Style 4". */
+    private View stylePanel() {
+        HorizontalScrollView scroll = new HorizontalScrollView(this);
+        scroll.setHorizontalScrollBarEnabled(false);
+        scroll.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(dp(12), dp(8), dp(12), dp(8));
+        row.setMinimumWidth(getResources().getDisplayMetrics().widthPixels);
+
+        int[] ratio = WidgetSchema.previewRatio(size);
+        int boxH = dp(ratio[0] >= 4 * ratio[1] ? 70 : 140);
+        int boxW = Math.max(dp(110), boxH * ratio[0] / ratio[1]);
+        int current = currentOption();
+        for (int i = 0; i < axis.options.size(); i++) {
+            final int index = i;
+            com.desire.widget.engine.runtime.EditorSchema.Option o = axis.options.get(i);
+            boolean sel = i == current;
+
+            LinearLayout cell = new LinearLayout(this);
+            cell.setOrientation(LinearLayout.VERTICAL);
+            cell.setGravity(Gravity.CENTER_HORIZONTAL);
+            LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            clp.setMargins(dp(6), 0, dp(6), 0);
+            cell.setLayoutParams(clp);
+
+            ImageView thumb = new ImageView(this);
+            thumb.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            thumb.setPadding(dp(8), dp(8), dp(8), dp(8));
+            GradientDrawable bg = new GradientDrawable();
+            bg.setCornerRadius(dp(18));
+            bg.setColor(0x14FFFFFF);
+            bg.setStroke(dp(sel ? 2 : 1), sel ? themeColor(androidx.appcompat.R.attr.colorPrimary, 0xFF6C7BFF) : 0x22FFFFFF);
+            thumb.setBackground(bg);
+            cell.addView(thumb, new LinearLayout.LayoutParams(boxW, boxH));
+            new StyledPreview(thumb, 360).bind(specJson, GSON.toJson(withOption(index)), ratio);
+
+            TextView label = pill(o.name, sel);
+            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            llp.topMargin = dp(10);
+            label.setLayoutParams(llp);
+            cell.addView(label);
+
+            View.OnClickListener pick = v -> {
+                applyOption(index);
+                render();
+                selectTab(selectedTab);
+            };
+            thumb.setOnClickListener(pick);
+            label.setOnClickListener(pick);
+            row.addView(cell);
+        }
+        scroll.addView(row);
+        return scroll;
+    }
+
+    /** Index of the active look: explicit choice, else the one matching the current props. */
+    private int currentOption() {
+        if (style.styleOption >= 0 && style.styleOption < axis.options.size()) return style.styleOption;
+        for (int i = 0; i < axis.options.size(); i++) {
+            boolean all = true;
+            for (java.util.Map.Entry<String, Object> e : axis.options.get(i).props.entrySet()) {
+                Object v = style.props != null ? style.props.get(e.getKey()) : null;
+                if (v == null || !String.valueOf(v).equals(String.valueOf(e.getValue()))) all = false;
+            }
+            if (all) return i;
+        }
+        // No override yet: highlight the look the design itself uses.
+        if (style.props == null || style.props.isEmpty()) {
+            for (int i = 0; i < axis.options.size(); i++) {
+                boolean all = true;
+                for (java.util.Map.Entry<String, Object> e : axis.options.get(i).props.entrySet()) {
+                    String k = e.getKey();
+                    int dot = k.indexOf('.');
+                    Object v = null;
+                    try {
+                        int ci = Integer.parseInt(k.substring(0, dot));
+                        if (parsedSpec != null && parsedSpec.components != null && ci < parsedSpec.components.size()
+                                && parsedSpec.components.get(ci).props != null) {
+                            v = parsedSpec.components.get(ci).props.get(k.substring(dot + 1));
+                        }
+                    } catch (Exception ignored) {}
+                    if (v == null ? i != 0 : !String.valueOf(v).equals(String.valueOf(e.getValue()))) all = false;
+                }
+                if (all) return i;
+            }
+        }
+        return -1;
+    }
+
+    /** A copy of the current style with look {@code index} applied (for its thumbnail). */
+    private WidgetStyle withOption(int index) {
+        WidgetStyle copy = GSON.fromJson(GSON.toJson(style), WidgetStyle.class);
+        WidgetStyle saved = style;
+        style = copy;
+        applyOption(index);
+        style = saved;
+        return copy;
+    }
+
+    private void applyOption(int index) {
+        if (style.props == null) style.props = new java.util.LinkedHashMap<>();
+        for (String k : axis.keys) style.props.remove(k);
+        style.props.putAll(axis.options.get(index).props);
+        style.styleOption = index;
+    }
+
+    // ---------------------------------------------------------------- Colour tabs
+
+    /** What a colour tab edits: one part of the design, or a theme-wide colour. */
+    private interface ColorTarget {
+        String get();
+        void set(String value); // null = the design's own colour
+        boolean gradients();
+    }
+
+    /** One part of the design ("Hour Color" → every prop listed in the slot). */
+    private final class SlotTarget implements ColorTarget {
+        final com.desire.widget.engine.runtime.EditorSchema.ColorSlot slot;
+
+        SlotTarget(com.desire.widget.engine.runtime.EditorSchema.ColorSlot slot) {
+            this.slot = slot;
+        }
+
+        @Override public String get() {
+            Object v = style.props != null ? style.props.get(slot.keys.get(0)) : null;
+            return v instanceof String ? (String) v : null;
+        }
+
+        @Override public void set(String value) {
+            if (style.props == null) style.props = new java.util.LinkedHashMap<>();
+            for (String k : slot.keys) {
+                if (value == null) style.props.remove(k);
+                else style.props.put(k, value);
+            }
+        }
+
+        @Override public boolean gradients() {
+            return slot.gradients;
+        }
+    }
+
+    /** Fallback for designs without named parts: the theme accent / text colour. */
+    private final class ThemeTarget implements ColorTarget {
+        final boolean accent;
+
+        ThemeTarget(boolean accent) {
+            this.accent = accent;
+        }
+
+        @Override public String get() {
+            return accent ? style.accentColor : style.textColor;
+        }
+
+        @Override public void set(String value) {
+            if (accent) style.accentColor = value;
+            else style.textColor = value;
+        }
+
+        @Override public boolean gradients() {
+            return false;
+        }
+    }
+
+    /** Gradient swatches (start, end). */
+    private static final int[][] GRADIENTS = {
+            {0xFFFF5F6D, 0xFFFFC371}, {0xFFF7971E, 0xFFFFD200}, {0xFFFC466B, 0xFF3F5EFB},
+            {0xFF8E2DE2, 0xFF4A00E0}, {0xFF00C9FF, 0xFF92FE9D}, {0xFF43E97B, 0xFF38F9D7},
+            {0xFFFA709A, 0xFFFEE140}, {0xFF30CFD0, 0xFF330867}, {0xFFA18CD1, 0xFFFBC2EB},
+            {0xFFFF9A9E, 0xFFFECFEF}, {0xFFE0E0E0, 0xFF8E8E8E}, {0xFFF5F7FA, 0xFFC3CFE2},
+    };
+
+    /** Muviz-style swatch grid: ＋ custom, A original, ✦ wallpaper, gradients, then solids. */
+    private View colorPanel(ColorTarget target) {
+        String current = target.get();
+        GridLayout grid = swatchGrid();
+        grid.addView(swatch(SWATCH_CUSTOM, 0, 0, false, () -> pickCustomColor(current, hex -> {
+            target.set(hex);
+            render();
+            selectTab(selectedTab);
+        })));
+        grid.addView(swatch(SWATCH_ORIGINAL, 0, 0, isBlank(current), () -> setAndRefresh(target, null)));
+        grid.addView(swatch(SWATCH_WALLPAPER, StyleApplier.wallpaperAccent(), 0,
+                StyleApplier.WALLPAPER.equals(current), () -> setAndRefresh(target, StyleApplier.WALLPAPER)));
+        if (target.gradients()) {
+            for (int[] g : GRADIENTS) {
+                String value = com.desire.widget.engine.util.SpecPaint.gradient(g[0], g[1]);
+                grid.addView(swatch(SWATCH_GRADIENT, g[0], g[1], value.equalsIgnoreCase(current),
+                        () -> setAndRefresh(target, value)));
+            }
+        }
+        for (int color : PALETTE) {
+            grid.addView(swatch(SWATCH_SOLID, color, 0, !isBlank(current) && matches(current, color),
+                    () -> setAndRefresh(target, hex(color))));
+        }
+        return wrapGrid(grid, "A  original colour   ·   ✦  follows your wallpaper");
+    }
+
+    private void setAndRefresh(ColorTarget target, String value) {
+        target.set(value);
+        render();
+        selectTab(selectedTab);
+    }
+
+    /** Drops per-part colours (used when a whole theme is applied). Keeps the chosen look. */
+    private void clearSlotColors() {
+        if (style.props == null) return;
+        for (com.desire.widget.engine.runtime.EditorSchema.ColorSlot slot : slots) {
+            for (String k : slot.keys) style.props.remove(k);
+        }
+    }
+
+    private static final int SWATCH_SOLID = 0, SWATCH_GRADIENT = 1, SWATCH_CUSTOM = 2,
+            SWATCH_ORIGINAL = 3, SWATCH_WALLPAPER = 4;
+
+    private GridLayout swatchGrid() {
+        GridLayout grid = new GridLayout(this);
+        grid.setColumnCount(4);
+        grid.setPadding(dp(10), dp(4), dp(10), dp(16));
+        return grid;
+    }
+
+    private View wrapGrid(View grid, String hint) {
+        ScrollView scroll = new ScrollView(this);
+        scroll.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        LinearLayout col = new LinearLayout(this);
+        col.setOrientation(LinearLayout.VERTICAL);
+        if (hint != null) {
+            TextView t = new TextView(this);
+            t.setText(hint);
+            t.setTextSize(12f);
+            t.setTextColor(withAlpha(onSurface(), 0.5f));
+            t.setGravity(Gravity.CENTER);
+            t.setPadding(dp(12), dp(12), dp(12), dp(2));
+            col.addView(t);
+        }
+        col.addView(grid, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        scroll.addView(col);
+        return scroll;
+    }
+
+    /** One 56dp circle in a 4-column grid; the selected one gets a white ring. */
+    private View swatch(int kind, int c1, int c2, boolean selected, Runnable onClick) {
+        FrameLayout cell = new FrameLayout(this);
+        GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
+                GridLayout.spec(GridLayout.UNDEFINED), GridLayout.spec(GridLayout.UNDEFINED, 1f));
+        lp.width = 0;
+        lp.height = dp(76);
+        cell.setLayoutParams(lp);
+
+        TextView dot = new TextView(this);
+        dot.setGravity(Gravity.CENTER);
+        dot.setTextSize(22f);
+        dot.setTextColor(Color.WHITE);
+        GradientDrawable d = new GradientDrawable();
+        d.setShape(GradientDrawable.OVAL);
+        switch (kind) {
+            case SWATCH_GRADIENT:
+                d.setOrientation(GradientDrawable.Orientation.TL_BR);
+                d.setColors(new int[]{c1, c2});
+                break;
+            case SWATCH_CUSTOM:
+                d.setColor(0xFF15171B);
+                dot.setText("＋");
+                dot.setTextSize(26f);
+                break;
+            case SWATCH_ORIGINAL:
+                d.setOrientation(GradientDrawable.Orientation.TL_BR);
+                d.setColors(new int[]{0xFFFF3D9A, 0xFF6C2BFF});
+                dot.setText("A");
+                dot.setTypeface(null, android.graphics.Typeface.BOLD);
+                break;
+            case SWATCH_WALLPAPER:
+                d.setColor(c1);
+                dot.setText("✦");
+                break;
+            default:
+                d.setColor(c1);
+                break;
+        }
+        boolean ring = selected || kind == SWATCH_CUSTOM;
+        d.setStroke(dp(ring ? 3 : 1), ring ? 0xFFFFFFFF : 0x33FFFFFF);
+        dot.setBackground(d);
+        FrameLayout.LayoutParams dlp = new FrameLayout.LayoutParams(dp(56), dp(56), Gravity.CENTER);
+        cell.addView(dot, dlp);
+        if (selected && kind != SWATCH_CUSTOM) {
+            // Thin gap + outer ring, so the selection reads on any colour.
+            View halo = new View(this);
+            GradientDrawable h = new GradientDrawable();
+            h.setShape(GradientDrawable.OVAL);
+            h.setStroke(dp(2), themeColor(androidx.appcompat.R.attr.colorPrimary, 0xFF6C7BFF));
+            halo.setBackground(h);
+            cell.addView(halo, new FrameLayout.LayoutParams(dp(66), dp(66), Gravity.CENTER));
+        }
+        cell.setOnClickListener(v -> onClick.run());
+        return cell;
+    }
+
+    /** Hue / saturation / brightness sliders with a live swatch and an editable hex code. */
+    private void pickCustomColor(String current, java.util.function.Consumer<String> onPick) {
+        int start = 0xFF6C7BFF;
+        try {
+            if (!isBlank(current) && current.startsWith("#")) start = Color.parseColor(current);
+        } catch (Exception ignored) {}
+        final float[] hsv = new float[3];
+        Color.colorToHSV(start, hsv);
+
+        LinearLayout col = new LinearLayout(this);
+        col.setOrientation(LinearLayout.VERTICAL);
+        col.setPadding(dp(22), dp(12), dp(22), dp(4));
+        View sample = new View(this);
+        GradientDrawable sd = new GradientDrawable();
+        sd.setCornerRadius(dp(16));
+        sample.setBackground(sd);
+        col.addView(sample, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(56)));
+        EditText hexInput = new EditText(this);
+        hexInput.setSingleLine(true);
+        col.addView(hexInput);
+
+        final boolean[] syncing = {false};
+        Runnable refresh = () -> {
+            int c = Color.HSVToColor(hsv);
+            sd.setColor(c);
+            syncing[0] = true;
+            hexInput.setText(hex(c));
+            syncing[0] = false;
+        };
+        String[] names = {"Hue", "Saturation", "Brightness"};
+        float[] max = {360f, 1f, 1f};
+        Slider[] sliders = new Slider[3];
+        for (int i = 0; i < 3; i++) {
+            final int k = i;
+            col.addView(sectionLabel(names[i]));
+            Slider sl = new Slider(this);
+            sl.setValueFrom(0f);
+            sl.setValueTo(max[i]);
+            sl.setValue(Math.max(0f, Math.min(max[i], hsv[i])));
+            sl.addOnChangeListener((x, v, user) -> {
+                if (!user) return;
+                hsv[k] = v;
+                refresh.run();
+            });
+            sliders[i] = sl;
+            col.addView(sl);
+        }
+        hexInput.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence a, int b, int c, int d) {}
+            @Override public void onTextChanged(CharSequence a, int b, int c, int d) {}
+            @Override public void afterTextChanged(android.text.Editable e) {
+                if (syncing[0]) return;
+                try {
+                    int c = Color.parseColor(e.toString().trim());
+                    Color.colorToHSV(c, hsv);
+                    sd.setColor(c);
+                    for (int i = 0; i < 3; i++) sliders[i].setValue(Math.max(0f, Math.min(max[i], hsv[i])));
+                } catch (Exception ignored) {}
+            }
+        });
+        refresh.run();
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Custom colour")
+                .setView(col)
+                .setPositiveButton("Apply", (dlg, w) -> onPick.accept(hex(Color.HSVToColor(hsv))))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // ---------------------------------------------------------------- Background
+
+    /** Background: Original / Solid / Gradient / None, a swatch grid, gradient angle, corners. */
     private View backgroundPanel() {
         ScrollView scroll = new ScrollView(this);
         scroll.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
-        col.setPadding(dp(14), dp(12), dp(14), dp(12));
+        col.setPadding(0, dp(10), 0, dp(12));
 
         String mode = style.backgroundMode == null ? "keep" : style.backgroundMode;
-        LinearLayout modeRow = new LinearLayout(this);
-        modeRow.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout modeRow = centeredRow();
+        modeRow.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         String[] modes = {"keep", "solid", "gradient", "transparent"};
-        String[] labels = {"Design", "Solid", "Gradient", "Transparent"};
+        String[] labels = {"Original", "Solid", "Gradient", "None"};
         for (int i = 0; i < modes.length; i++) {
             final String m = modes[i];
             TextView chip = pill(labels[i], mode.equals(m));
             LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            clp.setMargins(0, 0, dp(8), 0);
+            clp.setMargins(dp(4), 0, dp(4), 0);
             chip.setLayoutParams(clp);
             chip.setOnClickListener(v -> {
                 style.backgroundMode = m;
-                if ("keep".equals(m)) style.backgroundColor = null; // show the design's own bg
+                if ("keep".equals(m)) {
+                    style.backgroundColor = null; // show the design's own background
+                    style.gradientEndColor = null;
+                }
                 render();
                 selectTab(selectedTab);
             });
             modeRow.addView(chip);
         }
-        col.addView(wrapScrollH(modeRow));
+        col.addView(modeRow);
 
+        GridLayout grid = swatchGrid();
+        grid.setPadding(dp(10), dp(8), dp(10), dp(8));
+        boolean original = "keep".equals(mode) && isBlank(style.backgroundColor);
+        grid.addView(swatch(SWATCH_CUSTOM, 0, 0, false, () -> pickCustomColor(style.backgroundColor, h -> {
+            style.backgroundMode = "solid";
+            style.backgroundColor = h;
+            render();
+            selectTab(selectedTab);
+        })));
+        grid.addView(swatch(SWATCH_ORIGINAL, 0, 0, original, () -> {
+            style.backgroundMode = "keep";
+            style.backgroundColor = null;
+            style.gradientEndColor = null;
+            render();
+            selectTab(selectedTab);
+        }));
+        int wall = StyleApplier.wallpaperAccent();
+        grid.addView(swatch(SWATCH_WALLPAPER, scaleRgb(wall, 0.35f), 0, false, () -> {
+            style.backgroundMode = "gradient";
+            style.backgroundColor = toHex(scaleRgb(wall, 0.45f));
+            style.gradientEndColor = toHex(scaleRgb(wall, 0.15f));
+            render();
+            selectTab(selectedTab);
+        }));
+        for (int[] g : GRADIENTS) {
+            boolean sel = "gradient".equals(mode) && matches(style.backgroundColor, g[0])
+                    && matches(style.gradientEndColor, g[1]);
+            grid.addView(swatch(SWATCH_GRADIENT, g[0], g[1], sel, () -> {
+                style.backgroundMode = "gradient";
+                style.backgroundColor = hex(g[0]);
+                style.gradientEndColor = hex(g[1]);
+                render();
+                selectTab(selectedTab);
+            }));
+        }
+        for (int color : PALETTE) {
+            boolean sel = "solid".equals(mode) && matches(style.backgroundColor, color);
+            grid.addView(swatch(SWATCH_SOLID, color, 0, sel, () -> {
+                style.backgroundMode = "solid";
+                style.backgroundColor = hex(color);
+                render();
+                selectTab(selectedTab);
+            }));
+        }
+        col.addView(grid, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout sliders = new LinearLayout(this);
+        sliders.setOrientation(LinearLayout.VERTICAL);
+        sliders.setPadding(dp(22), 0, dp(22), 0);
         if ("gradient".equals(mode)) {
-            col.addView(sectionLabel("Gradient start = Color 3"));
-            col.addView(sectionLabel("Gradient end color"));
-            LinearLayout endRow = new LinearLayout(this);
-            endRow.setOrientation(LinearLayout.HORIZONTAL);
-            for (int color : PALETTE) {
-                boolean sel = !isBlank(style.gradientEndColor) && matches(style.gradientEndColor, color);
-                View sw = circleCellLinear(color, sel, () -> {
-                    style.gradientEndColor = hex(color);
-                    render();
-                    selectTab(selectedTab);
-                });
-                endRow.addView(sw);
-            }
-            col.addView(wrapScrollH(endRow));
-
-            col.addView(sectionLabel("Angle  " + Math.round(style.gradientAngle) + "°"));
+            TextView angleLabel = sectionLabel("Gradient angle  " + Math.round(style.gradientAngle) + "°");
+            sliders.addView(angleLabel);
             Slider angle = new Slider(this);
             angle.setValueFrom(0f);
             angle.setValueTo(360f);
             angle.setStepSize(15f);
             angle.setValue(snap(style.gradientAngle, 0f, 360f, 15f));
-            angle.addOnChangeListener((s, v, u) -> { style.gradientAngle = v; render(); });
-            col.addView(angle);
+            angle.addOnChangeListener((sl, v, u) -> {
+                style.gradientAngle = v;
+                angleLabel.setText("Gradient angle  " + Math.round(v) + "°");
+                render();
+            });
+            sliders.addView(angle);
         }
+        float corner = style.cornerRadius >= 0f ? style.cornerRadius : designCorner();
+        TextView cornerLabel = sectionLabel("Corners  " + Math.round(corner * 200) + "%");
+        sliders.addView(cornerLabel);
+        Slider corners = new Slider(this);
+        corners.setValueFrom(0f);
+        corners.setValueTo(0.5f);
+        corners.setStepSize(0.02f);
+        corners.setValue(snap(corner, 0f, 0.5f, 0.02f));
+        corners.addOnChangeListener((sl, v, u) -> {
+            style.cornerRadius = v;
+            cornerLabel.setText("Corners  " + Math.round(v * 200) + "%");
+            render();
+        });
+        sliders.addView(corners);
+        col.addView(sliders);
 
         scroll.addView(col);
         return scroll;
+    }
+
+    private float designCorner() {
+        return parsedSpec != null && parsedSpec.background != null ? parsedSpec.background.cornerRadius : 0.16f;
     }
 
     private View tapPanel() {
@@ -564,20 +1038,6 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         return h;
     }
 
-    private View circleCellLinear(int color, boolean selected, Runnable onClick) {
-        View v = new View(this);
-        GradientDrawable d = new GradientDrawable();
-        d.setShape(GradientDrawable.OVAL);
-        d.setColor(color);
-        d.setStroke(dp(selected ? 3 : 1), selected ? 0xFFFFFFFF : 0x33FFFFFF);
-        v.setBackground(d);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(40), dp(40));
-        lp.setMargins(0, dp(4), dp(10), dp(4));
-        v.setLayoutParams(lp);
-        v.setOnClickListener(x -> onClick.run());
-        return v;
-    }
-
     private View cityPanel() {
         LinearLayout col = centeredColumn();
         String current = style.cityName != null && !style.cityName.isEmpty()
@@ -600,33 +1060,6 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         });
         col.addView(pill);
         return col;
-    }
-
-    private View colorPanel(int slot) {
-        ScrollView scroll = new ScrollView(this);
-        scroll.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        GridLayout grid = new GridLayout(this);
-        grid.setColumnCount(6);
-        grid.setPadding(dp(14), dp(12), dp(14), dp(12));
-
-        String current = colorFor(slot);
-
-        // "A" = auto (use design default)
-        grid.addView(specialCell("A", isBlank(current), () -> { setColor(slot, null); render(); selectTab(selectedTab); }));
-        // "+" = custom hex
-        grid.addView(specialCell("+", false, () -> promptCustomColor(slot)));
-
-        for (int color : PALETTE) {
-            boolean sel = !isBlank(current) && matches(current, color);
-            grid.addView(circleCell(color, sel, () -> {
-                setColor(slot, hex(color));
-                render();
-                selectTab(selectedTab);
-            }));
-        }
-        scroll.addView(grid);
-        return scroll;
     }
 
     private View fontPanel() {
@@ -1061,55 +1494,15 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         return bestD <= 0.09f ? best : -1; // within ~0.3 of normalized distance
     }
 
-    private void promptCustomColor(int slot) {
-        EditText input = new EditText(this);
-        input.setHint("#RRGGBB");
-        String cur = colorFor(slot);
-        input.setText(cur != null ? cur : "#");
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("Custom color")
-                .setView(input)
-                .setPositiveButton("Apply", (d, w) -> {
-                    String hex = input.getText().toString().trim();
-                    try {
-                        Color.parseColor(hex);
-                        setColor(slot, hex);
-                        render();
-                        selectTab(selectedTab);
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Invalid color", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
-
-    // ---------------------------------------------------------------- Color slots
-
-    private String colorFor(int slot) {
-        switch (slot) {
-            case 1: return style.accentColor;
-            case 2: return style.textColor;
-            default: return style.backgroundColor;
-        }
-    }
-
-    private void setColor(int slot, String hex) {
-        switch (slot) {
-            case 1: style.accentColor = hex; break;
-            case 2: style.textColor = hex; break;
-            default: style.backgroundColor = hex; break;
-        }
-    }
-
     // ---------------------------------------------------------------- Actions
 
     private void setupActions() {
         findViewById(R.id.cw_close).setOnClickListener(v -> finish());
         findViewById(R.id.cw_reset).setOnClickListener(v -> resetStyle());
-        findViewById(R.id.cw_add_home).setOnClickListener(v -> addToHome());
-        // Studio (advanced JSON editor) has been removed — hide its button.
-        findViewById(R.id.cw_advanced).setVisibility(android.view.View.GONE);
+        findViewById(R.id.cw_add_home).setOnClickListener(v -> {
+            if (savesLook()) saveLook();
+            else addToHome();
+        });
     }
 
     private void addToHome() {
@@ -1126,8 +1519,26 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         WidgetInstaller.installSpecToHome(findViewById(R.id.cw_root), id, widgetName, specJson, size, styleJson);
     }
 
+    /** "ADD NEW" / "SAVE": stores this look on the widget page and returns there. */
+    private void saveLook() {
+        String json = GSON.toJson(style);
+        String id = variantId;
+        if (id != null) {
+            VariantStore.update(this, widgetId, id, json);
+            Toast.makeText(this, "Look saved", Toast.LENGTH_SHORT).show();
+        } else {
+            id = VariantStore.add(this, widgetId, json).id;
+            Toast.makeText(this, "Added to your looks", Toast.LENGTH_SHORT).show();
+        }
+        setResult(RESULT_OK, new Intent().putExtra(EXTRA_VARIANT_ID, id));
+        finish();
+    }
+
     private void resetStyle() {
         WidgetStyle fresh = new WidgetStyle();
+        style.props = null;
+        style.styleOption = -1;
+        style.tapPackage = null;
         style.accentColor = null;
         style.textColor = null;
         style.backgroundColor = null;
@@ -1269,22 +1680,6 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
         t.setBackground(d);
         t.setTextColor(selected ? themeColor(com.google.android.material.R.attr.colorOnPrimary, 0xFFFFFFFF) : onSurface());
         return t;
-    }
-
-    private View circleCell(int color, boolean selected, Runnable onClick) {
-        View v = new View(this);
-        GradientDrawable d = new GradientDrawable();
-        d.setShape(GradientDrawable.OVAL);
-        d.setColor(color);
-        d.setStroke(dp(selected ? 3 : 1), selected ? 0xFFFFFFFF : 0x33FFFFFF);
-        v.setBackground(d);
-        GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-        lp.width = dp(42);
-        lp.height = dp(42);
-        lp.setMargins(dp(6), dp(6), dp(6), dp(6));
-        v.setLayoutParams(lp);
-        v.setOnClickListener(x -> onClick.run());
-        return v;
     }
 
     private TextView specialCell(String label, boolean selected, Runnable onClick) {

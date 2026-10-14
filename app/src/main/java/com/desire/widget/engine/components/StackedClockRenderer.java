@@ -10,7 +10,7 @@ import com.desire.widget.engine.ComponentRenderer;
 import com.desire.widget.engine.RenderContext;
 import com.desire.widget.engine.model.ComponentSpec;
 import com.desire.widget.engine.util.FontResolver;
-import com.desire.widget.engine.util.SpecColors;
+import com.desire.widget.engine.util.SpecPaint;
 import com.desire.widget.engine.util.SpecProps;
 
 import java.util.Calendar;
@@ -22,8 +22,9 @@ import java.util.Map;
  * (the lock-screen "stacked" clock look). Follows the system 12/24-hour setting unless
  * {@code use24h} is given.
  *
- * <p>props: hourColor, minuteColor, use24h, font, align (left|center), gap (space between lines
- * as a fraction of the digit height, default 0.08).
+ * <p>props: hourColor, minuteColor (plain or {@code gradient:} — see SpecPaint), hourStyle,
+ * minuteStyle (fill|outline), use24h, font, align (left|center), gap (space between lines as a
+ * fraction of the digit height, default 0.08).
  */
 public class StackedClockRenderer implements ComponentRenderer {
     @Override
@@ -34,8 +35,10 @@ public class StackedClockRenderer implements ComponentRenderer {
     @Override
     public void render(Canvas canvas, RectF b, ComponentSpec s, RenderContext ctx) {
         Map<String, Object> p = s.props;
-        int hourColor = SpecColors.resolve(SpecProps.str(p, "hourColor", "@primary"), ctx.theme, ctx.theme.primary);
-        int minColor = SpecColors.resolve(SpecProps.str(p, "minuteColor", "@textPrimary"), ctx.theme, ctx.theme.textPrimary);
+        String hourColor = SpecProps.str(p, "hourColor", "@primary");
+        String minColor = SpecProps.str(p, "minuteColor", "@textPrimary");
+        boolean hourOutline = "outline".equals(SpecProps.str(p, "hourStyle", "fill"));
+        boolean minOutline = "outline".equals(SpecProps.str(p, "minuteStyle", "fill"));
         boolean use24 = p != null && p.containsKey("use24h")
                 ? SpecProps.b(p, "use24h", true)
                 : DateFormat.is24HourFormat(ctx.android);
@@ -73,9 +76,21 @@ public class StackedClockRenderer implements ComponentRenderer {
         float gap = digitH * gapFrac;
         float top = b.centerY() - (digitH * 2f + gap) / 2f;
 
-        paint.setColor(hourColor);
-        canvas.drawText(hh, x, top + digitH, paint);
-        paint.setColor(minColor);
-        canvas.drawText(mm, x, top + digitH * 2f + gap, paint);
+        float stroke = Math.max(1.5f, digitH * 0.03f);
+        RectF hourBox = new RectF(b.left, top, b.right, top + digitH);
+        RectF minBox = new RectF(b.left, top + digitH + gap, b.right, top + digitH * 2f + gap);
+
+        SpecPaint.apply(paint, hourColor, hourBox, ctx.theme, ctx.theme.primary);
+        outline(paint, hourOutline, stroke);
+        canvas.drawText(hh, x, hourBox.bottom, paint);
+        SpecPaint.apply(paint, minColor, minBox, ctx.theme, ctx.theme.textPrimary);
+        outline(paint, minOutline, stroke);
+        canvas.drawText(mm, x, minBox.bottom, paint);
+    }
+
+    private static void outline(Paint paint, boolean outline, float stroke) {
+        paint.setStyle(outline ? Paint.Style.STROKE : Paint.Style.FILL);
+        paint.setStrokeWidth(outline ? stroke : 0f);
+        paint.setStrokeJoin(Paint.Join.ROUND);
     }
 }

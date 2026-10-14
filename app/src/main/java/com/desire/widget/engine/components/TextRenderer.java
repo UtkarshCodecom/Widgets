@@ -12,15 +12,15 @@ import com.desire.widget.engine.ComponentRenderer;
 import com.desire.widget.engine.RenderContext;
 import com.desire.widget.engine.model.ComponentSpec;
 import com.desire.widget.engine.util.FontResolver;
-import com.desire.widget.engine.util.SpecColors;
+import com.desire.widget.engine.util.SpecPaint;
 import com.desire.widget.engine.util.SpecProps;
 
 import java.util.Map;
 
 /**
  * Multi-line, wrapping, vertically-centered text via StaticLayout (production text layout, not a
- * single drawText). props: text, color, fontSize (<=1 = fraction of bounds height, else px),
- * bold, align (left|center|right), maxLines.
+ * single drawText). props: text, color (plain or {@code gradient:}), fontSize (<=1 = fraction
+ * of bounds height, else px), bold, align (left|center|right), maxLines.
  */
 public class TextRenderer implements ComponentRenderer {
     @Override
@@ -33,7 +33,7 @@ public class TextRenderer implements ComponentRenderer {
         Map<String, Object> p = s.props;
         String text = SpecProps.str(p, "text", "");
         if (text == null) text = "";
-        int color = SpecColors.resolve(SpecProps.str(p, "color", "@textPrimary"), ctx.theme, ctx.theme.textPrimary);
+        String colorValue = SpecProps.str(p, "color", "@textPrimary");
         float fs = SpecProps.f(p, "fontSize", 0.3f);
         float px = fs <= 1f ? fs * b.height() : fs;
         boolean bold = SpecProps.b(p, "bold", false);
@@ -41,7 +41,7 @@ public class TextRenderer implements ComponentRenderer {
         int maxLines = Math.max(1, SpecProps.i(p, "maxLines", 2));
 
         TextPaint tp = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-        tp.setColor(color);
+        SpecPaint.apply(tp, colorValue, b, ctx.theme, ctx.theme.textPrimary);
         tp.setTextSize(Math.max(1f, px));
         String font = SpecProps.str(p, "font", ctx.theme.fontFamily);
         tp.setTypeface(FontResolver.resolve(font, bold));

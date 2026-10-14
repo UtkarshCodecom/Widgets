@@ -21,7 +21,19 @@ import java.util.HashMap;
  * <p>Pass a freshly-parsed spec (callers re-parse per render); this mutates it in place.
  */
 public final class StyleApplier {
+    /** Colour token for the editor's "A" swatch: follows the current wallpaper. */
+    public static final String WALLPAPER = "@wallpaper";
+
+    private static android.content.Context appContext;
+    private static int wallpaperColor;
+    private static long wallpaperReadAt;
+
     private StyleApplier() {}
+
+    /** Gives the "@wallpaper" colour access to the system; call once from Application.onCreate. */
+    public static void init(android.content.Context context) {
+        appContext = context.getApplicationContext();
+    }
 
     public static RenderTheme apply(WidgetSpec spec, WidgetStyle style, RenderTheme base) {
         RenderTheme theme = RenderTheme.copy(base);
@@ -37,9 +49,15 @@ public final class StyleApplier {
 
         if (spec == null) return theme;
 
+        // Snapshot the design's own components first: prop overrides are keyed by these indices,
+        // and injectPhoto may insert a component at index 0.
+        java.util.List<ComponentSpec> original = spec.components != null
+                ? new java.util.ArrayList<>(spec.components) : null;
+
         injectPhoto(spec, style);
         injectCity(spec, style);
         recolor(spec, style);
+        applyProps(original, style); // after recolor: a specific "Hour Color" beats a theme colour
         applyBackground(spec, style, theme);
         applyLayout(spec, style);
         injectStickers(spec, style); // after applyLayout so stickers aren't scaled/nudged with content
@@ -91,6 +109,80 @@ public final class StyleApplier {
         }
     }
 
+    /** Per-component overrides from the editor's widget-specific tabs ("Hour Color", "Style 2"…). */
+    private static void applyProps(java.util.List<ComponentSpec> components, WidgetStyle style) {
+        if (components == null || style.props == null || style.props.isEmpty()) return;
+        for (java.util.Map.Entry<String, Object> e : style.props.entrySet()) {
+            String key = e.getKey();
+            int dot = key != null ? key.indexOf('.') : -1;
+            if (dot <= 0) continue;
+            int index;
+            try {
+                index = Integer.parseInt(key.substring(0, dot));
+            } catch (NumberFormatException ex) {
+                continue;
+            }
+            if (index < 0 || index >= components.size()) continue;
+            ComponentSpec c = components.get(index);
+            if (c == null) continue;
+            if (c.props == null) c.props = new HashMap<>();
+            String prop = key.substring(dot + 1);
+            if (!(e.getValue() instanceof String)) { // booleans, numbers, lists: as declared
+                c.props.put(prop, e.getValue());
+                continue;
+            }
+            String value = resolveTokens((String) e.getValue());
+            if (prop.endsWith("Colors")) {
+                // List-valued colour props (styled_clock): a gradient becomes its two stops.
+                java.util.List<Object> stops = new java.util.ArrayList<>();
+                if (com.desire.widget.engine.util.SpecPaint.isGradient(value)) {
+                    String[] parts = value.substring(com.desire.widget.engine.util.SpecPaint.PREFIX.length()).split(",");
+                    for (int i = 0; i < Math.min(2, parts.length); i++) stops.add(parts[i].trim());
+                } else {
+                    stops.add(value);
+                }
+                c.props.put(prop, stops);
+            } else {
+                c.props.put(prop, value);
+            }
+        }
+    }
+
+    /** Replaces "@wallpaper" (also inside a gradient value) with the live wallpaper colour. */
+    private static String resolveTokens(String value) {
+        if (value == null || !value.contains(WALLPAPER)) return value;
+        return value.replace(WALLPAPER, hex(wallpaperAccent()));
+    }
+
+    /**
+     * A bright accent taken from the wallpaper: the system Material You accent on Android 12+,
+     * else the wallpaper's primary colour pushed vivid. Cached for 30 s (renders run every second
+     * in the editor).
+     */
+    public static int wallpaperAccent() {
+        long now = System.currentTimeMillis();
+        if (wallpaperReadAt != 0 && now - wallpaperReadAt < 30_000L) return wallpaperColor;
+        int color = 0xFF9AA5FF;
+        try {
+            if (appContext != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                color = appContext.getColor(android.R.color.system_accent1_200);
+            } else if (appContext != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+                android.app.WallpaperColors wc = android.app.WallpaperManager.getInstance(appContext)
+                        .getWallpaperColors(android.app.WallpaperManager.FLAG_SYSTEM);
+                if (wc != null) {
+                    float[] hsv = new float[3];
+                    Color.colorToHSV(wc.getPrimaryColor().toArgb(), hsv);
+                    hsv[1] = Math.max(hsv[1], 0.5f);
+                    hsv[2] = Math.max(hsv[2], 0.9f);
+                    color = Color.HSVToColor(hsv);
+                }
+            }
+        } catch (Exception ignored) {}
+        wallpaperColor = color;
+        wallpaperReadAt = now;
+        return color;
+    }
+
     private static void applyBackground(WidgetSpec spec, WidgetStyle style, RenderTheme theme) {
         if (spec.background == null) spec.background = new BackgroundSpec();
         BackgroundSpec bg = spec.background;
@@ -110,11 +202,12 @@ public final class StyleApplier {
             if (bg.gradientStart != null && bg.gradientEnd != null) {
                 int start = SpecColors.resolve(bg.gradientStart, theme, theme.surface);
                 int end = SpecColors.resolve(bg.gradientEnd, theme, theme.background);
-                bg.gradientStart = hex(withAlpha(start, op));
-                bg.gradientEnd = hex(withAlpha(end, op));
+                bg.gradientStart = hex(scaleAlpha(start, op));
+                bg.gradientEnd = hex(scaleAlpha(end, op));
             } else {
+                // Keep the design's own alpha (a transparent design must stay transparent).
                 int baseColor = SpecColors.resolve(bg.fill, theme, theme.surface);
-                bg.fill = hex(withAlpha(baseColor, op));
+                bg.fill = hex(scaleAlpha(baseColor, op));
             }
         } else if ("gradient".equals(mode)) {
             int start = notBlank(style.backgroundColor) ? parse(style.backgroundColor, theme.surface) : theme.surface;
@@ -125,12 +218,13 @@ public final class StyleApplier {
         } else {
             // solid — OR "keep" with an explicit Color 3 chosen (a picked color means solid, not a
             // lingering gradient, which was the "Color 3 still looks like a gradient" bug).
-            int baseColor = notBlank(style.backgroundColor)
+            boolean chosen = notBlank(style.backgroundColor);
+            int baseColor = chosen
                     ? parse(style.backgroundColor, theme.surface)
                     : SpecColors.resolve(bg.fill, theme, theme.surface);
             bg.gradientStart = null;
             bg.gradientEnd = null;
-            bg.fill = hex(withAlpha(baseColor, op));
+            bg.fill = hex(chosen ? withAlpha(baseColor, op) : scaleAlpha(baseColor, op));
         }
         if (style.cornerRadius >= 0f) bg.cornerRadius = style.cornerRadius;
     }
@@ -247,6 +341,12 @@ public final class StyleApplier {
         } catch (Exception e) {
             return fallback;
         }
+    }
+
+    /** Multiplies the colour's existing alpha by {@code frac}. */
+    private static int scaleAlpha(int color, float frac) {
+        int a = Math.round(((color >>> 24) & 0xFF) * Math.max(0f, Math.min(1f, frac)));
+        return (a << 24) | (color & 0x00FFFFFF);
     }
 
     private static int withAlpha(int color, float frac) {

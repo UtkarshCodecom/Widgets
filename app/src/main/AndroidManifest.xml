@@ -140,6 +140,10 @@
             android:theme="@style/Theme.Widgets" />
 
         <activity
+            android:name=".ui.customize.WidgetDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Widgets" />
+        <activity
             android:name=".ui.customize.CustomizeWidgetActivity"
             android:exported="false"
             android:theme="@style/Theme.Widgets" />
