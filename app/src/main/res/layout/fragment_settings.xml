@@ -89,12 +89,10 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Widgets & Updates -->
+            <!-- Widgets -->
             <TextView style="@style/SettingsSectionLabel" android:text="Widgets" android:layout_marginTop="20dp" />
-            <include layout="@layout/item_setting_row" android:id="@+id/check_updates_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/whats_new_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/restore_purchases_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/temp_unit_row" />
+            <include layout="@layout/item_setting_row" android:id="@+id/restore_purchases_row" />
 
             <!-- Permissions -->
             <TextView style="@style/SettingsSectionLabel" android:text="Permissions" />
@@ -105,28 +103,29 @@
             <include layout="@layout/item_setting_row" android:id="@+id/notification_permission_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/battery_optimization_row" />
 
-            <!-- Performance -->
-            <TextView style="@style/SettingsSectionLabel" android:text="Performance" />
-            <include layout="@layout/item_setting_row" android:id="@+id/clear_cache_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/background_running_row" />
-
-            <!-- Support -->
-            <TextView style="@style/SettingsSectionLabel" android:text="Support" />
+            <!-- Help -->
+            <TextView style="@style/SettingsSectionLabel" android:text="Help" />
             <include layout="@layout/item_setting_row" android:id="@+id/faq_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/privacy_policy_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/report_bug_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/support_row" />
-
-            <!-- About -->
-            <TextView style="@style/SettingsSectionLabel" android:text="About" />
-            <include layout="@layout/item_setting_row" android:id="@+id/about_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/social_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/more_apps_row" />
-
-            <!-- Community -->
-            <TextView style="@style/SettingsSectionLabel" android:text="Community" />
+            <include layout="@layout/item_setting_row" android:id="@+id/privacy_policy_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/rate_us_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/share_app_row" />
+
+            <!-- Rows kept for their click handlers but hidden to keep Settings short. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <include layout="@layout/item_setting_row" android:id="@+id/check_updates_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/whats_new_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/clear_cache_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/background_running_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/support_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/about_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/social_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/more_apps_row" />
+            </LinearLayout>
 
             <!-- Version Row -->
             <include layout="@layout/item_setting_row" android:id="@+id/version_row"

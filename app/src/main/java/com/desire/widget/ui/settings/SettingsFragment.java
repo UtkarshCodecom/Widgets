@@ -148,7 +148,7 @@ public class SettingsFragment extends Fragment {
         bindRow(view, R.id.clear_cache_row, "🗑", "#8D6E63", "Clear Cache", "Calculating…");
         bindRow(view, R.id.background_running_row, "⚙", "#78909C", "Background Running Guide", null);
 
-        bindRow(view, R.id.faq_row, "❓", "#5C6BC0", "FAQ", null);
+        bindRow(view, R.id.faq_row, "❓", "#5C6BC0", "Help & FAQ", null);
         bindRow(view, R.id.privacy_policy_row, "🔒", "#546E7A", "Privacy Policy", null);
         bindRow(view, R.id.report_bug_row, "🐞", "#EF5350", "Report a Bug", null);
         bindRow(view, R.id.support_row, "✉", "#42A5F5", "Contact Support", null);

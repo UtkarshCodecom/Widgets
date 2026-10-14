@@ -1,84 +1,180 @@
 {
   "categories": [
     {
-      "id": "ai",
-      "name": "AI",
-      "icon": "ai",
-      "color": "#6C7BFF",
-      "order": 0
-    },
-    {
       "id": "clock",
       "name": "Clock",
       "icon": "clock",
       "color": "#6C7BFF",
-      "order": 1
+      "order": 0
     },
     {
       "id": "calendar",
       "name": "Calendar",
       "icon": "calendar",
-      "color": "#9AA5FF",
-      "order": 2
+      "color": "#6C7BFF",
+      "order": 1
     },
     {
       "id": "weather",
       "name": "Weather",
       "icon": "weather",
-      "color": "#64B5F6",
-      "order": 3
-    },
-    {
-      "id": "health",
-      "name": "Health",
-      "icon": "health",
-      "color": "#4CAF7A",
-      "order": 4
+      "color": "#6C7BFF",
+      "order": 2
     },
     {
       "id": "media",
-      "name": "Media",
+      "name": "Music",
       "icon": "media",
-      "color": "#B39DFF",
-      "order": 5
+      "color": "#6C7BFF",
+      "order": 3
     },
     {
-      "id": "utility",
-      "name": "Utility",
-      "icon": "utility",
-      "color": "#A6ABB5",
-      "order": 6
-    },
-    {
-      "id": "finance",
-      "name": "Finance",
-      "icon": "finance",
-      "color": "#F7931A",
-      "order": 7
+      "id": "productivity",
+      "name": "Productivity",
+      "icon": "productivity",
+      "color": "#6C7BFF",
+      "order": 4
     },
     {
       "id": "controls",
       "name": "Controls",
       "icon": "controls",
-      "color": "#30D158",
-      "order": 8
+      "color": "#6C7BFF",
+      "order": 5
     },
     {
       "id": "device",
       "name": "Device",
       "icon": "device",
-      "color": "#64D2FF",
-      "order": 9
+      "color": "#6C7BFF",
+      "order": 6
+    },
+    {
+      "id": "health",
+      "name": "Health",
+      "icon": "health",
+      "color": "#6C7BFF",
+      "order": 7
     },
     {
       "id": "photos",
       "name": "Photos",
       "icon": "photos",
-      "color": "#FF9F0A",
-      "order": 10
+      "color": "#6C7BFF",
+      "order": 8
+    },
+    {
+      "id": "tools",
+      "name": "Tools",
+      "icon": "tools",
+      "color": "#6C7BFF",
+      "order": 9
     }
   ],
   "widgets": [
+    {
+      "id": "min_clock",
+      "name": "Minimal",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "min_clock.json",
+      "description": "Clean time and date",
+      "isFeatured": true
+    },
+    {
+      "id": "stacked_clock",
+      "name": "Stacked",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "stacked_clock.json",
+      "description": "Big hours over minutes",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "stacked_warm",
+      "name": "Stacked Warm",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "stacked_warm.json",
+      "description": "Stacked time on a sunset gradient",
+      "isFeatured": false,
+      "isTrending": true
+    },
+    {
+      "id": "min_flip",
+      "name": "Flip",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "min_flip.json",
+      "description": "Flip cards"
+    },
+    {
+      "id": "min_word",
+      "name": "Words",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "min_word.json",
+      "description": "Time in words"
+    },
+    {
+      "id": "aurora_clock",
+      "name": "Aurora",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "aurora_clock.json",
+      "description": "Aurora gradient clock",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "mini_clock",
+      "name": "Mini Time",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "1x1",
+      "specAsset": "mini_clock.json",
+      "description": "Tiny 1x1 time and date",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "pie_clock",
+      "name": "Sector",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "pie_clock.json",
+      "description": "Hours as a pie, minutes as a ring",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "min_analog",
+      "name": "Analog",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "min_analog.json",
+      "description": "Simple analog face"
+    },
+    {
+      "id": "luxe_analog",
+      "name": "Luxe",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x2",
+      "specAsset": "luxe_analog.json",
+      "description": "Gold analog on deep teal",
+      "isFeatured": true,
+      "isTrending": true
+    },
     {
       "id": "dial_numerals",
       "name": "Classic Dial",
@@ -135,50 +231,6 @@
       "isTrending": true
     },
     {
-      "id": "stacked_clock",
-      "name": "Stacked",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "stacked_clock.json",
-      "description": "Big hours over minutes",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "stacked_warm",
-      "name": "Stacked Warm",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "stacked_warm.json",
-      "description": "Stacked time on a sunset gradient",
-      "isFeatured": false,
-      "isTrending": true
-    },
-    {
-      "id": "pie_clock",
-      "name": "Sector",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "pie_clock.json",
-      "description": "Hours as a pie, minutes as a ring",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "mini_clock",
-      "name": "Mini Time",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "1x1",
-      "specAsset": "mini_clock.json",
-      "description": "Tiny 1x1 time and date",
-      "isFeatured": false,
-      "isTrending": false
-    },
-    {
       "id": "next_alarm",
       "name": "Next Alarm",
       "categoryId": "clock",
@@ -188,6 +240,24 @@
       "description": "Your next alarm and time until it",
       "isFeatured": true,
       "isTrending": false
+    },
+    {
+      "id": "min_mono",
+      "name": "Mono",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "2x1",
+      "specAsset": "min_mono.json",
+      "description": "Wide mono bar"
+    },
+    {
+      "id": "min_world",
+      "name": "World",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "4x1",
+      "specAsset": "min_world.json",
+      "description": "Three time zones"
     },
     {
       "id": "next_alarm_wide",
@@ -201,6 +271,17 @@
       "isTrending": false
     },
     {
+      "id": "sunset_clock",
+      "name": "Sunset",
+      "categoryId": "clock",
+      "categoryName": "Clock",
+      "widgetSize": "4x2",
+      "specAsset": "sunset_clock.json",
+      "description": "Sunset gradient time & date",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
       "id": "big_dashboard",
       "name": "Dashboard",
       "categoryId": "clock",
@@ -210,6 +291,276 @@
       "description": "Time, date, weather, battery and alarm in one",
       "isFeatured": true,
       "isTrending": true
+    },
+    {
+      "id": "min_date",
+      "name": "Date",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "2x2",
+      "specAsset": "min_date.json",
+      "description": "Big day number",
+      "isTrending": true
+    },
+    {
+      "id": "min_calendar",
+      "name": "Calendar",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "4x2",
+      "specAsset": "min_calendar.json",
+      "description": "Full navigable calendar with prev/next/today"
+    },
+    {
+      "id": "agenda",
+      "name": "Agenda",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "4x2",
+      "specAsset": "agenda.json",
+      "description": "Your upcoming events",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "agenda_large",
+      "name": "Agenda Large",
+      "categoryId": "calendar",
+      "categoryName": "Calendar",
+      "widgetSize": "4x4",
+      "specAsset": "agenda_large.json",
+      "description": "A full week of events",
+      "isFeatured": false,
+      "isTrending": true
+    },
+    {
+      "id": "min_weather",
+      "name": "Weather",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "2x2",
+      "specAsset": "min_weather.json",
+      "description": "Current conditions",
+      "isFeatured": true
+    },
+    {
+      "id": "storm_weather",
+      "name": "Climate",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "2x2",
+      "specAsset": "storm_weather.json",
+      "description": "Bold live weather",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "moon_phase",
+      "name": "Moon Phase",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "2x2",
+      "specAsset": "moon_phase.json",
+      "description": "Tonight's real moon phase"
+    },
+    {
+      "id": "cosmos_moon",
+      "name": "Cosmos",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "2x2",
+      "specAsset": "cosmos_moon.json",
+      "description": "Moon phase among the stars",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "min_weather_wide",
+      "name": "Weather Wide",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "4x2",
+      "specAsset": "min_weather_wide.json",
+      "description": "Detailed weather"
+    },
+    {
+      "id": "sun_times",
+      "name": "Sunrise & Sunset",
+      "categoryId": "weather",
+      "categoryName": "Weather",
+      "widgetSize": "4x1",
+      "specAsset": "sun_times.json",
+      "description": "Today's sunrise and sunset"
+    },
+    {
+      "id": "min_music",
+      "name": "Now Playing",
+      "categoryId": "media",
+      "categoryName": "Music",
+      "widgetSize": "4x2",
+      "specAsset": "min_music.json",
+      "description": "Media controls",
+      "isTrending": true
+    },
+    {
+      "id": "vibe_music",
+      "name": "Vibe",
+      "categoryId": "media",
+      "categoryName": "Music",
+      "widgetSize": "4x2",
+      "specAsset": "vibe_music.json",
+      "description": "Vibrant now-playing card",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "vinyl_music",
+      "name": "Vinyl",
+      "categoryId": "media",
+      "categoryName": "Music",
+      "widgetSize": "4x2",
+      "specAsset": "vinyl_music.json",
+      "description": "A record that turns while music plays",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "album_music",
+      "name": "Album Colour",
+      "categoryId": "media",
+      "categoryName": "Music",
+      "widgetSize": "4x2",
+      "specAsset": "album_music.json",
+      "description": "Recolours itself from the album art",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "min_todo",
+      "name": "To-Do",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "min_todo.json",
+      "description": "To-Do"
+    },
+    {
+      "id": "min_notes",
+      "name": "Notes",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "min_notes.json",
+      "description": "Notes"
+    },
+    {
+      "id": "pomodoro",
+      "name": "Pomodoro",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "pomodoro.json",
+      "description": "25/5 focus timer, tap to start"
+    },
+    {
+      "id": "stopwatch",
+      "name": "Stopwatch",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "stopwatch.json",
+      "description": "Tap to start or pause"
+    },
+    {
+      "id": "min_countdown",
+      "name": "Countdown",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "min_countdown.json",
+      "description": "Time remaining"
+    },
+    {
+      "id": "neon_countdown",
+      "name": "Neon Countdown",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "neon_countdown.json",
+      "description": "Bright countdown with progress",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "habit_tracker",
+      "name": "Habits",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "4x2",
+      "specAsset": "habit_tracker.json",
+      "description": "Track daily habits, 7-day streaks"
+    },
+    {
+      "id": "min_quote",
+      "name": "Quote",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "4x2",
+      "specAsset": "min_quote.json",
+      "description": "Daily quote"
+    },
+    {
+      "id": "control_center",
+      "name": "Control Center",
+      "categoryId": "controls",
+      "categoryName": "Controls",
+      "widgetSize": "2x2",
+      "specAsset": "control_center.json",
+      "description": "Four toggles in a 2x2 grid",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "torch_toggle",
+      "name": "Torch",
+      "categoryId": "controls",
+      "categoryName": "Controls",
+      "widgetSize": "1x1",
+      "specAsset": "torch_toggle.json",
+      "description": "One-tap flashlight",
+      "isFeatured": true,
+      "isTrending": false
+    },
+    {
+      "id": "quick_modes",
+      "name": "Quick Modes",
+      "categoryId": "controls",
+      "categoryName": "Controls",
+      "widgetSize": "4x1",
+      "specAsset": "quick_modes.json",
+      "description": "Do Not Disturb, rotation, dark and flight mode",
+      "isFeatured": false,
+      "isTrending": true
+    },
+    {
+      "id": "quick_toggles",
+      "name": "Quick Toggles",
+      "categoryId": "controls",
+      "categoryName": "Controls",
+      "widgetSize": "4x1",
+      "specAsset": "quick_toggles.json",
+      "description": "Wi-Fi, Bluetooth, torch and location",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "min_battery",
+      "name": "Battery",
+      "categoryId": "device",
+      "categoryName": "Device",
+      "widgetSize": "2x2",
+      "specAsset": "min_battery.json",
+      "description": "Battery level"
     },
     {
       "id": "battery_bars",
@@ -223,14 +574,14 @@
       "isTrending": false
     },
     {
-      "id": "battery_glow",
-      "name": "Battery Glow",
+      "id": "power_glow",
+      "name": "Power Glow",
       "categoryId": "device",
       "categoryName": "Device",
-      "widgetSize": "4x1",
-      "specAsset": "battery_glow.json",
-      "description": "Glowing battery bar",
-      "isFeatured": false,
+      "widgetSize": "2x2",
+      "specAsset": "power_glow.json",
+      "description": "Glowing live battery",
+      "isFeatured": true,
       "isTrending": true
     },
     {
@@ -267,17 +618,6 @@
       "isTrending": false
     },
     {
-      "id": "device_stats",
-      "name": "Device Stats",
-      "categoryId": "device",
-      "categoryName": "Device",
-      "widgetSize": "4x2",
-      "specAsset": "device_stats.json",
-      "description": "RAM and storage at a glance",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
       "id": "screen_time",
       "name": "Screen Time",
       "categoryId": "device",
@@ -285,6 +625,37 @@
       "widgetSize": "2x2",
       "specAsset": "screen_time.json",
       "description": "Today's screen time and top apps",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "battery_glow",
+      "name": "Battery Glow",
+      "categoryId": "device",
+      "categoryName": "Device",
+      "widgetSize": "4x1",
+      "specAsset": "battery_glow.json",
+      "description": "Glowing battery bar",
+      "isFeatured": false,
+      "isTrending": true
+    },
+    {
+      "id": "min_system",
+      "name": "System",
+      "categoryId": "device",
+      "categoryName": "Device",
+      "widgetSize": "4x1",
+      "specAsset": "min_system.json",
+      "description": "Time and battery"
+    },
+    {
+      "id": "device_stats",
+      "name": "Device Stats",
+      "categoryId": "device",
+      "categoryName": "Device",
+      "widgetSize": "4x2",
+      "specAsset": "device_stats.json",
+      "description": "RAM and storage at a glance",
       "isFeatured": true,
       "isTrending": true
     },
@@ -300,149 +671,6 @@
       "isTrending": true
     },
     {
-      "id": "quick_toggles",
-      "name": "Quick Toggles",
-      "categoryId": "controls",
-      "categoryName": "Controls",
-      "widgetSize": "4x1",
-      "specAsset": "quick_toggles.json",
-      "description": "Wi-Fi, Bluetooth, torch and location",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "quick_modes",
-      "name": "Quick Modes",
-      "categoryId": "controls",
-      "categoryName": "Controls",
-      "widgetSize": "4x1",
-      "specAsset": "quick_modes.json",
-      "description": "Do Not Disturb, rotation, dark and flight mode",
-      "isFeatured": false,
-      "isTrending": true
-    },
-    {
-      "id": "control_center",
-      "name": "Control Center",
-      "categoryId": "controls",
-      "categoryName": "Controls",
-      "widgetSize": "2x2",
-      "specAsset": "control_center.json",
-      "description": "Four toggles in a 2x2 grid",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "torch_toggle",
-      "name": "Torch",
-      "categoryId": "controls",
-      "categoryName": "Controls",
-      "widgetSize": "1x1",
-      "specAsset": "torch_toggle.json",
-      "description": "One-tap flashlight",
-      "isFeatured": true,
-      "isTrending": false
-    },
-    {
-      "id": "agenda",
-      "name": "Agenda",
-      "categoryId": "calendar",
-      "categoryName": "Calendar",
-      "widgetSize": "4x2",
-      "specAsset": "agenda.json",
-      "description": "Your upcoming events",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "agenda_large",
-      "name": "Agenda Large",
-      "categoryId": "calendar",
-      "categoryName": "Calendar",
-      "widgetSize": "4x4",
-      "specAsset": "agenda_large.json",
-      "description": "A full week of events",
-      "isFeatured": false,
-      "isTrending": true
-    },
-    {
-      "id": "vinyl_music",
-      "name": "Vinyl",
-      "categoryId": "media",
-      "categoryName": "Media",
-      "widgetSize": "4x2",
-      "specAsset": "vinyl_music.json",
-      "description": "A record that turns while music plays",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "album_music",
-      "name": "Album Colour",
-      "categoryId": "media",
-      "categoryName": "Media",
-      "widgetSize": "4x2",
-      "specAsset": "album_music.json",
-      "description": "Recolours itself from the album art",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "photo_clock",
-      "name": "Photo Clock",
-      "categoryId": "photos",
-      "categoryName": "Photos",
-      "widgetSize": "2x2",
-      "specAsset": "photo_clock.json",
-      "description": "Your photo behind the time \u2014 add photos in Customize",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "memories",
-      "name": "Memories",
-      "categoryId": "photos",
-      "categoryName": "Photos",
-      "widgetSize": "4x4",
-      "specAsset": "memories.json",
-      "description": "Big photo slideshow \u2014 add several photos in Customize",
-      "isFeatured": true,
-      "isTrending": false
-    },
-    {
-      "id": "aurora_clock",
-      "name": "Aurora",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "aurora_clock.json",
-      "description": "Aurora gradient clock",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "sunset_clock",
-      "name": "Sunset",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "4x2",
-      "specAsset": "sunset_clock.json",
-      "description": "Sunset gradient time & date",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "luxe_analog",
-      "name": "Luxe",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "luxe_analog.json",
-      "description": "Gold analog on deep teal",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
       "id": "activity_rings",
       "name": "Activity",
       "categoryId": "health",
@@ -452,154 +680,6 @@
       "description": "Apple-style activity rings",
       "isFeatured": true,
       "isTrending": true
-    },
-    {
-      "id": "power_glow",
-      "name": "Power",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "power_glow.json",
-      "description": "Glowing live battery",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "vibe_music",
-      "name": "Vibe",
-      "categoryId": "media",
-      "categoryName": "Media",
-      "widgetSize": "4x2",
-      "specAsset": "vibe_music.json",
-      "description": "Vibrant now-playing card",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "cosmos_moon",
-      "name": "Cosmos",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "cosmos_moon.json",
-      "description": "Moon phase among the stars",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "neon_countdown",
-      "name": "Countdown",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "neon_countdown.json",
-      "description": "Bright countdown with progress",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "storm_weather",
-      "name": "Climate",
-      "categoryId": "weather",
-      "categoryName": "Weather",
-      "widgetSize": "2x2",
-      "specAsset": "storm_weather.json",
-      "description": "Bold live weather",
-      "isFeatured": true,
-      "isTrending": true
-    },
-    {
-      "id": "min_clock",
-      "name": "Minimal",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "min_clock.json",
-      "description": "Clean time and date",
-      "isFeatured": true
-    },
-    {
-      "id": "min_analog",
-      "name": "Analog",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "min_analog.json",
-      "description": "Simple analog face"
-    },
-    {
-      "id": "min_flip",
-      "name": "Flip",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "min_flip.json",
-      "description": "Flip cards"
-    },
-    {
-      "id": "min_word",
-      "name": "Words",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x2",
-      "specAsset": "min_word.json",
-      "description": "Time in words"
-    },
-    {
-      "id": "min_mono",
-      "name": "Mono",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "2x1",
-      "specAsset": "min_mono.json",
-      "description": "Wide mono bar"
-    },
-    {
-      "id": "min_world",
-      "name": "World",
-      "categoryId": "clock",
-      "categoryName": "Clock",
-      "widgetSize": "4x1",
-      "specAsset": "min_world.json",
-      "description": "Three time zones"
-    },
-    {
-      "id": "min_date",
-      "name": "Date",
-      "categoryId": "calendar",
-      "categoryName": "Calendar",
-      "widgetSize": "2x2",
-      "specAsset": "min_date.json",
-      "description": "Big day number",
-      "isTrending": true
-    },
-    {
-      "id": "min_calendar",
-      "name": "Calendar",
-      "categoryId": "calendar",
-      "categoryName": "Calendar",
-      "widgetSize": "4x2",
-      "specAsset": "min_calendar.json",
-      "description": "Full navigable calendar with prev/next/today"
-    },
-    {
-      "id": "min_weather",
-      "name": "Weather",
-      "categoryId": "weather",
-      "categoryName": "Weather",
-      "widgetSize": "2x2",
-      "specAsset": "min_weather.json",
-      "description": "Current conditions",
-      "isFeatured": true
-    },
-    {
-      "id": "min_weather_wide",
-      "name": "Weather Wide",
-      "categoryId": "weather",
-      "categoryName": "Weather",
-      "widgetSize": "4x2",
-      "specAsset": "min_weather_wide.json",
-      "description": "Detailed weather"
     },
     {
       "id": "min_steps",
@@ -621,117 +701,6 @@
       "description": "Hydration ring"
     },
     {
-      "id": "min_music",
-      "name": "Now Playing",
-      "categoryId": "media",
-      "categoryName": "Media",
-      "widgetSize": "4x2",
-      "specAsset": "min_music.json",
-      "description": "Media controls",
-      "isTrending": true
-    },
-    {
-      "id": "min_battery",
-      "name": "Battery",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "min_battery.json",
-      "description": "Battery level"
-    },
-    {
-      "id": "min_countdown",
-      "name": "Countdown",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "min_countdown.json",
-      "description": "Time remaining"
-    },
-    {
-      "id": "min_quote",
-      "name": "Quote",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "4x2",
-      "specAsset": "min_quote.json",
-      "description": "Daily quote"
-    },
-    {
-      "id": "min_qr",
-      "name": "QR",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "min_qr.json",
-      "description": "Scannable code"
-    },
-    {
-      "id": "min_system",
-      "name": "System",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "4x1",
-      "specAsset": "min_system.json",
-      "description": "Time and battery"
-    },
-    {
-      "id": "min_crypto",
-      "name": "Crypto",
-      "categoryId": "finance",
-      "categoryName": "Finance",
-      "widgetSize": "4x1",
-      "specAsset": "min_crypto.json",
-      "description": "Crypto prices"
-    },
-    {
-      "id": "ai_search",
-      "name": "AI Search",
-      "categoryId": "ai",
-      "categoryName": "AI",
-      "widgetSize": "4x1",
-      "specAsset": "ai_search.json",
-      "description": "Universal AI search bar",
-      "isFeatured": true
-    },
-    {
-      "id": "ai_assistant",
-      "name": "Assistant",
-      "categoryId": "ai",
-      "categoryName": "AI",
-      "widgetSize": "2x2",
-      "specAsset": "ai_assistant.json",
-      "description": "Tap to ask your AI assistant",
-      "isFeatured": true
-    },
-    {
-      "id": "min_notes",
-      "name": "Notes",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "min_notes.json",
-      "description": "Notes"
-    },
-    {
-      "id": "min_todo",
-      "name": "To-Do",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "min_todo.json",
-      "description": "To-Do"
-    },
-    {
-      "id": "moon_phase",
-      "name": "Moon Phase",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "moon_phase.json",
-      "description": "Tonight's real moon phase"
-    },
-    {
       "id": "bmi_card",
       "name": "BMI",
       "categoryId": "health",
@@ -741,40 +710,64 @@
       "description": "Your Body Mass Index"
     },
     {
-      "id": "sun_times",
-      "name": "Sunrise & Sunset",
-      "categoryId": "weather",
-      "categoryName": "Weather",
+      "id": "photo_clock",
+      "name": "Photo Clock",
+      "categoryId": "photos",
+      "categoryName": "Photos",
+      "widgetSize": "2x2",
+      "specAsset": "photo_clock.json",
+      "description": "Your photo behind the time — add photos in Customize",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "memories",
+      "name": "Memories",
+      "categoryId": "photos",
+      "categoryName": "Photos",
+      "widgetSize": "4x4",
+      "specAsset": "memories.json",
+      "description": "Big photo slideshow — add several photos in Customize",
+      "isFeatured": true,
+      "isTrending": false
+    },
+    {
+      "id": "ai_assistant",
+      "name": "Assistant",
+      "categoryId": "tools",
+      "categoryName": "Tools",
+      "widgetSize": "2x2",
+      "specAsset": "ai_assistant.json",
+      "description": "Tap to ask your AI assistant",
+      "isFeatured": true
+    },
+    {
+      "id": "min_qr",
+      "name": "QR",
+      "categoryId": "tools",
+      "categoryName": "Tools",
+      "widgetSize": "2x2",
+      "specAsset": "min_qr.json",
+      "description": "Scannable code"
+    },
+    {
+      "id": "ai_search",
+      "name": "AI Search",
+      "categoryId": "tools",
+      "categoryName": "Tools",
       "widgetSize": "4x1",
-      "specAsset": "sun_times.json",
-      "description": "Today's sunrise and sunset"
+      "specAsset": "ai_search.json",
+      "description": "Universal AI search bar",
+      "isFeatured": true
     },
     {
-      "id": "habit_tracker",
-      "name": "Habits",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "4x2",
-      "specAsset": "habit_tracker.json",
-      "description": "Track daily habits, 7-day streaks"
-    },
-    {
-      "id": "stopwatch",
-      "name": "Stopwatch",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "stopwatch.json",
-      "description": "Tap to start or pause"
-    },
-    {
-      "id": "pomodoro",
-      "name": "Pomodoro",
-      "categoryId": "utility",
-      "categoryName": "Utility",
-      "widgetSize": "2x2",
-      "specAsset": "pomodoro.json",
-      "description": "25/5 focus timer, tap to start"
+      "id": "min_crypto",
+      "name": "Crypto",
+      "categoryId": "tools",
+      "categoryName": "Tools",
+      "widgetSize": "4x1",
+      "specAsset": "min_crypto.json",
+      "description": "Crypto prices"
     }
   ]
 }

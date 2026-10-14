@@ -60,21 +60,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     class CategoryViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
-        private final View selectionIndicator;
 
         CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.category_name);
-            selectionIndicator = itemView.findViewById(R.id.selection_indicator);
         }
 
         void bind(CategoryEntity category, boolean isSelected) {
             name.setText(category.getName());
             itemView.setSelected(isSelected);
             name.setSelected(isSelected);
-            if (selectionIndicator != null) {
-                selectionIndicator.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-            }
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

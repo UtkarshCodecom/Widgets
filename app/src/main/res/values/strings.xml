@@ -16,6 +16,9 @@
     <string name="widget_preview">Preview</string>
     <string name="no_favorites">No favorites yet</string>
     <string name="no_widgets">No widgets found</string>
+    <string name="see_all">See all</string>
+    <string name="no_favorites_hint">Tap ♡ on any widget to keep it here.</string>
+    <string name="no_results_hint">Try another word, like “clock” or “battery”.</string>
 
     <!-- Customize Tab -->
     <string name="theme_manager">Theme Manager</string>

@@ -1151,6 +1151,46 @@ public class CustomizeWidgetActivity extends AppCompatActivity {
     }
 
 
+    // ---------------------------------------------------------------- Live clock
+
+    /** Re-renders the preview in real time for clocks/visualizers, like the placed widget. */
+    private final android.os.Handler liveHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private long liveInterval = com.desire.widget.ui.widgets.LivePreview.STATIC;
+    private long lastLiveMinute = -1;
+    private final Runnable liveTick = new Runnable() {
+        @Override
+        public void run() {
+            long now = System.currentTimeMillis();
+            boolean due = liveInterval == com.desire.widget.ui.widgets.LivePreview.EVERY_SECOND
+                    || (liveInterval == com.desire.widget.ui.widgets.LivePreview.EVERY_MINUTE
+                        && now / 60_000L != lastLiveMinute);
+            // Never fight a sticker gesture: the drag ghost is drawn separately.
+            if (due && draggingSticker < 0) {
+                lastLiveMinute = now / 60_000L;
+                render();
+            }
+            liveHandler.postDelayed(this, 1000 - now % 1000 + 15);
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            liveInterval = com.desire.widget.ui.widgets.LivePreview.intervalOf(GSON.fromJson(specJson, WidgetSpec.class));
+        } catch (Exception e) {
+            liveInterval = com.desire.widget.ui.widgets.LivePreview.STATIC;
+        }
+        liveHandler.removeCallbacks(liveTick);
+        if (liveInterval != com.desire.widget.ui.widgets.LivePreview.STATIC) liveHandler.post(liveTick);
+    }
+
+    @Override
+    protected void onPause() {
+        liveHandler.removeCallbacks(liveTick);
+        super.onPause();
+    }
+
     // ---------------------------------------------------------------- Render
 
     private void render() {

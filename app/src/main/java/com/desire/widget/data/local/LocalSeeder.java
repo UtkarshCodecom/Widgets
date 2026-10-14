@@ -24,7 +24,7 @@ public final class LocalSeeder {
     private static final String CATALOG = "seed/native/catalog.json";
     private static final String WIDGET_DIR = "seed/native/";
     /** Bump whenever catalog widgets are added/changed so existing installs pick them up. */
-    private static final int SEED_VERSION = 4;
+    private static final int SEED_VERSION = 5;
     private static final String SEED_PREFS = "seed_meta";
     private static final String KEY_SEED_VERSION = "seed_version";
 
@@ -56,7 +56,11 @@ public final class LocalSeeder {
         Catalog catalog = new Gson().fromJson(readAsset(context, CATALOG), Catalog.class);
         if (catalog == null || catalog.widgets == null || catalog.widgets.isEmpty()) return;
 
-        if (catalog.categories != null) categoryDao.insertAll(buildCategories(catalog));
+        if (catalog.categories != null) {
+            // Categories are owned by the catalog: replace them so renamed/merged ones disappear.
+            categoryDao.deleteAll();
+            categoryDao.insertAll(buildCategories(catalog));
+        }
 
         long now = System.currentTimeMillis();
         int total = catalog.widgets.size();
@@ -75,7 +79,8 @@ public final class LocalSeeder {
                 added++;
             } else {
                 widgetDao.syncExisting(w.id, spec, w.name, w.description, w.categoryId,
-                        w.categoryName, w.widgetSize, w.isPro, w.isFeatured, w.isTrending);
+                        w.categoryName, w.widgetSize, w.isPro, w.isFeatured, w.isTrending,
+                        now - i * 1000L);
                 updated++;
             }
         }
