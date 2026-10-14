@@ -34,6 +34,7 @@ import java.util.List;
  * {@code cache/render_dump/sheet_N.png}, for visual QA without capturing the device screen.
  *
  * <pre>adb shell am broadcast -a com.desire.widget.debug.RENDER_DUMP -n com.desire.widget/.debug.RenderDumpReceiver</pre>
+ * Add {@code --es specs id1,id2} to render specific spec files (e.g. ones not in the catalog yet).
  */
 public class RenderDumpReceiver extends BroadcastReceiver {
     private static final String TAG = "RenderDump";
@@ -47,9 +48,10 @@ public class RenderDumpReceiver extends BroadcastReceiver {
             SelfCapture.capture(app, intent, pending::finish);
             return;
         }
+        final String only = intent.getStringExtra("specs");
         new Thread(() -> {
             try {
-                dump(app);
+                dump(app, only);
             } catch (Exception e) {
                 Log.e(TAG, "dump failed", e);
             } finally {
@@ -58,9 +60,25 @@ public class RenderDumpReceiver extends BroadcastReceiver {
         }).start();
     }
 
-    private void dump(Context app) throws Exception {
-        JsonObject catalog = new Gson().fromJson(read(app, "seed/native/catalog.json"), JsonObject.class);
-        JsonArray widgets = catalog.getAsJsonArray("widgets");
+    private void dump(Context app, String only) throws Exception {
+        JsonArray widgets;
+        if (only != null && !only.trim().isEmpty()) {
+            // Explicit spec ids (e.g. designs not in the catalog yet): size comes from designSize.
+            widgets = new JsonArray();
+            for (String id : only.split(",")) {
+                id = id.trim();
+                if (id.isEmpty()) continue;
+                JsonObject spec = new Gson().fromJson(read(app, "seed/native/" + id + ".json"), JsonObject.class);
+                JsonObject w = new JsonObject();
+                w.addProperty("id", id);
+                w.addProperty("widgetSize", spec.has("designSize") ? spec.get("designSize").getAsString() : "2x2");
+                w.addProperty("specAsset", id + ".json");
+                widgets.add(w);
+            }
+        } else {
+            JsonObject catalog = new Gson().fromJson(read(app, "seed/native/catalog.json"), JsonObject.class);
+            widgets = catalog.getAsJsonArray("widgets");
+        }
         File dir = new File(app.getCacheDir(), "render_dump");
         if (!dir.exists() && !dir.mkdirs()) throw new IllegalStateException("no dump dir");
         File[] old = dir.listFiles();

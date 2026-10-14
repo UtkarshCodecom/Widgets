@@ -1,0 +1,64 @@
+{
+  "id": "battery_dots",
+  "name": "Battery Grid",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.1,
+        "y": 0.12,
+        "w": 0.8,
+        "h": 0.76
+      },
+      "props": {
+        "style": "dots",
+        "fillColor": "#D9C8FF",
+        "bodyColor": "#3A3A44",
+        "trackColor": "#2A2A31",
+        "nameColor": "#FF8A80",
+        "textColor": "#FFFFFF",
+        "previewLevel": 40
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  },
+  "styles": [
+    {
+      "name": "Grid",
+      "props": {
+        "0.style": "dots"
+      }
+    },
+    {
+      "name": "Pills",
+      "props": {
+        "0.style": "pills"
+      }
+    },
+    {
+      "name": "Glow",
+      "props": {
+        "0.style": "glowCard"
+      }
+    },
+    {
+      "name": "Ring",
+      "props": {
+        "0.style": "ring"
+      }
+    },
+    {
+      "name": "Cells",
+      "props": {
+        "0.style": "bars"
+      }
+    }
+  ]
+}

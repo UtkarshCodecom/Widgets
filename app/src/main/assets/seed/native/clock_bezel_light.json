@@ -1,0 +1,51 @@
+{
+  "id": "clock_bezel_light",
+  "name": "Bezel Light",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "bezel_clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {
+        "bezel": "ticks",
+        "faceColor": "#EFEFF2",
+        "bezelColor": "#F2B3B3",
+        "accentColor": "#E5322D",
+        "textColor": "#111114",
+        "subColor": "#2A2A30"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Ticks",
+      "props": {
+        "0.bezel": "ticks"
+      }
+    },
+    {
+      "name": "Dots",
+      "props": {
+        "0.bezel": "dots"
+      }
+    },
+    {
+      "name": "Still",
+      "props": {
+        "0.sweep": false
+      }
+    }
+  ]
+}

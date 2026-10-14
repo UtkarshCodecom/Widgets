@@ -28,6 +28,8 @@ public class CachedLiveDataSource implements LiveDataSource {
         w.sunriseMillis = prefs.getLong("weather_sunrise", w.sunriseMillis);
         w.sunsetMillis = prefs.getLong("weather_sunset", w.sunsetMillis);
         w.updatedAtMillis = prefs.getLong("weather_updated_at", 0);
+        w.description = prefs.getString("weather_desc", "");
+        w.forecast = prefs.getString("weather_forecast", "");
         return w;
     }
 
@@ -58,6 +60,8 @@ public class CachedLiveDataSource implements LiveDataSource {
                 .putLong("weather_sunrise", w.sunriseMillis)
                 .putLong("weather_sunset", w.sunsetMillis)
                 .putLong("weather_updated_at", System.currentTimeMillis())
+                .putString("weather_desc", w.description != null ? w.description : "")
+                .putString("weather_forecast", w.forecast != null ? w.forecast : "")
                 .apply();
     }
 

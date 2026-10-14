@@ -1,0 +1,91 @@
+{
+  "id": "clock_serif",
+  "name": "Serif",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.05,
+        "y": 0.28,
+        "w": 0.9,
+        "h": 0.1
+      },
+      "props": {
+        "format": "EEEE, dd MMMM",
+        "color": "#C9C5EE",
+        "fontSize": 0.75,
+        "align": "center",
+        "bold": false
+      }
+    },
+    {
+      "type": "styled_clock",
+      "frame": {
+        "x": 0.03,
+        "y": 0.4,
+        "w": 0.94,
+        "h": 0.32
+      },
+      "props": {
+        "font": "serif",
+        "colors": [
+          "#CFCBF7"
+        ],
+        "sepColor": "#CFCBF7",
+        "fill": 0.92
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Solid",
+      "props": {
+        "1.style": "solid"
+      }
+    },
+    {
+      "name": "Gradient",
+      "props": {
+        "1.style": "gradient"
+      }
+    },
+    {
+      "name": "Holo",
+      "props": {
+        "1.style": "holo"
+      }
+    },
+    {
+      "name": "Outline",
+      "props": {
+        "1.style": "outline"
+      }
+    },
+    {
+      "name": "Bubble",
+      "props": {
+        "1.style": "bubble"
+      }
+    },
+    {
+      "name": "Candy",
+      "props": {
+        "1.style": "candy"
+      }
+    },
+    {
+      "name": "Stencil",
+      "props": {
+        "1.style": "stencil"
+      }
+    }
+  ]
+}

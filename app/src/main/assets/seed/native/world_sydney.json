@@ -1,0 +1,33 @@
+{
+  "id": "world_sydney",
+  "name": "World Clock",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#000000",
+    "cornerRadius": 0.24
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.06,
+        "w": 0.88,
+        "h": 0.88
+      },
+      "props": {
+        "dialStyle": "ios",
+        "faceColor": "#FFFFFF",
+        "tickColor": "#2A2A2E",
+        "numeralColor": "#111114",
+        "handColor": "#111114",
+        "secondColor": "#FF3B30",
+        "city": "SYD",
+        "timezone": "Australia/Sydney"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

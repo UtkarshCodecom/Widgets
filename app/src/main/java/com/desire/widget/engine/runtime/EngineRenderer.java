@@ -155,8 +155,12 @@ public final class EngineRenderer {
         }
 
         // Toggle widgets need a tap target per tile → the 2x4 grid layout instead of the standard
-        // overlay. Everything else keeps widget_layout.xml (calendar nav / music / timer regions).
-        boolean grid = hasToggleComponent(spec);
+        // overlay; so does the 4x1 "pill" music player (its buttons sit in columns 3 and 4).
+        // Everything else keeps widget_layout.xml (calendar nav / music / timer regions).
+        com.desire.widget.engine.model.ComponentSpec music = musicComponent(spec);
+        boolean pillPlayer = music != null
+                && "pill".equals(com.desire.widget.engine.util.SpecProps.str(music.props, "style", "card"));
+        boolean grid = hasToggleComponent(spec) || pillPlayer;
         RemoteViews views = new RemoteViews(app.getPackageName(),
                 grid ? R.layout.widget_layout_grid : R.layout.widget_layout);
         views.setImageViewBitmap(R.id.widget_image, bitmap);
@@ -168,7 +172,8 @@ public final class EngineRenderer {
         views.setOnClickPendingIntent(R.id.widget_root, click);
 
         if (grid) {
-            wireToggleGrid(app, appWidgetId, spec, views);
+            if (pillPlayer) wirePillPlayer(app, appWidgetId, views);
+            else wireToggleGrid(app, appWidgetId, spec, views);
             AppWidgetManager.getInstance(app).updateAppWidget(appWidgetId, views);
             return;
         }
@@ -183,10 +188,14 @@ public final class EngineRenderer {
                     mediaControlIntent(app, appWidgetId, com.desire.widget.service.MediaControlReceiver.CMD_PLAY_PAUSE));
             views.setOnClickPendingIntent(R.id.widget_ctrl_next,
                     mediaControlIntent(app, appWidgetId, com.desire.widget.service.MediaControlReceiver.CMD_NEXT));
-            // Tap-to-seek: 8 zones over the progress bar, each seeking to the centre of its band.
-            for (int i = 0; i < SEEK_CELL_IDS.length; i++) {
-                float fraction = (i + 0.5f) / SEEK_CELL_IDS.length;
-                views.setOnClickPendingIntent(SEEK_CELL_IDS[i], seekIntent(app, appWidgetId, i, fraction));
+            // Tap-to-seek: 8 zones over the progress bar, each seeking to the centre of its band —
+            // only when the design actually draws a bar there (seekBar:false styles keep the band
+            // as part of the whole-widget tap).
+            if (music == null || com.desire.widget.engine.util.SpecProps.b(music.props, "seekBar", true)) {
+                for (int i = 0; i < SEEK_CELL_IDS.length; i++) {
+                    float fraction = (i + 0.5f) / SEEK_CELL_IDS.length;
+                    views.setOnClickPendingIntent(SEEK_CELL_IDS[i], seekIntent(app, appWidgetId, i, fraction));
+                }
             }
         } else if (hasTimerComponent(spec)) {
             // Whole-widget tap already toggles start/pause; the bottom-right region resets instead,
@@ -312,6 +321,30 @@ public final class EngineRenderer {
                 }
             }
         }
+    }
+
+    /**
+     * 4x1 pill player: play/pause is drawn centred in the 3rd column and "next" in the 4th, so those
+     * grid cells (both rows) get the transport intents; the art/title columns fall through to the
+     * whole-widget tap, which opens the music app.
+     */
+    private static void wirePillPlayer(Context app, int appWidgetId, RemoteViews views) {
+        PendingIntent playPause = mediaControlIntent(app, appWidgetId,
+                com.desire.widget.service.MediaControlReceiver.CMD_PLAY_PAUSE);
+        PendingIntent next = mediaControlIntent(app, appWidgetId,
+                com.desire.widget.service.MediaControlReceiver.CMD_NEXT);
+        views.setOnClickPendingIntent(GRID_CELL_IDS[2], playPause);
+        views.setOnClickPendingIntent(GRID_CELL_IDS[6], playPause);
+        views.setOnClickPendingIntent(GRID_CELL_IDS[3], next);
+        views.setOnClickPendingIntent(GRID_CELL_IDS[7], next);
+    }
+
+    private static com.desire.widget.engine.model.ComponentSpec musicComponent(WidgetSpec spec) {
+        if (spec.components == null) return null;
+        for (com.desire.widget.engine.model.ComponentSpec c : spec.components) {
+            if (c != null && "music".equals(c.type)) return c;
+        }
+        return null;
     }
 
     private static boolean hasMusicComponent(WidgetSpec spec) {

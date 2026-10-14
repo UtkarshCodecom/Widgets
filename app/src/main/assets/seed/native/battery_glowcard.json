@@ -1,0 +1,63 @@
+{
+  "id": "battery_glowcard",
+  "name": "Battery Glow",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#0E0E11",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.03,
+        "y": 0.05,
+        "w": 0.94,
+        "h": 0.9
+      },
+      "props": {
+        "style": "glowCard",
+        "fillColor": "#E2F56B",
+        "bodyColor": "#E2F56B",
+        "trackColor": "#2E3320",
+        "textColor": "#FFFFFF",
+        "previewLevel": 80
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  },
+  "styles": [
+    {
+      "name": "Grid",
+      "props": {
+        "0.style": "dots"
+      }
+    },
+    {
+      "name": "Pills",
+      "props": {
+        "0.style": "pills"
+      }
+    },
+    {
+      "name": "Glow",
+      "props": {
+        "0.style": "glowCard"
+      }
+    },
+    {
+      "name": "Ring",
+      "props": {
+        "0.style": "ring"
+      }
+    },
+    {
+      "name": "Cells",
+      "props": {
+        "0.style": "bars"
+      }
+    }
+  ]
+}

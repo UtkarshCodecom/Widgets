@@ -1,0 +1,29 @@
+{
+  "id": "week_strip",
+  "name": "Week",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#000000",
+    "cornerRadius": 0.4
+  },
+  "components": [
+    {
+      "type": "week_strip",
+      "frame": {
+        "x": 0.05,
+        "y": 0.1,
+        "w": 0.9,
+        "h": 0.8
+      },
+      "props": {
+        "accentColor": "#B8A7FF",
+        "onAccentColor": "#101114",
+        "textColor": "#F2F2F4",
+        "subColor": "#9A9AA4"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

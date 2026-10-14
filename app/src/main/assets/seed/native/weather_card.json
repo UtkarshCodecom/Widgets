@@ -1,0 +1,52 @@
+{
+  "id": "weather_card",
+  "name": "Weather Card",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#0E0E11",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "weather",
+      "frame": {
+        "x": 0.12,
+        "y": 0.1,
+        "w": 0.76,
+        "h": 0.8
+      },
+      "props": {
+        "style": "card",
+        "location": "Tokyo",
+        "temp": 26,
+        "condition": "clouds",
+        "iconColor": "#FFD27A",
+        "textColor": "#FFFFFF",
+        "subColor": "#D9D9DE"
+      }
+    }
+  ],
+  "action": {
+    "type": "weather"
+  },
+  "styles": [
+    {
+      "name": "Card",
+      "props": {
+        "0.style": "card"
+      }
+    },
+    {
+      "name": "Shapes",
+      "props": {
+        "0.style": "tiles"
+      }
+    },
+    {
+      "name": "Classic",
+      "props": {
+        "0.style": "row"
+      }
+    }
+  ]
+}

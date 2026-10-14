@@ -137,8 +137,8 @@ public class WeatherWorker extends Worker {
         String url = String.format(Locale.US,
                 "https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f" +
                         "&current=temperature_2m,weather_code" +
-                        "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset" +
-                        "&timezone=auto&forecast_days=1&timeformat=unixtime",
+                        "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset" +
+                        "&timezone=auto&forecast_days=5&timeformat=unixtime",
                 lat, lon);
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         conn.setConnectTimeout(8000);
@@ -158,6 +158,7 @@ public class WeatherWorker extends Worker {
             WeatherSnapshot s = new WeatherSnapshot();
             s.temp = current.getDouble("temperature_2m");
             s.condition = mapCondition(current.getInt("weather_code"));
+            s.description = describe(current.getInt("weather_code"));
             s.high = daily.getJSONArray("temperature_2m_max").getDouble(0);
             s.low = daily.getJSONArray("temperature_2m_min").getDouble(0);
             s.unit = "°";
@@ -171,10 +172,37 @@ public class WeatherWorker extends Worker {
             if (daily.has("sunset") && daily.getJSONArray("sunset").length() > 0) {
                 s.sunsetMillis = daily.getJSONArray("sunset").getLong(0) * 1000L;
             }
+            // Daily forecast for the multi-day widgets ("epochSec,condition,high,low;…").
+            if (daily.has("time") && daily.has("weather_code")) {
+                StringBuilder fc = new StringBuilder();
+                int n = Math.min(daily.getJSONArray("time").length(), daily.getJSONArray("weather_code").length());
+                for (int i = 0; i < n; i++) {
+                    if (fc.length() > 0) fc.append(';');
+                    fc.append(daily.getJSONArray("time").getLong(i)).append(',')
+                            .append(mapCondition(daily.getJSONArray("weather_code").getInt(i))).append(',')
+                            .append(daily.getJSONArray("temperature_2m_max").getDouble(i)).append(',')
+                            .append(daily.getJSONArray("temperature_2m_min").getDouble(i));
+                }
+                s.forecast = fc.toString();
+            }
             return s;
         } finally {
             conn.disconnect();
         }
+    }
+
+    /** WMO weather code → short human description. */
+    private String describe(int code) {
+        if (code == 0) return "Clear sky";
+        if (code == 1) return "Mainly clear";
+        if (code == 2) return "Partly cloudy";
+        if (code == 3) return "Overcast";
+        if (code == 45 || code == 48) return "Fog";
+        if (code >= 51 && code <= 57) return "Drizzle";
+        if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return "Rain";
+        if ((code >= 71 && code <= 77) || code == 85 || code == 86) return "Snow";
+        if (code >= 95) return "Thunderstorm";
+        return "Cloudy";
     }
 
     /** WMO weather codes → our condition buckets. */

@@ -23,8 +23,15 @@ import java.util.Map;
  * present; props override individual fields.
  *
  * <p>props: title, artist, playing, progress (0..1), accentColor, textColor, subColor,
- * style (card|vinyl — the art slot drawn as a turning record), theme (default|albumArt — tint the
- * card from the cover art's most vivid colour).
+ * style (card|vinyl — the art slot drawn as a turning record | disc — 2x2: the cover slides out
+ * of a sleeve as a half record, centred text, slim seek line, controls | cover — 2x2: rounded
+ * cover on top, centred text and controls | pill — 4x1: cover, text, play/pause and next on the
+ * right; {@code button: label} draws a "Pause"/"Play" pill), theme (default|albumArt — tint the
+ * card from the cover art's most vivid colour), playColor (fill of the round play button in
+ * disc/cover), seekBar (draw the seek line; the widget only wires seek taps when it is drawn).
+ *
+ * <p>With no cover art (nothing playing yet, gallery previews) an abstract generated cover is
+ * drawn so the design never shows an empty slot.
  */
 public class MusicRenderer implements ComponentRenderer {
     @Override
@@ -55,7 +62,12 @@ public class MusicRenderer implements ComponentRenderer {
         int accent = SpecColors.resolve(SpecProps.str(p, "accentColor", "@primary"), ctx.theme, ctx.theme.primary);
         int textColor = SpecColors.resolve(SpecProps.str(p, "textColor", "@textPrimary"), ctx.theme, ctx.theme.textPrimary);
         int subColor = SpecColors.resolve(SpecProps.str(p, "subColor", "@textSecondary"), ctx.theme, ctx.theme.textSecondary);
-        boolean vinyl = "vinyl".equals(SpecProps.str(p, "style", "card"));
+        String styleName = SpecProps.str(p, "style", "card");
+        boolean vinyl = "vinyl".equals(styleName);
+        if ("disc".equals(styleName) || "cover".equals(styleName) || "pill".equals(styleName)) {
+            new Compact(canvas, b, p, ctx, np, accent, textColor, subColor).draw(styleName);
+            return;
+        }
 
         float pad = b.height() * 0.12f;
         float textLeft = b.left + pad;
@@ -314,5 +326,218 @@ public class MusicRenderer implements ComponentRenderer {
     private String ellipsize(String s, int max) {
         if (s == null) return "";
         return s.length() <= max ? s : s.substring(0, max - 1) + "…";
+    }
+    /** Compact Muviz-style layouts: disc / cover (2x2) and pill (4x1). */
+    private final class Compact {
+        final Canvas c;
+        final RectF b;
+        final Map<String, Object> p;
+        final RenderContext ctx;
+        final NowPlaying np;
+        int accent, text, sub;
+        final Bitmap art;
+
+        Compact(Canvas c, RectF b, Map<String, Object> p, RenderContext ctx, NowPlaying np,
+                int accent, int text, int sub) {
+            this.c = c;
+            this.b = b;
+            this.p = p;
+            this.ctx = ctx;
+            this.np = np;
+            this.accent = accent;
+            this.text = text;
+            this.sub = sub;
+            this.art = loadArt(np.albumArtPath);
+        }
+
+        void draw(String style) {
+            // Card backdrop: album colour when available, else the spec's own background shows.
+            if ("albumArt".equals(SpecProps.str(p, "theme", "default"))) {
+                int base = art != null ? vividColor(np.albumArtPath, art)
+                        : SpecColors.resolve(SpecProps.str(p, "fallbackColor", "#3A4A7A"), ctx.theme, 0xFF3A4A7A);
+                Paint backdrop = new Paint(Paint.ANTI_ALIAS_FLAG);
+                backdrop.setShader(new android.graphics.LinearGradient(b.left, b.top, b.left, b.bottom,
+                        shade(base, 0.62f), shade(base, 0.38f), Shader.TileMode.CLAMP));
+                float corner = Math.min(b.width(), b.height()) * ("pill".equals(style) ? 0.5f : 0.16f);
+                c.drawRoundRect(b, corner, corner, backdrop);
+                accent = lighten(base);
+                sub = (text & 0x00FFFFFF) | 0xB3000000;
+            }
+            switch (style) {
+                case "disc": disc(); break;
+                case "cover": cover(); break;
+                default: pill(); break;
+            }
+        }
+
+        private void cover(RectF dst, float corner, boolean circle) {
+            if (art != null) {
+                if (circle) {
+                    Path clip = new Path();
+                    clip.addOval(dst, Path.Direction.CW);
+                    int save = c.save();
+                    c.clipPath(clip);
+                    drawRoundedBitmap(c, art, dst, 0f);
+                    c.restoreToCount(save);
+                } else {
+                    drawRoundedBitmap(c, art, dst, corner);
+                }
+                return;
+            }
+            // Generated stand-in cover: a soft two-tone gradient with a sun disc.
+            Paint g = new Paint(Paint.ANTI_ALIAS_FLAG);
+            g.setShader(new android.graphics.LinearGradient(dst.left, dst.top, dst.right, dst.bottom,
+                    0xFFF7B267, 0xFF6D5BD0, Shader.TileMode.CLAMP));
+            Path shape = new Path();
+            if (circle) shape.addOval(dst, Path.Direction.CW);
+            else shape.addRoundRect(dst, corner, corner, Path.Direction.CW);
+            c.drawPath(shape, g);
+            int save = c.save();
+            c.clipPath(shape);
+            Paint sun = new Paint(Paint.ANTI_ALIAS_FLAG);
+            sun.setColor(0x66FFF3D6);
+            float r = Math.min(dst.width(), dst.height()) * 0.26f;
+            c.drawCircle(dst.centerX() + r * 0.4f, dst.centerY() - r * 0.2f, r, sun);
+            Paint hill = new Paint(Paint.ANTI_ALIAS_FLAG);
+            hill.setColor(0x55201A40);
+            c.drawCircle(dst.left + dst.width() * 0.25f, dst.bottom + r * 0.6f, r * 2.2f, hill);
+            c.restoreToCount(save);
+        }
+
+        private void centeredText(String s, float y, float size, int color, boolean bold) {
+            Paint tp = new Paint(Paint.ANTI_ALIAS_FLAG);
+            tp.setColor(color);
+            tp.setTextAlign(Paint.Align.CENTER);
+            tp.setTextSize(size);
+            tp.setTypeface(com.desire.widget.engine.util.FontResolver.resolve(
+                    SpecProps.str(p, "font", "medium"), bold));
+            String t = fit(s, tp, b.width() * 0.84f);
+            Paint.FontMetrics fm = tp.getFontMetrics();
+            c.drawText(t, b.centerX(), y - (fm.ascent + fm.descent) / 2f, tp);
+        }
+
+        private String fit(String s, Paint tp, float max) {
+            if (s == null) return "";
+            if (tp.measureText(s) <= max) return s;
+            String t = s;
+            while (t.length() > 1 && tp.measureText(t + "…") > max) t = t.substring(0, t.length() - 1);
+            return t + "…";
+        }
+
+        private void seekLine(float y) {
+            if (!SpecProps.b(p, "seekBar", true)) return;
+            float left = b.left + b.width() * 0.16f, right = b.right - b.width() * 0.16f;
+            float h = Math.max(2f, b.height() * 0.014f);
+            Paint track = new Paint(Paint.ANTI_ALIAS_FLAG);
+            track.setColor((sub & 0x00FFFFFF) | 0x44000000);
+            c.drawRoundRect(new RectF(left, y - h / 2f, right, y + h / 2f), h, h, track);
+            Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
+            fill.setColor(text);
+            float x = left + (right - left) * np.progress;
+            c.drawRoundRect(new RectF(left, y - h / 2f, x, y + h / 2f), h, h, fill);
+        }
+
+        /** prev / play-pause / next centred in the left, middle and right thirds (the tap cells). */
+        private void controls(float y) {
+            float r = b.height() * 0.075f;
+            drawPrevNext(c, b.left + b.width() * 0.26f, y, r * 0.75f, text, true);
+            drawPrevNext(c, b.left + b.width() * 0.74f, y, r * 0.75f, text, false);
+            int playFill = SpecColors.resolve(SpecProps.str(p, "playColor", ""), ctx.theme, accent);
+            Paint disc = new Paint(Paint.ANTI_ALIAS_FLAG);
+            disc.setColor(playFill);
+            c.drawCircle(b.centerX(), y, r * 1.45f, disc);
+            int glyph = luminance(playFill) > 0.6 ? 0xFF1B1B1F : 0xFFFFFFFF;
+            if (np.playing) drawPause(c, b.centerX(), y, r * 0.85f, glyph);
+            else drawPlay(c, b.centerX() + r * 0.1f, y, r * 0.85f, glyph);
+        }
+
+        private void disc() {
+            // The cover as a record half-out of its sleeve: a circle cut by the sleeve line.
+            float sleeve = b.top + b.height() * 0.46f;
+            float r = b.width() * 0.32f;
+            float cy = sleeve + r * 0.12f;
+            RectF disc = new RectF(b.centerX() - r, cy - r, b.centerX() + r, cy + r);
+            int save = c.save();
+            c.clipRect(b.left, b.top, b.right, sleeve);
+            cover(disc, 0f, true);
+            Paint hole = new Paint(Paint.ANTI_ALIAS_FLAG);
+            hole.setColor(0x88000000);
+            c.drawCircle(disc.centerX(), disc.centerY(), r * 0.1f, hole);
+            c.restoreToCount(save);
+            Paint line = new Paint(Paint.ANTI_ALIAS_FLAG);
+            line.setColor((text & 0x00FFFFFF) | 0x33000000);
+            line.setStrokeWidth(Math.max(1f, b.height() * 0.006f));
+            c.drawLine(b.left + b.width() * 0.08f, sleeve, b.right - b.width() * 0.08f, sleeve, line);
+            centeredText(np.title, b.top + b.height() * 0.555f, b.height() * 0.085f, text, true);
+            centeredText(np.artist, b.top + b.height() * 0.64f, b.height() * 0.06f, sub, false);
+            seekLine(b.top + b.height() * 0.725f);
+            controls(b.top + b.height() * 0.87f);
+        }
+
+        private void cover() {
+            float w = b.width() * 0.78f, h = b.height() * 0.42f;
+            RectF dst = new RectF(b.centerX() - w / 2f, b.top + b.height() * 0.07f, b.centerX() + w / 2f,
+                    b.top + b.height() * 0.07f + h);
+            cover(dst, h * 0.22f, false);
+            centeredText(np.title, b.top + b.height() * 0.565f, b.height() * 0.08f, text, true);
+            centeredText(np.artist, b.top + b.height() * 0.645f, b.height() * 0.058f, sub, false);
+            seekLine(b.top + b.height() * 0.725f);
+            controls(b.top + b.height() * 0.87f);
+        }
+
+        private void pill() {
+            float h = b.height();
+            float pad = h * 0.14f;
+            RectF artBox = new RectF(b.left + pad, b.top + pad, b.left + pad + (h - 2 * pad), b.bottom - pad);
+            cover(artBox, artBox.height() * 0.22f, false);
+            // Controls live in the right half: play/pause centred at 62.5%, next at 87.5% of the
+            // width — the centres of the 3rd and 4th columns of the widget's tap grid.
+            float playCx = b.left + b.width() * 0.625f, nextCx = b.left + b.width() * 0.875f;
+            boolean label = "label".equals(SpecProps.str(p, "button", "icon"));
+            float textLeft = artBox.right + pad * 0.9f;
+            float textRight = playCx - (label ? h * 0.62f : h * 0.3f);
+            Paint tp = new Paint(Paint.ANTI_ALIAS_FLAG);
+            tp.setColor(text);
+            tp.setTypeface(com.desire.widget.engine.util.FontResolver.resolve(SpecProps.str(p, "font", "medium"), true));
+            tp.setTextSize(h * 0.2f);
+            c.drawText(fit(np.title, tp, textRight - textLeft), textLeft, b.top + h * 0.45f, tp);
+            Paint ap = new Paint(tp);
+            ap.setColor(sub);
+            ap.setTypeface(com.desire.widget.engine.util.FontResolver.resolve(SpecProps.str(p, "font", "medium"), false));
+            ap.setTextSize(h * 0.15f);
+            c.drawText(fit(np.artist, ap, textRight - textLeft), textLeft, b.top + h * 0.7f, ap);
+
+            float cy = b.centerY();
+            if (label) {
+                // Light pill button with a glyph and "Pause"/"Play", plus a round next button.
+                float bw = h * 1.05f, bh = h * 0.36f;
+                RectF btn = new RectF(playCx - bw / 2f, cy - bh / 2f, playCx + bw / 2f, cy + bh / 2f);
+                Paint bp = new Paint(Paint.ANTI_ALIAS_FLAG);
+                bp.setColor(0xFFE6E6EA);
+                c.drawRoundRect(btn, bh / 2f, bh / 2f, bp);
+                float gr = bh * 0.3f;
+                float gx = btn.left + bh * 0.48f;
+                if (np.playing) drawPause(c, gx, cy, gr, 0xFF1B1B1F);
+                else drawPlay(c, gx, cy, gr, 0xFF1B1B1F);
+                Paint lp = new Paint(Paint.ANTI_ALIAS_FLAG);
+                lp.setColor(0xFF1B1B1F);
+                lp.setTypeface(com.desire.widget.engine.util.FontResolver.resolve("medium", true));
+                lp.setTextSize(bh * 0.46f);
+                Paint.FontMetrics fm = lp.getFontMetrics();
+                c.drawText(np.playing ? "Pause" : "Play", gx + gr * 1.4f, cy - (fm.ascent + fm.descent) / 2f, lp);
+                c.drawCircle(nextCx, cy, bh * 0.56f, bp);
+                drawPrevNext(c, nextCx - bh * 0.17f, cy, bh * 0.24f, 0xFF1B1B1F, false);
+            } else {
+                float r = h * 0.16f;
+                if (np.playing) drawPause(c, playCx, cy, r, text);
+                else drawPlay(c, playCx, cy, r, text);
+                drawPrevNext(c, nextCx - r * 0.5f, cy, r * 0.7f, text, false);
+            }
+        }
+    }
+
+    private static double luminance(int c) {
+        return (0.299 * android.graphics.Color.red(c) + 0.587 * android.graphics.Color.green(c)
+                + 0.114 * android.graphics.Color.blue(c)) / 255.0;
     }
 }

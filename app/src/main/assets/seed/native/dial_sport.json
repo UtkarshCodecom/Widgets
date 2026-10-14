@@ -1,0 +1,94 @@
+{
+  "id": "dial_sport",
+  "name": "Sport",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {
+        "dialStyle": "sport",
+        "faceColor": "#4B2BB8",
+        "tickColor": "#FFFFFF",
+        "accentColor": "#C8F53A",
+        "numeralColor": "#FFFFFF",
+        "handColor": "#FFFFFF",
+        "secondColor": "#C8F53A"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Bold",
+      "props": {
+        "0.dialStyle": "bold"
+      }
+    },
+    {
+      "name": "Radial",
+      "props": {
+        "0.dialStyle": "radial"
+      }
+    },
+    {
+      "name": "Sport",
+      "props": {
+        "0.dialStyle": "sport"
+      }
+    },
+    {
+      "name": "Outline",
+      "props": {
+        "0.dialStyle": "outline"
+      }
+    },
+    {
+      "name": "Ios",
+      "props": {
+        "0.dialStyle": "ios"
+      }
+    },
+    {
+      "name": "Squircle",
+      "props": {
+        "0.dialStyle": "iosSquare"
+      }
+    },
+    {
+      "name": "Numerals",
+      "props": {
+        "0.dialStyle": "numerals"
+      }
+    },
+    {
+      "name": "Pilot",
+      "props": {
+        "0.dialStyle": "pilot"
+      }
+    },
+    {
+      "name": "Minimal",
+      "props": {
+        "0.dialStyle": "minimal"
+      }
+    },
+    {
+      "name": "Filled",
+      "props": {
+        "0.dialStyle": "filled"
+      }
+    }
+  ]
+}

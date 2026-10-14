@@ -1,0 +1,63 @@
+{
+  "id": "battery_pills",
+  "name": "Battery Pills",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#0E0E11",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.08,
+        "y": 0.1,
+        "w": 0.84,
+        "h": 0.8
+      },
+      "props": {
+        "style": "pills",
+        "fillColor": "#D9C8FF",
+        "trackColor": "#3B3448",
+        "textColor": "#FFFFFF",
+        "subColor": "#CFCFD6",
+        "previewLevel": 60
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  },
+  "styles": [
+    {
+      "name": "Grid",
+      "props": {
+        "0.style": "dots"
+      }
+    },
+    {
+      "name": "Pills",
+      "props": {
+        "0.style": "pills"
+      }
+    },
+    {
+      "name": "Glow",
+      "props": {
+        "0.style": "glowCard"
+      }
+    },
+    {
+      "name": "Ring",
+      "props": {
+        "0.style": "ring"
+      }
+    },
+    {
+      "name": "Cells",
+      "props": {
+        "0.style": "bars"
+      }
+    }
+  ]
+}

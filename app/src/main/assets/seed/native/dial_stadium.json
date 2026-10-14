@@ -1,0 +1,47 @@
+{
+  "id": "dial_stadium",
+  "name": "Stadium",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.02,
+        "y": 0.04,
+        "w": 0.96,
+        "h": 0.92
+      },
+      "props": {
+        "dialStyle": "stadium",
+        "faceColor": "#000000",
+        "tickColor": "#6C6C72",
+        "handColor": "#FFFFFF",
+        "accentColor": "#FF3B30",
+        "secondColor": "#FF3B30",
+        "showNumerals": true,
+        "showDate": true
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Numerals",
+      "props": {
+        "0.showNumerals": true
+      }
+    },
+    {
+      "name": "Rays",
+      "props": {
+        "0.showNumerals": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "clock_geo",
+  "name": "Bauhaus",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "geo_clock",
+      "frame": {
+        "x": 0.12,
+        "y": 0.05,
+        "w": 0.76,
+        "h": 0.9
+      },
+      "props": {
+        "color": "#F2B6CF",
+        "accentColor": "#86D99B"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

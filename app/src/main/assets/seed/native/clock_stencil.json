@@ -1,0 +1,82 @@
+{
+  "id": "clock_stencil",
+  "name": "Stencil",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "styled_clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.07,
+        "w": 0.88,
+        "h": 0.86
+      },
+      "props": {
+        "style": "stencil",
+        "sep": "none",
+        "font": "condensed",
+        "scaleX": 0.5,
+        "colors": [
+          "#D9CCF5"
+        ],
+        "hourGradientTo": "#B9A6E8",
+        "minuteColors": [
+          "#B5C8FF"
+        ],
+        "minuteGradientTo": "#F4B6E4",
+        "fill": 0.94
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Solid",
+      "props": {
+        "0.style": "solid"
+      }
+    },
+    {
+      "name": "Gradient",
+      "props": {
+        "0.style": "gradient"
+      }
+    },
+    {
+      "name": "Holo",
+      "props": {
+        "0.style": "holo"
+      }
+    },
+    {
+      "name": "Outline",
+      "props": {
+        "0.style": "outline"
+      }
+    },
+    {
+      "name": "Bubble",
+      "props": {
+        "0.style": "bubble"
+      }
+    },
+    {
+      "name": "Candy",
+      "props": {
+        "0.style": "candy"
+      }
+    },
+    {
+      "name": "Stencil",
+      "props": {
+        "0.style": "stencil"
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "clock_led",
+  "name": "LED",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "dot_clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.22,
+        "w": 0.92,
+        "h": 0.56
+      },
+      "props": {
+        "style": "led",
+        "colors": [
+          "#FFFFFF"
+        ],
+        "subFormat": "EEE, dd MMM",
+        "subDots": true,
+        "subColor": "#A9AEB8",
+        "subScale": 0.4
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "LED",
+      "props": {
+        "0.style": "led"
+      }
+    },
+    {
+      "name": "Matrix",
+      "props": {
+        "0.style": "led",
+        "0.ghost": true
+      }
+    },
+    {
+      "name": "Pixels",
+      "props": {
+        "0.style": "pixel"
+      }
+    }
+  ]
+}

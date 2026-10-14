@@ -1,0 +1,68 @@
+{
+  "id": "device_tiles",
+  "name": "Devices",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "device_battery",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {
+        "style": "tiles"
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  },
+  "styles": [
+    {
+      "name": "Playful",
+      "props": {
+        "0.shapes": [
+          "blob",
+          "gem",
+          "circle"
+        ]
+      }
+    },
+    {
+      "name": "Round",
+      "props": {
+        "0.shapes": [
+          "circle",
+          "circle",
+          "circle"
+        ]
+      }
+    },
+    {
+      "name": "Soft",
+      "props": {
+        "0.shapes": [
+          "squircle",
+          "squircle",
+          "squircle"
+        ]
+      }
+    },
+    {
+      "name": "Petals",
+      "props": {
+        "0.shapes": [
+          "flower",
+          "clover",
+          "cookie"
+        ]
+      }
+    }
+  ]
+}

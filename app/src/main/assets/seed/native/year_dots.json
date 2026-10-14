@@ -1,0 +1,51 @@
+{
+  "id": "year_dots",
+  "name": "Year Progress",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#101114",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "year_progress",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "scope": "year",
+        "style": "dots",
+        "fillColor": "#F2F2F4",
+        "emptyColor": "#33363D",
+        "accentColor": "#FFB74D",
+        "textColor": "#F2F2F4"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  },
+  "styles": [
+    {
+      "name": "Dots",
+      "props": {
+        "0.style": "dots"
+      }
+    },
+    {
+      "name": "Ring",
+      "props": {
+        "0.style": "ring"
+      }
+    },
+    {
+      "name": "Bar",
+      "props": {
+        "0.style": "bar"
+      }
+    }
+  ]
+}

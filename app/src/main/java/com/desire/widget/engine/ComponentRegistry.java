@@ -90,6 +90,15 @@ public class ComponentRegistry {
                 .register(new com.desire.widget.engine.components.NextAlarmRenderer())
                 .register(new com.desire.widget.engine.components.ToggleRenderer())
                 .register(new com.desire.widget.engine.components.AgendaRenderer())
-                .register(new com.desire.widget.engine.components.ScreenTimeRenderer());
+                .register(new com.desire.widget.engine.components.ScreenTimeRenderer())
+                // Expressive designs (shape tiles, typographic / dot / bezel clocks).
+                .register(new com.desire.widget.engine.components.StyledClockRenderer())
+                .register(new com.desire.widget.engine.components.DotClockRenderer())
+                .register(new com.desire.widget.engine.components.TimeTilesRenderer())
+                .register(new com.desire.widget.engine.components.BezelClockRenderer())
+                .register(new com.desire.widget.engine.components.WeekStripRenderer())
+                .register(new com.desire.widget.engine.components.YearProgressRenderer())
+                .register(new com.desire.widget.engine.components.DeviceBatteryRenderer())
+                .register(new com.desire.widget.engine.components.GeoClockRenderer());
     }
 }

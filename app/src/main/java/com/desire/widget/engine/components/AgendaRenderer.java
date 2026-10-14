@@ -34,7 +34,8 @@ import java.util.Map;
  * placed widget asks the user to tap (WidgetTapActivity routes that to the permission prompt),
  * while gallery previews show sample events.
  *
- * <p>props: title, maxEvents, days, accentColor, textColor, subColor.
+ * <p>props: title, maxEvents, days, accentColor, textColor, subColor, layout (list | day — a big
+ * weekday + date with the next event as a tinted card and an "N more events" line), cardColor.
  */
 public class AgendaRenderer implements ComponentRenderer {
     private static final class Event {
@@ -65,6 +66,10 @@ public class AgendaRenderer implements ComponentRenderer {
         int subColor = SpecColors.resolve(SpecProps.str(p, "subColor", "@textSecondary"), ctx.theme, ctx.theme.textSecondary);
         int maxEvents = Math.max(1, SpecProps.i(p, "maxEvents", 4));
         int days = Math.max(1, SpecProps.i(p, "days", 7));
+        if ("day".equals(SpecProps.str(p, "layout", "list"))) {
+            renderDay(canvas, b, p, ctx, accent, textColor, subColor, days);
+            return;
+        }
 
         // Header: weekday + date.
         Date today = new Date(ctx.nowMillis);
@@ -197,5 +202,106 @@ public class AgendaRenderer implements ComponentRenderer {
         if (p.measureText(s) <= maxW) return s;
         while (s.length() > 1 && p.measureText(s + "…") > maxW) s = s.substring(0, s.length() - 1);
         return s + "…";
+    }
+    /** Compact "day" card: WEEKDAY / big date, the next event as a tinted card, "N more events". */
+    private void renderDay(Canvas canvas, RectF b, Map<String, Object> p, RenderContext ctx,
+                           int accent, int textColor, int subColor, int days) {
+        Date today = new Date(ctx.nowMillis);
+        Paint wd = paint(accent, b.height() * 0.1f, true, Paint.Align.LEFT);
+        canvas.drawText(new SimpleDateFormat("EEEE", Locale.getDefault()).format(today).toUpperCase(Locale.getDefault()),
+                b.left, b.top + b.height() * 0.1f, wd);
+        Paint num = paint(textColor, b.height() * 0.26f, false, Paint.Align.LEFT);
+        num.setFakeBoldText(false);
+        canvas.drawText(new SimpleDateFormat("d", Locale.getDefault()).format(today),
+                b.left, b.top + b.height() * 0.36f, num);
+
+        boolean granted = ContextCompat.checkSelfPermission(ctx.android, Manifest.permission.READ_CALENDAR)
+                == PackageManager.PERMISSION_GRANTED;
+        List<Event> events;
+        if (granted) events = query(ctx.android, ctx.nowMillis, days, 50);
+        else if (ctx.appWidgetId < 0) events = sample(ctx.nowMillis, accent);
+        else {
+            Paint a = paint(accent, b.height() * 0.085f, true, Paint.Align.LEFT);
+            canvas.drawText("Tap to connect", b.left, b.top + b.height() * 0.58f, a);
+            canvas.drawText("your calendar", b.left, b.top + b.height() * 0.7f, a);
+            return;
+        }
+        if (events.isEmpty()) {
+            Paint none = paint(subColor, b.height() * 0.085f, false, Paint.Align.LEFT);
+            canvas.drawText("No upcoming events", b.left, b.top + b.height() * 0.6f, none);
+            return;
+        }
+        Event e = events.get(0);
+        RectF card = new RectF(b.left, b.top + b.height() * 0.45f, b.right, b.top + b.height() * 0.74f);
+        Paint cp = new Paint(Paint.ANTI_ALIAS_FLAG);
+        cp.setColor((e.color & 0x00FFFFFF) | 0x33000000);
+        float cr = card.height() * 0.18f;
+        canvas.drawRoundRect(card, cr, cr, cp);
+        Paint bar = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bar.setColor(e.color);
+        float bw = Math.max(3f, card.height() * 0.07f);
+        canvas.drawRoundRect(new RectF(card.left + bw, card.top + card.height() * 0.16f, card.left + bw * 2f,
+                card.bottom - card.height() * 0.16f), bw, bw, bar);
+        float x = card.left + bw * 3.4f;
+        Paint t = paint(lift(e.color), card.height() * 0.32f, true, Paint.Align.LEFT);
+        canvas.drawText(ellipsize(e.title, t, card.right - x - bw), x, card.top + card.height() * 0.46f, t);
+        Paint w = paint(subColor, card.height() * 0.24f, false, Paint.Align.LEFT);
+        canvas.drawText(ellipsize(whenLabel(e, ctx.nowMillis, DateFormat.is24HourFormat(ctx.android)),
+                w, card.right - x - bw), x, card.top + card.height() * 0.82f, w);
+
+        int more = events.size() - 1;
+        if (more > 0) {
+            float y = b.top + b.height() * 0.88f;
+            Paint mb = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mb.setColor(accent);
+            canvas.drawRoundRect(new RectF(card.left + bw, y - b.height() * 0.06f, card.left + bw * 2f,
+                    y + b.height() * 0.02f), bw, bw, mb);
+            Paint m = paint(accent, b.height() * 0.075f, false, Paint.Align.LEFT);
+            canvas.drawText(more + (more == 1 ? " more event" : " more events"), x, y, m);
+        }
+    }
+
+    /** Event colours are often dark; brighten them enough to read on a dark card. */
+    private static int lift(int c) {
+        float[] hsv = new float[3];
+        android.graphics.Color.colorToHSV(c, hsv);
+        hsv[2] = Math.max(hsv[2], 0.85f);
+        hsv[1] = Math.min(hsv[1], 0.6f);
+        return android.graphics.Color.HSVToColor(hsv);
+    }
+
+    /**
+     * Number of event instances on each of {@code days} consecutive days starting at the local
+     * midnight {@code dayStart}; all zeros without calendar access. Used by the week strip.
+     */
+    static int[] eventsPerDay(Context c, long dayStart, int days) {
+        int[] counts = new int[days];
+        if (ContextCompat.checkSelfPermission(c, Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) return counts;
+        long end = dayStart + days * 24L * 3600_000L;
+        Uri.Builder ub = CalendarContract.Instances.CONTENT_URI.buildUpon();
+        ContentUris.appendId(ub, dayStart);
+        ContentUris.appendId(ub, end);
+        String[] proj = {CalendarContract.Instances.BEGIN};
+        try (Cursor cur = c.getContentResolver().query(ub.build(), proj,
+                CalendarContract.Instances.VISIBLE + " = 1", null, null)) {
+            while (cur != null && cur.moveToNext()) {
+                long begin = Math.max(dayStart, cur.getLong(0));
+                int idx = (int) Math.round((startOfDay(begin) - dayStart) / 86_400_000.0);
+                if (idx >= 0 && idx < days) counts[idx]++;
+            }
+        } catch (Exception ignored) {
+        }
+        return counts;
+    }
+
+    static long startOfDay(long t) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(t);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
     }
 }

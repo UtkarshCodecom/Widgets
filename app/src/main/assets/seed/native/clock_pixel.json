@@ -1,0 +1,58 @@
+{
+  "id": "clock_pixel",
+  "name": "Pixel",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "dot_clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.2,
+        "w": 0.92,
+        "h": 0.6
+      },
+      "props": {
+        "style": "pixel",
+        "colors": [
+          "#F5B2E1",
+          "#C9B8F5",
+          "#A9C8FF"
+        ],
+        "subFormat": "dd MMM, EEEE",
+        "subPosition": "top",
+        "subDots": false,
+        "subColor": "#FFFFFF",
+        "letterSpacing": 0.35,
+        "subScale": 0.32
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Pixels",
+      "props": {
+        "0.style": "pixel"
+      }
+    },
+    {
+      "name": "LED",
+      "props": {
+        "0.style": "led"
+      }
+    },
+    {
+      "name": "Matrix",
+      "props": {
+        "0.style": "led",
+        "0.ghost": true
+      }
+    }
+  ]
+}
