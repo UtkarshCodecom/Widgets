@@ -1,249 +1,429 @@
 package com.desire.widget.ui.notes;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.graphics.Color;
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.desire.widget.R;
 import com.desire.widget.engine.data.UserDataStore;
 import com.desire.widget.engine.runtime.EngineRenderer;
 import com.desire.widget.util.ThemeManager;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Functional editor for the To-Do widget bound to a single {@code appWidgetId}: add items, tick
- * them off, delete them. Every change is saved to {@link UserDataStore} and re-renders that one
- * placed widget immediately — other To-Do widgets are never touched.
+ * Editor for the To-Do widget bound to one {@code appWidgetId}. Open tasks come first (drag ≡ to
+ * reorder), completed ones collect under "Completed" with a Clear action. Tap a task to edit it,
+ * swipe it away to delete (with Undo). Every change is saved and re-renders that one widget at
+ * once — and the widget's rows can be ticked off directly on the home screen too.
  */
 public class TodoActivity extends AppCompatActivity {
     public static final String EXTRA_APPWIDGET_ID = "appwidget_id";
-    private static final int ACCENT = 0xFF6C7BFF;
-    private static final int CARD = 0xFF212429;
-    private static final int TEXT = 0xFFECEDF0;
-    private static final int MUTED = 0xFF8A8F99;
 
-    private List<UserDataStore.Todo> todos;
-    private LinearLayout list;
-    private TextView emptyState;
-    private TextView subtitleView;
     private int appWidgetId = -1;
+    /** Canonical order: open tasks (user order), then completed ones (most recent first). */
+    private final List<UserDataStore.Todo> todos = new ArrayList<>();
+    private final List<Row> rows = new ArrayList<>();
+
+    private TodoAdapter adapter;
+    private RecyclerView list;
+    private TextView emptyView, progressText;
+    private LinearProgressIndicator progress;
+    private EditText input;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ThemeManager.apply(this);
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        setContentView(R.layout.activity_todo);
+
         appWidgetId = getIntent().getIntExtra(EXTRA_APPWIDGET_ID, -1);
-        todos = appWidgetId >= 0 ? UserDataStore.getTodos(this, appWidgetId) : new ArrayList<>();
+        if (appWidgetId >= 0) todos.addAll(UserDataStore.getTodos(this, appWidgetId));
+        normalizeOrder();
 
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setPadding(dp(22), dp(28), dp(22), dp(16));
-        root.setFitsSystemWindows(true);
+        View root = findViewById(R.id.todo_root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+            v.setPadding(bars.left, bars.top, bars.right, Math.max(bars.bottom, ime.bottom));
+            return WindowInsetsCompat.CONSUMED;
+        });
 
-        TextView title = new TextView(this);
-        title.setText("To-Do");
-        title.setTextColor(TEXT);
-        title.setTextSize(28f);
-        title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
-        root.addView(title);
+        findViewById(R.id.todo_back).setOnClickListener(v -> finish());
+        list = findViewById(R.id.todo_list);
+        emptyView = findViewById(R.id.todo_empty);
+        progressText = findViewById(R.id.todo_progress_text);
+        progress = findViewById(R.id.todo_progress);
+        input = findViewById(R.id.todo_input);
 
-        subtitleView = new TextView(this);
-        subtitleView.setText(todos.size() + " tasks");
-        subtitleView.setTextColor(MUTED);
-        subtitleView.setTextSize(13f);
-        LinearLayout.LayoutParams stlp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        stlp.topMargin = dp(2);
-        root.addView(subtitleView, stlp);
+        adapter = new TodoAdapter();
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(adapter);
+        touchHelper.attachToRecyclerView(list);
 
-        // Add row — pill input + circular add button
-        LinearLayout addRow = new LinearLayout(this);
-        addRow.setOrientation(LinearLayout.HORIZONTAL);
-        addRow.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout.LayoutParams arlp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        arlp.topMargin = dp(18);
-        final EditText input = new EditText(this);
-        input.setHint("Add a task…");
-        input.setHintTextColor(0x66FFFFFF);
-        input.setTextColor(TEXT);
-        input.setSingleLine(true);
-        input.setBackground(pill(0x14FFFFFF));
-        input.setPadding(dp(16), dp(13), dp(16), dp(13));
-        addRow.addView(input, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-
-        TextView add = new TextView(this);
-        add.setText("＋");
-        add.setGravity(Gravity.CENTER);
-        add.setTextColor(Color.WHITE);
-        add.setTextSize(22f);
-        add.setBackground(circle(ACCENT));
-        add.setForeground(rippleForeground());
-        LinearLayout.LayoutParams addBtnLp = new LinearLayout.LayoutParams(dp(48), dp(48));
-        addBtnLp.leftMargin = dp(10);
-        Runnable addTask = () -> {
-            String t = input.getText().toString().trim();
-            if (!t.isEmpty()) {
-                todos.add(0, new UserDataStore.Todo(t, false));
-                input.setText("");
-                save();
-                rebuild();
+        findViewById(R.id.todo_add).setOnClickListener(v -> addFromInput());
+        input.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addFromInput(); // keep the keyboard up for quick entry of several tasks
+                return true;
             }
-        };
-        add.setOnClickListener(v -> addTask.run());
-        addRow.addView(add, addBtnLp);
-        root.addView(addRow, arlp);
+            return false;
+        });
 
-        emptyState = new TextView(this);
-        emptyState.setText("No tasks yet.\nAdd one above to get started.");
-        emptyState.setTextColor(MUTED);
-        emptyState.setTextSize(14f);
-        emptyState.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams eslp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        eslp.topMargin = dp(48);
-        root.addView(emptyState, eslp);
-
-        ScrollView scroll = new ScrollView(this);
-        scroll.setClipToPadding(false);
-        list = new LinearLayout(this);
-        list.setOrientation(LinearLayout.VERTICAL);
-        list.setPadding(0, dp(14), 0, dp(24));
-        scroll.addView(list);
-        root.addView(scroll, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
-
-        setContentView(root);
-        rebuild();
+        refresh(false);
+        if (todos.isEmpty()) {
+            input.requestFocus();
+            input.post(() -> {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+            });
+        }
     }
 
-    private void rebuild() {
-        list.removeAllViews();
-        emptyState.setVisibility(todos.isEmpty() ? View.VISIBLE : View.GONE);
-        subtitleView.setText(todos.size() + (todos.size() == 1 ? " task" : " tasks"));
+    private boolean resumedOnce;
 
-        for (int i = 0; i < todos.size(); i++) {
-            final int index = i;
-            final UserDataStore.Todo t = todos.get(i);
-
-            LinearLayout row = new LinearLayout(this);
-            row.setOrientation(LinearLayout.HORIZONTAL);
-            row.setGravity(Gravity.CENTER_VERTICAL);
-            row.setBackground(roundedCard(CARD, 16));
-            row.setPadding(dp(14), dp(12), dp(10), dp(12));
-            LinearLayout.LayoutParams rlp = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            rlp.bottomMargin = dp(10);
-            row.setAlpha(0f);
-            row.setScaleY(0.85f);
-
-            CheckBox cb = new CheckBox(this);
-            cb.setChecked(t.done);
-            cb.setButtonTintList(android.content.res.ColorStateList.valueOf(ACCENT));
-            row.addView(cb);
-
-            TextView text = new TextView(this);
-            text.setText(t.text);
-            text.setTextColor(t.done ? MUTED : TEXT);
-            text.setTextSize(16f);
-            if (t.done) text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            else text.setPaintFlags(text.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(
-                    0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-            tlp.leftMargin = dp(4);
-            row.addView(text, tlp);
-
-            cb.setOnCheckedChangeListener((btn, checked) -> {
-                t.done = checked;
-                text.setTextColor(checked ? MUTED : TEXT);
-                if (checked) text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                else text.setPaintFlags(text.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-                // Small pulse for tactile feedback on toggle.
-                row.animate().scaleX(0.98f).scaleY(0.98f).setDuration(80).withEndAction(() ->
-                        row.animate().scaleX(1f).scaleY(1f).setDuration(120).start()).start();
-                save();
-            });
-
-            TextView del = new TextView(this);
-            del.setText("✕");
-            del.setTextColor(0x80FFFFFF);
-            del.setTextSize(16f);
-            del.setPadding(dp(10), dp(6), dp(4), dp(6));
-            del.setForeground(rippleForeground());
-            del.setOnClickListener(v -> {
-                row.animate().alpha(0f).translationX(dp(40)).setDuration(160).withEndAction(() -> {
-                    todos.remove(index);
-                    save();
-                    rebuild();
-                }).start();
-            });
-            row.addView(del);
-
-            list.addView(row, rlp);
-
-            // Staggered entrance animation.
-            AnimatorSet set = new AnimatorSet();
-            set.playTogether(
-                    ObjectAnimator.ofFloat(row, "alpha", 0f, 1f),
-                    ObjectAnimator.ofFloat(row, "scaleY", 0.85f, 1f));
-            set.setStartDelay(Math.min(index * 30L, 200L));
-            set.setDuration(220);
-            set.setInterpolator(new OvershootInterpolator(1.2f));
-            set.start();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Tasks may have been ticked on the widget while we were in the background.
+        if (resumedOnce && appWidgetId >= 0) {
+            todos.clear();
+            todos.addAll(UserDataStore.getTodos(this, appWidgetId));
+            normalizeOrder();
+            refresh(false);
         }
+        resumedOnce = true;
+    }
+
+    // ------------------------------------------------------------------ actions
+
+    private void addFromInput() {
+        String t = input.getText().toString().trim();
+        if (t.isEmpty()) return;
+        UserDataStore.Todo todo = new UserDataStore.Todo(t, false);
+        todos.add(openCount(), todo); // newest open task goes to the end of the open section
+        UserDataStore.assignIds(todos);
+        input.setText("");
+        save();
+        refresh(true);
+        list.scrollToPosition(Math.max(0, openCount() - 1));
+    }
+
+    private void setDone(UserDataStore.Todo t, boolean done) {
+        if (t.done == done) return;
+        todos.remove(t);
+        t.done = done;
+        // Ticked → top of Completed; un-ticked → back to the end of the open tasks.
+        todos.add(openCount(), t);
+        save();
+        refresh(true);
+    }
+
+    private void edit(UserDataStore.Todo t) {
+        EditText field = new EditText(this);
+        field.setText(t.text);
+        field.setSelection(field.getText().length());
+        field.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        int pad = Math.round(20 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout box = new android.widget.FrameLayout(this);
+        box.setPadding(pad, pad / 2, pad, 0);
+        box.addView(field);
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Edit task")
+                .setView(box)
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Save", (d, w) -> {
+                    String s = field.getText().toString().trim();
+                    if (!s.isEmpty() && !s.equals(t.text)) {
+                        t.text = s;
+                        save();
+                        refresh(true);
+                    }
+                })
+                .show();
+        field.requestFocus();
+    }
+
+    private void delete(UserDataStore.Todo t) {
+        final int index = todos.indexOf(t);
+        if (index < 0) return;
+        todos.remove(index);
+        save();
+        refresh(true);
+        Snackbar.make(list, "Task deleted", Snackbar.LENGTH_LONG)
+                .setAction("Undo", v -> {
+                    todos.add(Math.min(index, todos.size()), t);
+                    normalizeOrder();
+                    save();
+                    refresh(true);
+                })
+                .show();
+    }
+
+    private void clearCompleted() {
+        final List<UserDataStore.Todo> before = new ArrayList<>(todos);
+        List<UserDataStore.Todo> kept = new ArrayList<>();
+        for (UserDataStore.Todo t : todos) if (!t.done) kept.add(t);
+        int removed = todos.size() - kept.size();
+        todos.clear();
+        todos.addAll(kept);
+        save();
+        refresh(true);
+        Snackbar.make(list, removed + (removed == 1 ? " task cleared" : " tasks cleared"), Snackbar.LENGTH_LONG)
+                .setAction("Undo", v -> {
+                    todos.clear();
+                    todos.addAll(before);
+                    save();
+                    refresh(true);
+                })
+                .show();
     }
 
     private void save() {
+        if (appWidgetId < 0) return;
         UserDataStore.setTodos(this, appWidgetId, todos);
-        if (appWidgetId >= 0) {
-            EngineRenderer.render(getApplicationContext(), new int[]{appWidgetId});
+        EngineRenderer.render(getApplicationContext(), new int[]{appWidgetId});
+    }
+
+    // ------------------------------------------------------------------ list model
+
+    private int openCount() {
+        int n = 0;
+        for (UserDataStore.Todo t : todos) if (!t.done) n++;
+        return n;
+    }
+
+    /** Open tasks first, keeping relative order (data saved by older versions was mixed). */
+    private void normalizeOrder() {
+        List<UserDataStore.Todo> open = new ArrayList<>(), done = new ArrayList<>();
+        for (UserDataStore.Todo t : todos) (t.done ? done : open).add(t);
+        todos.clear();
+        todos.addAll(open);
+        todos.addAll(done);
+    }
+
+    private void refresh(boolean animate) {
+        List<Row> next = new ArrayList<>();
+        int done = 0;
+        for (UserDataStore.Todo t : todos) {
+            if (!t.done) next.add(Row.task(t));
+            else done++;
+        }
+        if (done > 0) {
+            next.add(Row.section("Completed · " + done));
+            for (UserDataStore.Todo t : todos) if (t.done) next.add(Row.task(t));
+        }
+        List<Row> old = new ArrayList<>(rows);
+        rows.clear();
+        rows.addAll(next);
+        if (animate) {
+            DiffUtil.calculateDiff(new RowDiff(old, rows)).dispatchUpdatesTo(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+        int total = todos.size();
+        emptyView.setVisibility(total == 0 ? View.VISIBLE : View.GONE);
+        progressText.setText(total == 0 ? "" : done + " of " + total + " done");
+        progress.setProgressCompat(total == 0 ? 0 : Math.round(100f * done / total), animate);
+    }
+
+    private static final class Row {
+        final UserDataStore.Todo todo; // null for the "Completed" section header
+        final String title;
+        final boolean done;
+        final String text;
+
+        private Row(UserDataStore.Todo todo, String title) {
+            this.todo = todo;
+            this.title = title;
+            this.done = todo != null && todo.done;
+            this.text = todo != null ? todo.text : null;
+        }
+
+        static Row task(UserDataStore.Todo t) { return new Row(t, null); }
+        static Row section(String title) { return new Row(null, title); }
+    }
+
+    private static final class RowDiff extends DiffUtil.Callback {
+        private final List<Row> a, b;
+
+        RowDiff(List<Row> a, List<Row> b) { this.a = a; this.b = b; }
+
+        @Override public int getOldListSize() { return a.size(); }
+        @Override public int getNewListSize() { return b.size(); }
+
+        @Override
+        public boolean areItemsTheSame(int i, int j) {
+            Row x = a.get(i), y = b.get(j);
+            if (x.todo == null || y.todo == null) return x.todo == null && y.todo == null;
+            return x.todo.id == y.todo.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(int i, int j) {
+            Row x = a.get(i), y = b.get(j);
+            if (x.todo == null) return x.title.equals(y.title);
+            return x.done == y.done && String.valueOf(x.text).equals(String.valueOf(y.text));
         }
     }
 
-    private GradientDrawable pill(int color) {
-        GradientDrawable d = new GradientDrawable();
-        d.setColor(color);
-        d.setCornerRadius(dp(24));
-        return d;
+    // ------------------------------------------------------------------ adapter
+
+    private class TodoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        @Override
+        public int getItemViewType(int position) {
+            return rows.get(position).todo == null ? 1 : 0;
+        }
+
+        @Override
+        public int getItemCount() {
+            return rows.size();
+        }
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inf = LayoutInflater.from(parent.getContext());
+            if (viewType == 1) return new SectionHolder(inf.inflate(R.layout.item_todo_section, parent, false));
+            return new TaskHolder(inf.inflate(R.layout.item_todo, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            Row row = rows.get(position);
+            if (holder instanceof SectionHolder) ((SectionHolder) holder).bind(row);
+            else ((TaskHolder) holder).bind(row.todo);
+        }
     }
 
-    private GradientDrawable circle(int color) {
-        GradientDrawable d = new GradientDrawable();
-        d.setShape(GradientDrawable.OVAL);
-        d.setColor(color);
-        return d;
+    private class SectionHolder extends RecyclerView.ViewHolder {
+        private final TextView title;
+
+        SectionHolder(View v) {
+            super(v);
+            title = v.findViewById(R.id.section_title);
+            v.findViewById(R.id.section_action).setOnClickListener(x -> clearCompleted());
+        }
+
+        void bind(Row row) {
+            title.setText(row.title);
+        }
     }
 
-    private GradientDrawable roundedCard(int color, int radiusDp) {
-        GradientDrawable d = new GradientDrawable();
-        d.setColor(color);
-        d.setCornerRadius(dp(radiusDp));
-        d.setStroke(1, 0x14FFFFFF);
-        return d;
+    private class TaskHolder extends RecyclerView.ViewHolder {
+        private final CheckBox check;
+        private final TextView text;
+        private final View drag;
+
+        TaskHolder(View v) {
+            super(v);
+            check = v.findViewById(R.id.todo_check);
+            text = v.findViewById(R.id.todo_text);
+            drag = v.findViewById(R.id.todo_drag);
+        }
+
+        @SuppressWarnings("ClickableViewAccessibility")
+        void bind(UserDataStore.Todo t) {
+            check.setOnCheckedChangeListener(null);
+            check.setChecked(t.done);
+            text.setText(t.text);
+            text.setAlpha(t.done ? 0.5f : 1f);
+            if (t.done) text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            else text.setPaintFlags(text.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+            check.setOnCheckedChangeListener((b, isChecked) -> b.post(() -> setDone(t, isChecked)));
+            text.setOnClickListener(v -> edit(t));
+            drag.setVisibility(t.done ? View.INVISIBLE : View.VISIBLE);
+            drag.setOnTouchListener((v, e) -> {
+                if (e.getActionMasked() == MotionEvent.ACTION_DOWN) touchHelper.startDrag(this);
+                return false;
+            });
+        }
     }
 
-    private android.graphics.drawable.Drawable rippleForeground() {
-        return androidx.core.content.ContextCompat.getDrawable(this,
-                android.R.drawable.list_selector_background);
-    }
+    // ------------------------------------------------------------------ gestures
 
-    private int dp(int v) {
-        return Math.round(v * getResources().getDisplayMetrics().density);
-    }
+    private final ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh) {
+            int pos = vh.getBindingAdapterPosition();
+            if (pos < 0 || pos >= rows.size() || rows.get(pos).todo == null) return 0;
+            boolean open = !rows.get(pos).todo.done;
+            int drag = open ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0;
+            return makeMovementFlags(drag, ItemTouchHelper.START | ItemTouchHelper.END);
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return true;
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder from,
+                              @NonNull RecyclerView.ViewHolder to) {
+            int a = from.getBindingAdapterPosition(), b = to.getBindingAdapterPosition();
+            int open = openCount();
+            if (a < 0 || b < 0 || a >= open || b >= open) return false; // open tasks only
+            Collections.swap(rows, a, b);
+            Collections.swap(todos, a, b); // open tasks occupy the same indices in both lists
+            adapter.notifyItemMoved(a, b);
+            return true;
+        }
+
+        @Override
+        public void clearView(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh) {
+            super.clearView(rv, vh);
+            vh.itemView.setAlpha(1f);
+            save(); // persist the new order once the drag ends
+        }
+
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder vh, int actionState) {
+            super.onSelectedChanged(vh, actionState);
+            if (vh != null && actionState == ItemTouchHelper.ACTION_STATE_DRAG) vh.itemView.setAlpha(0.85f);
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int direction) {
+            int pos = vh.getBindingAdapterPosition();
+            if (pos >= 0 && pos < rows.size() && rows.get(pos).todo != null) delete(rows.get(pos).todo);
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder vh,
+                                float dX, float dY, int actionState, boolean active) {
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                vh.itemView.setAlpha(1f - Math.min(1f, Math.abs(dX) / vh.itemView.getWidth()));
+            }
+            super.onChildDraw(c, rv, vh, dX, dY, actionState, active);
+        }
+    });
 }

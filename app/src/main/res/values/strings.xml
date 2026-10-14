@@ -107,4 +107,15 @@
     <string name="cd_close">Close</string>
     <string name="cd_back">Back</string>
     <string name="cd_favorite">Toggle Favorite</string>
+    <!-- To-Do & Notes editors -->
+    <string name="back">Back</string>
+    <string name="todo_title">To-Do</string>
+    <string name="todo_add_hint">Add a task…</string>
+    <string name="todo_add">Add task</string>
+    <string name="todo_reorder">Drag to reorder</string>
+    <string name="todo_empty">No tasks yet.\nType one above — it shows on your widget instantly.</string>
+    <string name="todo_gesture_hint">Tap a task to edit · swipe to delete · drag ≡ to reorder · tick tasks right on the widget</string>
+    <string name="todo_clear_done">Clear</string>
+    <string name="notes_title">Note</string>
+    <string name="notes_hint">Write anything…\n\nTip: start a line with “- ” for a bullet or “[ ] ” for a checkbox.</string>
 </resources>

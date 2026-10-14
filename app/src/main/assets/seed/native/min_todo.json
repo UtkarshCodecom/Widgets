@@ -10,16 +10,17 @@
     {
       "type": "todo",
       "frame": {
-        "x": 0.09,
-        "y": 0.1,
-        "w": 0.82,
-        "h": 0.8
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
       },
       "props": {
         "title": "TO-DO",
         "titleColor": "#6C7BFF",
         "accentColor": "#6C7BFF",
-        "textColor": "#ECEDF0"
+        "textColor": "#ECEDF0",
+        "listRows": 5
       }
     }
   ],

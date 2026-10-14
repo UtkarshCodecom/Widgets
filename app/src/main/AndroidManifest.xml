@@ -151,6 +151,11 @@
             android:noHistory="true"
             android:theme="@style/Theme.Widgets.Translucent" />
 
+        <!-- Ticks a to-do from a row on the home-screen To-Do widget. -->
+        <receiver
+            android:name=".service.TodoToggleReceiver"
+            android:exported="false" />
+
         <!-- One-time permission sheet for quick toggles (also must not be noHistory). -->
         <activity
             android:name=".ui.permission.ToggleSetupActivity"

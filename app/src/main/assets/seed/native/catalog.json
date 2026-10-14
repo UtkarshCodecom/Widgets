@@ -442,7 +442,7 @@
       "categoryName": "Productivity",
       "widgetSize": "2x2",
       "specAsset": "min_todo.json",
-      "description": "To-Do"
+      "description": "Tap a task on the widget to tick it off"
     },
     {
       "id": "min_notes",
@@ -451,7 +451,18 @@
       "categoryName": "Productivity",
       "widgetSize": "2x2",
       "specAsset": "min_notes.json",
-      "description": "Notes"
+      "description": "Autosaving note with paper colours"
+    },
+    {
+      "id": "sticky_note",
+      "name": "Sticky Note",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "2x2",
+      "specAsset": "sticky_note.json",
+      "description": "A yellow sticky note — pick any paper colour",
+      "isFeatured": true,
+      "isTrending": false
     },
     {
       "id": "pomodoro",
@@ -492,6 +503,28 @@
       "isTrending": true
     },
     {
+      "id": "todo_wide",
+      "name": "To-Do List",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "4x2",
+      "specAsset": "todo_wide.json",
+      "description": "Tick tasks off right on your home screen",
+      "isFeatured": true,
+      "isTrending": true
+    },
+    {
+      "id": "note_wide",
+      "name": "Note Wide",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "4x2",
+      "specAsset": "note_wide.json",
+      "description": "Roomy note with bullets and checkboxes",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
       "id": "habit_tracker",
       "name": "Habits",
       "categoryId": "productivity",
@@ -508,6 +541,17 @@
       "widgetSize": "4x2",
       "specAsset": "min_quote.json",
       "description": "Daily quote"
+    },
+    {
+      "id": "todo_large",
+      "name": "To-Do Large",
+      "categoryId": "productivity",
+      "categoryName": "Productivity",
+      "widgetSize": "4x4",
+      "specAsset": "todo_large.json",
+      "description": "Nine tappable tasks with progress",
+      "isFeatured": false,
+      "isTrending": false
     },
     {
       "id": "control_center",

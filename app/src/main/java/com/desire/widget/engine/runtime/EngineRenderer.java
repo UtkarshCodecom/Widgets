@@ -147,6 +147,13 @@ public final class EngineRenderer {
         Bitmap old = BITMAP_CACHE.put(appWidgetId, bitmap);
         if (old != null && !old.isRecycled()) old.recycle();
 
+        // To-Do lists: a strip overlay so every row can be ticked off right on the home screen.
+        int todoRows = todoListRows(spec);
+        if (todoRows > 0) {
+            pushTodoList(app, appWidgetId, todoRows, bitmap);
+            return;
+        }
+
         // Toggle widgets need a tap target per tile → the 2x4 grid layout instead of the standard
         // overlay. Everything else keeps widget_layout.xml (calendar nav / music / timer regions).
         boolean grid = hasToggleComponent(spec);
@@ -221,6 +228,51 @@ public final class EngineRenderer {
         PendingIntent open = appIntent(app, appWidgetId);
         views.setOnClickPendingIntent(R.id.widget_image, open);
         views.setOnClickPendingIntent(R.id.widget_root, open);
+        AppWidgetManager.getInstance(app).updateAppWidget(appWidgetId, views);
+    }
+
+    /** {@code listRows} of a tappable to-do list component, or 0 when the spec has none. */
+    private static int todoListRows(WidgetSpec spec) {
+        if (spec.components == null) return 0;
+        for (com.desire.widget.engine.model.ComponentSpec c : spec.components) {
+            if (c != null && "todo".equals(c.type)) {
+                return (int) com.desire.widget.engine.util.SpecProps.f(c.props, "listRows", 0f);
+            }
+        }
+        return 0;
+    }
+
+    private static final int[] STRIP_IDS = {
+            R.id.widget_strip_0, R.id.widget_strip_1, R.id.widget_strip_2, R.id.widget_strip_3,
+            R.id.widget_strip_4, R.id.widget_strip_5, R.id.widget_strip_6, R.id.widget_strip_7,
+            R.id.widget_strip_8, R.id.widget_strip_9, R.id.widget_strip_10, R.id.widget_strip_11,
+            R.id.widget_strip_12, R.id.widget_strip_13, R.id.widget_strip_14, R.id.widget_strip_15,
+            R.id.widget_strip_16, R.id.widget_strip_17, R.id.widget_strip_18, R.id.widget_strip_19,
+    };
+
+    /**
+     * widget_layout_list: each task row's strips tick that task (by id); the header, empty rows and
+     * "+N more" stay unwired, so those taps reach widget_root and open the editor.
+     */
+    private static void pushTodoList(Context app, int appWidgetId, int rows, Bitmap bitmap) {
+        RemoteViews views = new RemoteViews(app.getPackageName(), R.layout.widget_layout_list);
+        views.setImageViewBitmap(R.id.widget_image, bitmap);
+        PendingIntent open = tapIntent(app, appWidgetId);
+        views.setOnClickPendingIntent(R.id.widget_image, open);
+        views.setOnClickPendingIntent(R.id.widget_root, open);
+
+        java.util.List<com.desire.widget.engine.data.UserDataStore.Todo> todos =
+                com.desire.widget.engine.data.UserDataStore.getTodos(app, appWidgetId);
+        int[] lay = com.desire.widget.engine.components.TodoRenderer.layoutFor(rows);
+        int shown = com.desire.widget.engine.components.TodoRenderer.visibleTaskRows(rows, todos.size());
+        for (int row = 0; row < shown; row++) {
+            PendingIntent tick = com.desire.widget.service.TodoToggleReceiver.pendingIntent(
+                    app, appWidgetId, row, todos.get(row).id);
+            int first = lay[0] + row * lay[1];
+            for (int k = 0; k < lay[1] && first + k < STRIP_IDS.length; k++) {
+                views.setOnClickPendingIntent(STRIP_IDS[first + k], tick);
+            }
+        }
         AppWidgetManager.getInstance(app).updateAppWidget(appWidgetId, views);
     }
 

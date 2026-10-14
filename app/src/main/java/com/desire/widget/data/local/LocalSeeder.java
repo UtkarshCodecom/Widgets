@@ -27,13 +27,15 @@ public final class LocalSeeder {
     private static final String CATALOG = "seed/native/catalog.json";
     private static final String WIDGET_DIR = "seed/native/";
     /** Bump whenever catalog widgets are added/changed so existing installs pick them up. */
-    private static final int SEED_VERSION = 6;
+    private static final int SEED_VERSION = 7;
     /**
      * Catalog widgets whose ALREADY-PLACED copies are upgraded on sync, because their old spec was
-     * broken in a way users would notice (toggles that could only open Settings).
+     * broken or limited in a way users would notice (toggles that could only open Settings; To-Do
+     * rows that couldn't be ticked on the home screen; notes without paper colours). Only the spec
+     * is replaced — the user's style and their notes/tasks (keyed by appWidgetId) are untouched.
      */
     private static final java.util.Set<String> UPGRADE_PLACED = new java.util.HashSet<>(
-            java.util.Arrays.asList("quick_modes", "control_center"));
+            java.util.Arrays.asList("quick_modes", "control_center", "min_todo", "min_notes"));
     private static final String SEED_PREFS = "seed_meta";
     private static final String KEY_SEED_VERSION = "seed_version";
 

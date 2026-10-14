@@ -1,0 +1,32 @@
+{
+  "id": "todo_large",
+  "name": "To-Do Large",
+  "designSize": "4x4",
+  "background": {
+    "gradientStart": "#221C2E",
+    "gradientEnd": "#15141B",
+    "gradientAngle": 270,
+    "cornerRadius": 0.08
+  },
+  "components": [
+    {
+      "type": "todo",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "props": {
+        "title": "MY TASKS",
+        "titleColor": "#FF8A65",
+        "accentColor": "#FF8A65",
+        "textColor": "#ECEDF0",
+        "listRows": 9
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_todo"
+  }
+}

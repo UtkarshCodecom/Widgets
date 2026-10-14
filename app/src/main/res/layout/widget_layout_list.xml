@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Widget layout for tappable lists (To-Do). Same bitmap ImageView as widget_layout.xml, with 20
+  equal transparent horizontal strips on top (TodoRenderer.STRIPS). TodoRenderer lays its header
+  and rows out on these strip boundaries, and EngineRenderer wires the strips of each task row to
+  tick that task off; unwired strips (header, empty rows, "+N more") stay un-clickable so the tap
+  falls through to widget_root, which opens the editor.
+  Only RemoteViews-legal views (FrameLayout / LinearLayout / ImageView).
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/widget_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/widget_preview"
+        android:scaleType="fitXY" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <FrameLayout android:id="@+id/widget_strip_0" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_1" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_2" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_3" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_4" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_5" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_6" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_7" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_8" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_9" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_10" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_11" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_12" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_13" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_14" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_15" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_16" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_17" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_18" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+        <FrameLayout android:id="@+id/widget_strip_19" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+</FrameLayout>

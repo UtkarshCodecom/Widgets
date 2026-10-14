@@ -1,0 +1,32 @@
+{
+  "id": "todo_wide",
+  "name": "To-Do List",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#1E2230",
+    "gradientEnd": "#15171D",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "todo",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "props": {
+        "title": "TODAY",
+        "titleColor": "#4FD1A5",
+        "accentColor": "#4FD1A5",
+        "textColor": "#ECEDF0",
+        "listRows": 5
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_todo"
+  }
+}
