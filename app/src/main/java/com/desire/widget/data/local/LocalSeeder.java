@@ -1,5 +1,8 @@
 package com.desire.widget.data.local;
 
+import com.desire.widget.engine.runtime.EngineRenderer;
+import com.desire.widget.engine.runtime.EngineWidgetStore;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -24,7 +27,13 @@ public final class LocalSeeder {
     private static final String CATALOG = "seed/native/catalog.json";
     private static final String WIDGET_DIR = "seed/native/";
     /** Bump whenever catalog widgets are added/changed so existing installs pick them up. */
-    private static final int SEED_VERSION = 5;
+    private static final int SEED_VERSION = 6;
+    /**
+     * Catalog widgets whose ALREADY-PLACED copies are upgraded on sync, because their old spec was
+     * broken in a way users would notice (toggles that could only open Settings).
+     */
+    private static final java.util.Set<String> UPGRADE_PLACED = new java.util.HashSet<>(
+            java.util.Arrays.asList("quick_modes", "control_center"));
     private static final String SEED_PREFS = "seed_meta";
     private static final String KEY_SEED_VERSION = "seed_version";
 
@@ -85,6 +94,30 @@ public final class LocalSeeder {
             }
         }
         Log.i(TAG, "Catalog sync: +" + added + " new, " + updated + " refreshed");
+        upgradePlacedWidgets(context, catalog);
+    }
+
+    private static void upgradePlacedWidgets(Context context, Catalog catalog) {
+        java.util.Map<String, String> specAssets = new java.util.HashMap<>();
+        for (Wid w : catalog.widgets) {
+            if (UPGRADE_PLACED.contains(w.id)) specAssets.put(w.id, w.specAsset);
+        }
+        java.util.List<Integer> changed = new ArrayList<>();
+        for (int appWidgetId : EngineWidgetStore.allPlacedIds(context)) {
+            String asset = specAssets.get(EngineWidgetStore.getWidgetId(context, appWidgetId));
+            if (asset == null) continue;
+            try {
+                EngineWidgetStore.setSpecJson(context, appWidgetId, readAsset(context, WIDGET_DIR + asset));
+                changed.add(appWidgetId);
+            } catch (Exception e) {
+                Log.w(TAG, "Couldn't upgrade placed widget " + appWidgetId, e);
+            }
+        }
+        if (changed.isEmpty()) return;
+        int[] ids = new int[changed.size()];
+        for (int i = 0; i < ids.length; i++) ids[i] = changed.get(i);
+        EngineRenderer.render(context, ids);
+        Log.i(TAG, "Upgraded " + ids.length + " placed widget(s)");
     }
 
     private static int seedVersion(Context context) {

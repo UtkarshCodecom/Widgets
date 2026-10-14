@@ -63,7 +63,7 @@ public class ToggleRenderer implements ComponentRenderer {
             canvas.drawRoundRect(tile, r, r, bg);
         }
 
-        Drawable icon = ContextCompat.getDrawable(ctx.android, ToggleState.icon(kind));
+        Drawable icon = ContextCompat.getDrawable(ctx.android, ToggleState.icon(ctx.android, kind));
         if (icon != null) {
             icon = icon.mutate();
             icon.setTint(on ? iconOn : iconOff);
@@ -78,7 +78,7 @@ public class ToggleRenderer implements ComponentRenderer {
             tp.setTextAlign(Paint.Align.CENTER);
             tp.setFakeBoldText(on);
             tp.setTextSize(labelH * 0.62f);
-            String label = SpecProps.str(p, "label", ToggleState.label(kind));
+            String label = SpecProps.str(p, "label", ToggleState.label(ctx.android, kind));
             float w = tp.measureText(label);
             if (w > b.width() * 0.98f) tp.setTextSize(tp.getTextSize() * b.width() * 0.98f / w);
             Paint.FontMetrics fm = tp.getFontMetrics();

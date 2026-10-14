@@ -84,6 +84,16 @@ public final class EngineWidgetStore {
         return WidgetSchema.normalizeSize(prefs(c).getString(key(appWidgetId, "size"), WidgetSchema.SIZE_2X2));
     }
 
+    /** The catalog id this placed widget was created from (e.g. "quick_modes"), or "". */
+    public static String getWidgetId(Context c, int appWidgetId) {
+        return prefs(c).getString(key(appWidgetId, "id"), "");
+    }
+
+    /** Replaces only the spec of a placed widget; its user style and data are kept. */
+    public static void setSpecJson(Context c, int appWidgetId, String specJson) {
+        prefs(c).edit().putString(key(appWidgetId, "spec"), specJson != null ? specJson : "").apply();
+    }
+
     public static String getName(Context c, int appWidgetId) {
         return prefs(c).getString(key(appWidgetId, "name"), "Widget");
     }

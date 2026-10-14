@@ -72,6 +72,8 @@ public final class LivePreview {
                     break;
                 case "pie_clock":
                 case "music_visualizer":
+                case "bezel_clock":
+                case "year_progress":
                     return EVERY_SECOND;
                 case "clock": {
                     String f = SpecProps.str(c.props, "format", "HH:mm");
@@ -84,6 +86,10 @@ public final class LivePreview {
                 case "stacked_clock":
                 case "countdown":
                 case "next_alarm":
+                case "styled_clock":
+                case "dot_clock":
+                case "time_tiles":
+                case "week_strip":
                     best = EVERY_MINUTE;
                     break;
                 default:

@@ -18,7 +18,7 @@
         "h": 0.42
       },
       "props": {
-        "kind": "wifi",
+        "kind": "flashlight",
         "onColor": "#0A84FF"
       }
     },
@@ -31,7 +31,7 @@
         "h": 0.42
       },
       "props": {
-        "kind": "bluetooth",
+        "kind": "sound",
         "onColor": "#0A84FF"
       }
     },
@@ -44,7 +44,7 @@
         "h": 0.42
       },
       "props": {
-        "kind": "flashlight",
+        "kind": "rotate",
         "onColor": "#FFD60A",
         "iconOnColor": "#1C1C1E"
       }

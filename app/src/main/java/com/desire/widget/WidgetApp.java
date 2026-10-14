@@ -71,11 +71,28 @@ public class WidgetApp extends Application {
         filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         filter.addAction(android.location.LocationManager.PROVIDERS_CHANGED_ACTION);
         filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
+        filter.addAction(android.media.AudioManager.RINGER_MODE_CHANGED_ACTION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(stateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
         } else {
             registerReceiver(stateReceiver, filter);
         }
+
+        // Auto-rotate and auto-brightness have no broadcast — watch the settings themselves, so a
+        // change from the system's quick settings shows on the widget too.
+        android.database.ContentObserver settingsObserver = new android.database.ContentObserver(
+                new android.os.Handler(android.os.Looper.getMainLooper())) {
+            @Override
+            public void onChange(boolean selfChange) {
+                com.desire.widget.service.ToggleReceiver.renderToggleWidgets(WidgetApp.this);
+            }
+        };
+        try {
+            getContentResolver().registerContentObserver(android.provider.Settings.System.getUriFor(
+                    android.provider.Settings.System.ACCELEROMETER_ROTATION), false, settingsObserver);
+            getContentResolver().registerContentObserver(android.provider.Settings.System.getUriFor(
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE), false, settingsObserver);
+        } catch (Exception ignored) {}
 
         try {
             android.hardware.camera2.CameraManager cm =

@@ -31,7 +31,7 @@
         "h": 0.88
       },
       "props": {
-        "kind": "rotate",
+        "kind": "sound",
         "onColor": "#5E5CE6"
       }
     },
@@ -44,7 +44,7 @@
         "h": 0.88
       },
       "props": {
-        "kind": "darkmode",
+        "kind": "rotate",
         "onColor": "#5E5CE6"
       }
     },
@@ -57,7 +57,7 @@
         "h": 0.88
       },
       "props": {
-        "kind": "airplane",
+        "kind": "autobright",
         "onColor": "#5E5CE6"
       }
     }

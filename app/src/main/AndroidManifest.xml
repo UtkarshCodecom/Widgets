@@ -16,6 +16,10 @@
          (the latter two only after the user grants access in system settings). -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <!-- Quick toggles: direct Wi-Fi/Bluetooth switching where Android still allows it. -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
@@ -145,6 +149,14 @@
             android:exported="false"
             android:excludeFromRecents="true"
             android:noHistory="true"
+            android:theme="@style/Theme.Widgets.Translucent" />
+
+        <!-- One-time permission sheet for quick toggles (also must not be noHistory). -->
+        <activity
+            android:name=".ui.permission.ToggleSetupActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.Widgets.Translucent" />
 
         <!-- Not noHistory: it must survive behind the system permission dialog to get the result. -->

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -30,6 +31,10 @@ public final class ToggleState {
     public static final String ROTATE = "rotate";
     public static final String DARK = "darkmode";
     public static final String DATA = "data";
+    /** Ringer mode: Ring → Vibrate → Silent. "On" = a quiet mode is active. */
+    public static final String SOUND = "sound";
+    /** Adaptive (automatic) screen brightness. */
+    public static final String AUTOBRIGHT = "autobright";
 
     private static final String TORCH_PREFS = "torch_state";
 
@@ -73,6 +78,12 @@ public final class ToggleState {
                     int mode = Resources.getSystem().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
                     return mode == Configuration.UI_MODE_NIGHT_YES;
                 }
+                case SOUND:
+                    return ringerMode(c) != AudioManager.RINGER_MODE_NORMAL;
+                case AUTOBRIGHT:
+                    return Settings.System.getInt(cr, Settings.System.SCREEN_BRIGHTNESS_MODE,
+                            Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL)
+                            == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
                 case DATA: {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null;
                     TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
@@ -86,6 +97,36 @@ public final class ToggleState {
         }
     }
 
+    /** Ringer mode, or RINGER_MODE_NORMAL when it can't be read. */
+    public static int ringerMode(Context c) {
+        AudioManager am = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+        return am != null ? am.getRingerMode() : AudioManager.RINGER_MODE_NORMAL;
+    }
+
+    /** Label reflecting the live state where it has more than on/off (the ringer). */
+    public static String label(Context c, String kind) {
+        if (SOUND.equals(kind)) {
+            switch (ringerMode(c)) {
+                case AudioManager.RINGER_MODE_VIBRATE: return "Vibrate";
+                case AudioManager.RINGER_MODE_SILENT: return "Silent";
+                default: return "Ring";
+            }
+        }
+        return label(kind);
+    }
+
+    /** Icon reflecting the live state where it has more than on/off (the ringer). */
+    public static int icon(Context c, String kind) {
+        if (SOUND.equals(kind)) {
+            switch (ringerMode(c)) {
+                case AudioManager.RINGER_MODE_VIBRATE: return R.drawable.ic_tg_vibrate;
+                case AudioManager.RINGER_MODE_SILENT: return R.drawable.ic_tg_silent;
+                default: return R.drawable.ic_tg_ring;
+            }
+        }
+        return icon(kind);
+    }
+
     public static String label(String kind) {
         switch (kind) {
             case WIFI: return "Wi-Fi";
@@ -97,6 +138,8 @@ public final class ToggleState {
             case ROTATE: return "Rotate";
             case DARK: return "Dark";
             case DATA: return "Data";
+            case SOUND: return "Sound";
+            case AUTOBRIGHT: return "Auto";
             default: return kind;
         }
     }
@@ -112,6 +155,8 @@ public final class ToggleState {
             case ROTATE: return R.drawable.ic_tg_rotate;
             case DARK: return R.drawable.ic_tg_darkmode;
             case DATA: return R.drawable.ic_tg_data;
+            case SOUND: return R.drawable.ic_tg_ring;
+            case AUTOBRIGHT: return R.drawable.ic_tg_brightness;
             default: return R.drawable.ic_tg_wifi;
         }
     }
