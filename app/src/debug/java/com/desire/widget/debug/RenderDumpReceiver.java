@@ -43,6 +43,10 @@ public class RenderDumpReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         final PendingResult pending = goAsync();
         final Context app = context.getApplicationContext();
+        if ("com.desire.widget.debug.CAPTURE_SELF".equals(intent.getAction())) {
+            SelfCapture.capture(app, intent, pending::finish);
+            return;
+        }
         new Thread(() -> {
             try {
                 dump(app);

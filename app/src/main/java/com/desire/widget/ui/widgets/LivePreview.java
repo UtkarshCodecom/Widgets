@@ -90,6 +90,7 @@ public final class LivePreview {
                 case "dot_clock":
                 case "time_tiles":
                 case "week_strip":
+                case "geo_clock":
                     best = EVERY_MINUTE;
                     break;
                 default:

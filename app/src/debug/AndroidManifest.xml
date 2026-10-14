@@ -8,7 +8,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.desire.widget.debug.RENDER_DUMP" />
+                <action android:name="com.desire.widget.debug.CAPTURE_SELF" />
             </intent-filter>
         </receiver>
+
+        <!-- Tracks our own resumed Activity for CAPTURE_SELF; serves no data. -->
+        <provider
+            android:name="com.desire.widget.debug.SelfCapture"
+            android:authorities="${applicationId}.debug.selfcapture"
+            android:exported="false" />
     </application>
 </manifest>
