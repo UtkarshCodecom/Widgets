@@ -75,6 +75,17 @@ public class WidgetTapActivity extends Activity {
                                 .putExtra(com.desire.widget.ui.permission.PermissionRequestActivity.EXTRA_REASON,
                                         "Allow Calendar in App info → Permissions to show your events");
                     }
+                    // Earbuds/watch battery needs "Nearby devices" (BLUETOOTH_CONNECT) from Android 12.
+                    if (hasComponent(spec, "device_battery")
+                            && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
+                            && checkSelfPermission(android.Manifest.permission.BLUETOOTH_CONNECT)
+                                    != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                        return new Intent(this, com.desire.widget.ui.permission.PermissionRequestActivity.class)
+                                .putExtra(com.desire.widget.ui.permission.PermissionRequestActivity.EXTRA_PERMISSION,
+                                        android.Manifest.permission.BLUETOOTH_CONNECT)
+                                .putExtra(com.desire.widget.ui.permission.PermissionRequestActivity.EXTRA_REASON,
+                                        "Allow Nearby devices in App info → Permissions to show your earbuds' and watch's battery");
+                    }
                     if (hasComponent(spec, "screen_time")
                             && !com.desire.widget.engine.data.ScreenTimeStore.hasAccess(this)) {
                         android.widget.Toast.makeText(this, "Find \"Widgets\" and turn on usage access",

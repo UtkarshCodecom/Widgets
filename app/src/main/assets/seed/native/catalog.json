@@ -73,6 +73,160 @@
   ],
   "widgets": [
     {
+      "id": "clock_bubble",
+      "name": "Bubble",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_bubble.json",
+      "description": "Chunky 3D digits",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_holo",
+      "name": "Holo",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_holo.json",
+      "description": "Iridescent time with the date",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_candy",
+      "name": "Candy",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_candy.json",
+      "description": "Four playful outlined digits",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_serif",
+      "name": "Serif",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_serif.json",
+      "description": "Elegant serif time with the full date",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_pixel",
+      "name": "Pixel",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_pixel.json",
+      "description": "Retro pixel digits in pastel",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_stencil",
+      "name": "Stencil",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_stencil.json",
+      "description": "Tall stencil digits in a soft gradient",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_tall",
+      "name": "Tall",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_tall.json",
+      "description": "Towering condensed time",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_outline",
+      "name": "Outline",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_outline.json",
+      "description": "Hours over minutes, outlined",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_split",
+      "name": "Split",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_split.json",
+      "description": "Huge hour, minutes and AM/PM on the side",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_led",
+      "name": "LED",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_led.json",
+      "description": "Dot-matrix time and date",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_geo",
+      "name": "Bauhaus",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_geo.json",
+      "description": "Digits built from lines, arcs and rings",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_tiles",
+      "name": "Shapes",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_tiles.json",
+      "description": "Hour, minute, date and day in four shapes",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_bezel",
+      "name": "Bezel",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_bezel.json",
+      "description": "Digital time in a sweeping dotted bezel",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "clock_bezel_light",
+      "name": "Bezel Light",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "clock_bezel_light.json",
+      "description": "Bold time inside a red tick bezel",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
       "id": "min_clock",
       "name": "Minimal",
       "categoryId": "clock",
@@ -154,6 +308,72 @@
       "description": "Hours as a pie, minutes as a ring",
       "isFeatured": true,
       "isTrending": true
+    },
+    {
+      "id": "dial_bold",
+      "name": "Bold Dial",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "dial_bold.json",
+      "description": "Black dial with giant numerals",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "dial_radial",
+      "name": "Radial",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "dial_radial.json",
+      "description": "Rays and turned numerals on a light face",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "dial_sport",
+      "name": "Sport",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "dial_sport.json",
+      "description": "Sporty dial with a date window",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "dial_outline",
+      "name": "Bubble Dial",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "dial_outline.json",
+      "description": "Outlined numerals and a chunky hour hand",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "world_sydney",
+      "name": "World Clock",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "world_sydney.json",
+      "description": "Sydney time with its offset from yours",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "world_newyork",
+      "name": "World Square",
+      "categoryId": "clock",
+      "widgetSize": "2x2",
+      "specAsset": "world_newyork.json",
+      "description": "New York time on a squircle dial",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
     },
     {
       "id": "min_analog",
@@ -242,6 +462,39 @@
       "isTrending": false
     },
     {
+      "id": "clock_brush",
+      "name": "Brush",
+      "categoryId": "clock",
+      "widgetSize": "4x2",
+      "specAsset": "clock_brush.json",
+      "description": "Hand-lettered time, month, date and weekday",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "dial_stadium",
+      "name": "Stadium",
+      "categoryId": "clock",
+      "widgetSize": "4x2",
+      "specAsset": "dial_stadium.json",
+      "description": "Wide dial with red numerals and the date",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "dial_rays",
+      "name": "Sunburst",
+      "categoryId": "clock",
+      "widgetSize": "4x2",
+      "specAsset": "dial_rays.json",
+      "description": "A sunburst of rays across the screen",
+      "categoryName": "Clock",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
       "id": "min_mono",
       "name": "Mono",
       "categoryId": "clock",
@@ -293,6 +546,28 @@
       "isTrending": true
     },
     {
+      "id": "date_tile",
+      "name": "Date Tile",
+      "categoryId": "calendar",
+      "widgetSize": "2x2",
+      "specAsset": "date_tile.json",
+      "description": "Today's date, app-icon style",
+      "categoryName": "Calendar",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "date_tile_serif",
+      "name": "Date Serif",
+      "categoryId": "calendar",
+      "widgetSize": "2x2",
+      "specAsset": "date_tile_serif.json",
+      "description": "Serif day and date",
+      "categoryName": "Calendar",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
       "id": "min_date",
       "name": "Date",
       "categoryId": "calendar",
@@ -301,6 +576,50 @@
       "specAsset": "min_date.json",
       "description": "Big day number",
       "isTrending": true
+    },
+    {
+      "id": "event_day",
+      "name": "Next Event",
+      "categoryId": "calendar",
+      "widgetSize": "2x2",
+      "specAsset": "event_day.json",
+      "description": "Today and your next event at a glance",
+      "categoryName": "Calendar",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "month_dots",
+      "name": "Month Progress",
+      "categoryId": "calendar",
+      "widgetSize": "2x2",
+      "specAsset": "month_dots.json",
+      "description": "How much of the month has passed",
+      "categoryName": "Calendar",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "year_dots",
+      "name": "Year Progress",
+      "categoryId": "calendar",
+      "widgetSize": "2x2",
+      "specAsset": "year_dots.json",
+      "description": "The whole year, one dot per day",
+      "categoryName": "Calendar",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "week_strip",
+      "name": "Week",
+      "categoryId": "calendar",
+      "widgetSize": "4x1",
+      "specAsset": "week_strip.json",
+      "description": "This week with today highlighted",
+      "categoryName": "Calendar",
+      "isFeatured": false,
+      "isTrending": false
     },
     {
       "id": "min_calendar",
@@ -332,6 +651,28 @@
       "description": "A full week of events",
       "isFeatured": false,
       "isTrending": true
+    },
+    {
+      "id": "weather_card",
+      "name": "Weather Card",
+      "categoryId": "weather",
+      "widgetSize": "2x2",
+      "specAsset": "weather_card.json",
+      "description": "City, big temperature and conditions",
+      "categoryName": "Weather",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "weather_tiles",
+      "name": "Forecast Shapes",
+      "categoryId": "weather",
+      "widgetSize": "2x2",
+      "specAsset": "weather_tiles.json",
+      "description": "Now and the next three days in shapes",
+      "categoryName": "Weather",
+      "isFeatured": false,
+      "isTrending": false
     },
     {
       "id": "min_weather",
@@ -391,6 +732,50 @@
       "widgetSize": "4x1",
       "specAsset": "sun_times.json",
       "description": "Today's sunrise and sunset"
+    },
+    {
+      "id": "music_disc",
+      "name": "Disc",
+      "categoryId": "media",
+      "widgetSize": "2x2",
+      "specAsset": "music_disc.json",
+      "description": "Cover as a half record, colours from the art",
+      "categoryName": "Music",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "music_cover",
+      "name": "Cover",
+      "categoryId": "media",
+      "widgetSize": "2x2",
+      "specAsset": "music_cover.json",
+      "description": "Album cover on top, tinted by the art",
+      "categoryName": "Music",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "music_pill",
+      "name": "Pill Player",
+      "categoryId": "media",
+      "widgetSize": "4x1",
+      "specAsset": "music_pill.json",
+      "description": "Compact player coloured by the album art",
+      "categoryName": "Music",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "music_pill_dark",
+      "name": "Pill Dark",
+      "categoryId": "media",
+      "widgetSize": "4x1",
+      "specAsset": "music_pill_dark.json",
+      "description": "Black player with a Pause button",
+      "categoryName": "Music",
+      "isFeatured": false,
+      "isTrending": false
     },
     {
       "id": "min_music",
@@ -598,6 +983,61 @@
       "isTrending": true
     },
     {
+      "id": "battery_dots",
+      "name": "Battery Grid",
+      "categoryId": "device",
+      "widgetSize": "2x2",
+      "specAsset": "battery_dots.json",
+      "description": "Device name and charge as a dot grid",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "battery_dots_light",
+      "name": "Battery Grid Light",
+      "categoryId": "device",
+      "widgetSize": "2x2",
+      "specAsset": "battery_dots_light.json",
+      "description": "Light dot-grid battery",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "battery_glowcard",
+      "name": "Glow Card",
+      "categoryId": "device",
+      "widgetSize": "2x2",
+      "specAsset": "battery_glowcard.json",
+      "description": "Glowing charge bar with time to full",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "battery_pills",
+      "name": "Battery Pills",
+      "categoryId": "device",
+      "widgetSize": "2x2",
+      "specAsset": "battery_pills.json",
+      "description": "Eight pill cells and the time left",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "device_tiles",
+      "name": "Devices",
+      "categoryId": "device",
+      "widgetSize": "2x2",
+      "specAsset": "device_tiles.json",
+      "description": "Phone, earbuds and watch battery in shapes",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
       "id": "min_battery",
       "name": "Battery",
       "categoryId": "device",
@@ -671,6 +1111,28 @@
       "description": "Today's screen time and top apps",
       "isFeatured": true,
       "isTrending": true
+    },
+    {
+      "id": "battery_fill",
+      "name": "Battery Fill",
+      "categoryId": "device",
+      "widgetSize": "4x2",
+      "specAsset": "battery_fill.json",
+      "description": "A card that fills with your charge",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
+    },
+    {
+      "id": "buds_fill",
+      "name": "Earbuds",
+      "categoryId": "device",
+      "widgetSize": "4x2",
+      "specAsset": "buds_fill.json",
+      "description": "Battery of your connected earbuds or watch",
+      "categoryName": "Device",
+      "isFeatured": false,
+      "isTrending": false
     },
     {
       "id": "battery_glow",

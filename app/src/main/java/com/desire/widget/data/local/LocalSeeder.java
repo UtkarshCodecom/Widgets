@@ -27,7 +27,7 @@ public final class LocalSeeder {
     private static final String CATALOG = "seed/native/catalog.json";
     private static final String WIDGET_DIR = "seed/native/";
     /** Bump whenever catalog widgets are added/changed so existing installs pick them up. */
-    private static final int SEED_VERSION = 7;
+    private static final int SEED_VERSION = 8;
     /**
      * Catalog widgets whose ALREADY-PLACED copies are upgraded on sync, because their old spec was
      * broken or limited in a way users would notice (toggles that could only open Settings; To-Do
