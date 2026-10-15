@@ -1,0 +1,48 @@
+{
+  "id": "music_disc",
+  "name": "Disc",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#23405C",
+    "cornerRadius": 0.2
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "props": {
+        "style": "disc",
+        "theme": "albumArt",
+        "fallbackColor": "#2C4A6B",
+        "playColor": "#F2B8E6",
+        "textColor": "#FFFFFF",
+        "title": "Midnight Drive",
+        "artist": "Neon Coast",
+        "playing": false,
+        "progress": 0.4
+      }
+    }
+  ],
+  "action": {
+    "type": "music"
+  },
+  "styles": [
+    {
+      "name": "Disc",
+      "props": {
+        "0.style": "disc"
+      }
+    },
+    {
+      "name": "Cover",
+      "props": {
+        "0.style": "cover"
+      }
+    }
+  ]
+}

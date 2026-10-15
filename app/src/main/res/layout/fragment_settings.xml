@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_background"
+    android:background="?android:colorBackground"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/dark_background"
+        android:background="?android:colorBackground"
         app:title="@string/nav_settings"
         app:titleTextColor="@color/text_primary" />
 
@@ -17,34 +17,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
         android:paddingBottom="24dp">
 
         <LinearLayout
+            android:id="@+id/settings_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <!-- App Themes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:letterSpacing="0.05"
+                android:text="@string/settings_themes"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/theme_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp" />
 
             <!-- Premium Banner -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/premium_banner"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
                 android:foreground="?selectableItemBackground"
-                app:cardBackgroundColor="@color/dark_card"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/yellow_accent_alpha_10"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp"
+                app:strokeColor="@color/yellow_accent_alpha_20"
+                app:strokeWidth="1dp"
                 app:contentPadding="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_neumorphic_small"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="16dp">
+                    android:paddingHorizontal="18dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -52,96 +75,61 @@
                         android:layout_weight="1"
                         android:text="@string/premium_banner"
                         android:textColor="@color/yellow_accent"
-                        android:textSize="14sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_arrow_right"
-                        android:alpha="0.5" />
+                        app:tint="@color/yellow_accent"
+                        android:alpha="0.7" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <include layout="@layout/item_setting_row" android:id="@+id/check_updates_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/whats_new_row" />
+            <!-- Widgets -->
+            <TextView style="@style/SettingsSectionLabel" android:text="Widgets" android:layout_marginTop="20dp" />
+            <include layout="@layout/item_setting_row" android:id="@+id/temp_unit_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/restore_purchases_row" />
+
+            <!-- Permissions -->
+            <TextView style="@style/SettingsSectionLabel" android:text="Permissions" />
+            <include layout="@layout/item_setting_row" android:id="@+id/location_permission_row" />
+            <include layout="@layout/item_setting_row" android:id="@+id/media_permission_row" />
+            <include layout="@layout/item_setting_row" android:id="@+id/calendar_permission_row" />
+            <include layout="@layout/item_setting_row" android:id="@+id/usage_access_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/notification_permission_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/background_running_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/battery_optimization_row" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"
-                android:text="Information"
-                android:textColor="@color/yellow_accent"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
+            <!-- Help -->
+            <TextView style="@style/SettingsSectionLabel" android:text="Help" />
             <include layout="@layout/item_setting_row" android:id="@+id/faq_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/privacy_policy_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/report_bug_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/support_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/about_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/social_row" />
-            <include layout="@layout/item_setting_row" android:id="@+id/more_apps_row" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"
-                android:text="Community"
-                android:textColor="@color/yellow_accent"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
+            <include layout="@layout/item_setting_row" android:id="@+id/privacy_policy_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/rate_us_row" />
             <include layout="@layout/item_setting_row" android:id="@+id/share_app_row" />
 
-            <!-- Version Row -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/version_row"
+            <!-- Rows kept for their click handlers but hidden to keep Settings short. -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="20dp"
-                android:foreground="?selectableItemBackground"
-                app:cardBackgroundColor="@color/dark_card"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0dp"
-                app:contentPadding="0dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <include layout="@layout/item_setting_row" android:id="@+id/check_updates_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/whats_new_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/clear_cache_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/background_running_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/support_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/about_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/social_row" />
+                <include layout="@layout/item_setting_row" android:id="@+id/more_apps_row" />
+            </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_neumorphic_small"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/version"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/version_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_tertiary"
-                        android:textSize="13sp" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            <!-- Version Row -->
+            <include layout="@layout/item_setting_row" android:id="@+id/version_row"
+                android:layout_marginTop="20dp" />
 
             <!-- Developer Tap Hint -->
             <TextView
@@ -162,15 +150,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/developer_section"
-                    android:textColor="@color/yellow_accent"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
+                <TextView style="@style/SettingsSectionLabel" android:text="@string/developer_section" android:layout_marginTop="0dp" />
                 <include layout="@layout/item_setting_row" android:id="@+id/admin_dashboard_row" />
 
             </LinearLayout>

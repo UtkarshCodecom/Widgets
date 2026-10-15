@@ -1,0 +1,65 @@
+{
+  "id": "quick_modes",
+  "name": "Quick Modes",
+  "designSize": "4x1",
+  "background": {
+    "gradientStart": "#1B1D22",
+    "gradientEnd": "#121418",
+    "gradientAngle": 270,
+    "cornerRadius": 0.3
+  },
+  "components": [
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.0,
+        "y": 0.06,
+        "w": 0.25,
+        "h": 0.88
+      },
+      "props": {
+        "kind": "dnd",
+        "onColor": "#5E5CE6"
+      }
+    },
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.25,
+        "y": 0.06,
+        "w": 0.25,
+        "h": 0.88
+      },
+      "props": {
+        "kind": "sound",
+        "onColor": "#5E5CE6"
+      }
+    },
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.5,
+        "y": 0.06,
+        "w": 0.25,
+        "h": 0.88
+      },
+      "props": {
+        "kind": "rotate",
+        "onColor": "#5E5CE6"
+      }
+    },
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.75,
+        "y": 0.06,
+        "w": 0.25,
+        "h": 0.88
+      },
+      "props": {
+        "kind": "autobright",
+        "onColor": "#5E5CE6"
+      }
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "id": "ai_search",
+  "name": "AI Search",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#1A1B20",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.045,
+        "y": 0.16,
+        "w": 0.91,
+        "h": 0.68
+      },
+      "props": {
+        "shape": "pill",
+        "fill": "#25272F",
+        "cornerRadius": 0.2,
+        "stroke": "#33FFFFFF",
+        "strokeWidth": 0.01
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.06,
+        "y": 0.24,
+        "w": 0.15,
+        "h": 0.52
+      },
+      "props": {
+        "shape": "circle",
+        "fill": "#6C7BFF",
+        "cornerRadius": 0.2
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.24,
+        "w": 0.15,
+        "h": 0.52
+      },
+      "props": {
+        "text": "✦",
+        "fontSize": 0.42,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": false
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.26,
+        "y": 0.28,
+        "w": 0.5,
+        "h": 0.44
+      },
+      "props": {
+        "text": "Ask AI anything…",
+        "fontSize": 0.32,
+        "align": "left",
+        "color": "#8B92A3",
+        "bold": false
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.855,
+        "y": 0.28,
+        "w": 0.05,
+        "h": 0.24
+      },
+      "props": {
+        "shape": "pill",
+        "fill": "#FFFFFF",
+        "cornerRadius": 0.2
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.845,
+        "y": 0.5,
+        "w": 0.07,
+        "h": 0.014
+      },
+      "props": {
+        "shape": "pill",
+        "fill": "#FFFFFF",
+        "cornerRadius": 0.2
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.876,
+        "y": 0.52,
+        "w": 0.014,
+        "h": 0.1
+      },
+      "props": {
+        "shape": "pill",
+        "fill": "#FFFFFF",
+        "cornerRadius": 0.2
+      }
+    }
+  ],
+  "action": {
+    "type": "ai"
+  }
+}

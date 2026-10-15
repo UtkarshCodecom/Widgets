@@ -1,6 +1,7 @@
 package com.desire.widget.service;
 
 import android.content.ComponentName;
+import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.MediaSessionManager;
@@ -13,6 +14,8 @@ import com.desire.widget.engine.data.NowPlaying;
 import com.desire.widget.engine.runtime.EngineRenderer;
 import com.desire.widget.engine.runtime.EngineWidgetStore;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -53,8 +56,13 @@ public class MediaNotificationListener extends NotificationListenerService {
                     np.artist = text(md, MediaMetadata.METADATA_KEY_ARTIST, "");
                     long dur = md.getLong(MediaMetadata.METADATA_KEY_DURATION);
                     if (ps != null && dur > 0) {
+                        // Raw position + duration so MusicRenderer can extrapolate the moving
+                        // progress bar between notification updates (see NowPlaying.updatedAtMillis).
+                        np.positionMillis = Math.max(0, ps.getPosition());
+                        np.durationMillis = dur;
                         np.progress = Math.max(0f, Math.min(1f, ps.getPosition() / (float) dur));
                     }
+                    np.albumArtPath = cacheAlbumArt(md);
                 }
                 np.playing = ps != null && ps.getState() == PlaybackState.STATE_PLAYING;
             }
@@ -69,5 +77,28 @@ public class MediaNotificationListener extends NotificationListenerService {
     private String text(MediaMetadata md, String key, String def) {
         CharSequence cs = md.getText(key);
         return cs != null ? cs.toString() : def;
+    }
+
+    /**
+     * Saves the track's album art (if the session provides one) to a small cache file the
+     * MusicRenderer can load synchronously during a render pass. Overwrites the same file each
+     * time so storage never grows.
+     */
+    private String cacheAlbumArt(MediaMetadata md) {
+        try {
+            Bitmap art = md.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
+            if (art == null) art = md.getBitmap(MediaMetadata.METADATA_KEY_ART);
+            if (art == null) return null;
+
+            int size = 256;
+            Bitmap scaled = Bitmap.createScaledBitmap(art, size, size, true);
+            File file = new File(getCacheDir(), "now_playing_art.png");
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                scaled.compress(Bitmap.CompressFormat.PNG, 90, out);
+            }
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

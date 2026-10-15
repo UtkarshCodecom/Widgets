@@ -1,0 +1,31 @@
+{
+  "id": "agenda_large",
+  "name": "Agenda Large",
+  "designSize": "4x4",
+  "background": {
+    "gradientStart": "#1A1F2B",
+    "gradientEnd": "#11141C",
+    "gradientAngle": 270,
+    "cornerRadius": 0.1
+  },
+  "components": [
+    {
+      "type": "agenda",
+      "frame": {
+        "x": 0.06,
+        "y": 0.05,
+        "w": 0.88,
+        "h": 0.9
+      },
+      "props": {
+        "maxEvents": 6,
+        "accentColor": "#FF6B6B",
+        "textColor": "#FFFFFF",
+        "subColor": "#98A2B3"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

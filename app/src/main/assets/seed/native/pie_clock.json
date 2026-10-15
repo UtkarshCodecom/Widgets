@@ -1,0 +1,32 @@
+{
+  "id": "pie_clock",
+  "name": "Sector",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#12141A",
+    "gradientEnd": "#1E2130",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "pie_clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "hourColor": "#7C4DFF",
+        "minuteColor": "#18FFFF",
+        "trackColor": "#22FFFFFF",
+        "centerColor": "#161925",
+        "textColor": "#FFFFFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

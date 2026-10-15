@@ -1,0 +1,46 @@
+{
+  "id": "music_pill_dark",
+  "name": "Pill Dark",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#000000",
+    "cornerRadius": 0.45
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0.02,
+        "y": 0.06,
+        "w": 0.96,
+        "h": 0.88
+      },
+      "props": {
+        "style": "pill",
+        "button": "label",
+        "textColor": "#FFFFFF",
+        "subColor": "#C9C9CF",
+        "title": "Golden Hour",
+        "artist": "Luma",
+        "playing": true
+      }
+    }
+  ],
+  "action": {
+    "type": "music"
+  },
+  "styles": [
+    {
+      "name": "Label",
+      "props": {
+        "0.button": "label"
+      }
+    },
+    {
+      "name": "Icons",
+      "props": {
+        "0.button": "icon"
+      }
+    }
+  ]
+}

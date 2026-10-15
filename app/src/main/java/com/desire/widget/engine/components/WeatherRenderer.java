@@ -20,9 +20,13 @@ import java.util.Map;
  * props override individual fields so Studio previews are fully controllable.
  *
  * <p>props: temp, condition (clear|clouds|rain|snow|storm), location, high, low, unit, iconColor,
- * textColor, subColor.
+ * textColor, subColor, style (row | card — city, huge temperature, icon + condition | tiles — four
+ * shaped tiles: now and the next three days; shapes / fills / textColors / font).
  */
 public class WeatherRenderer implements ComponentRenderer {
+    /** PreferenceManager key: show temperatures in °F instead of °C. */
+    public static final String PREF_FAHRENHEIT = "temp_fahrenheit";
+
     @Override
     public String type() {
         return "weather";
@@ -32,17 +36,38 @@ public class WeatherRenderer implements ComponentRenderer {
     public void render(Canvas canvas, RectF b, ComponentSpec s, RenderContext ctx) {
         Map<String, Object> p = s.props;
         WeatherSnapshot w = ctx.live != null ? ctx.live.weather() : new WeatherSnapshot();
-        // Per-component prop overrides
-        w.temp = SpecProps.f(p, "temp", (float) w.temp);
-        w.condition = SpecProps.str(p, "condition", w.condition);
-        w.location = SpecProps.str(p, "location", w.location);
-        w.high = SpecProps.f(p, "high", (float) w.high);
-        w.low = SpecProps.f(p, "low", (float) w.low);
-        w.unit = SpecProps.str(p, "unit", w.unit);
+        // Sample props apply ONLY to gallery/customize previews (appWidgetId < 0). On a placed
+        // widget the fetched snapshot always wins — letting these placeholder props override it
+        // pinned the widget to the fake "24° City" forever (the old bug).
+        if (ctx.appWidgetId < 0) {
+            w.temp = SpecProps.f(p, "temp", (float) w.temp);
+            w.condition = SpecProps.str(p, "condition", w.condition);
+            w.location = SpecProps.str(p, "location", w.location);
+            w.high = SpecProps.f(p, "high", (float) w.high);
+            w.low = SpecProps.f(p, "low", (float) w.low);
+            w.unit = SpecProps.str(p, "unit", w.unit);
+        }
+        // Settings → Temperature unit. Data is fetched in °C; convert for display.
+        if (com.desire.widget.util.PreferenceManager.getInstance(ctx.android).getBoolean(PREF_FAHRENHEIT, false)) {
+            w.temp = w.temp * 9.0 / 5.0 + 32.0;
+            w.high = w.high * 9.0 / 5.0 + 32.0;
+            w.low = w.low * 9.0 / 5.0 + 32.0;
+        }
 
         int iconColor = SpecColors.resolve(SpecProps.str(p, "iconColor", "@primary"), ctx.theme, ctx.theme.primary);
         int textColor = SpecColors.resolve(SpecProps.str(p, "textColor", "@textPrimary"), ctx.theme, ctx.theme.textPrimary);
         int subColor = SpecColors.resolve(SpecProps.str(p, "subColor", "@textSecondary"), ctx.theme, ctx.theme.textSecondary);
+        boolean fahrenheit = com.desire.widget.util.PreferenceManager.getInstance(ctx.android)
+                .getBoolean(PREF_FAHRENHEIT, false);
+        String style = SpecProps.str(p, "style", "row");
+        if ("card".equals(style)) {
+            drawCard(canvas, b, p, w, iconColor, textColor, subColor);
+            return;
+        }
+        if ("tiles".equals(style)) {
+            drawTiles(canvas, b, p, ctx, w, fahrenheit);
+            return;
+        }
 
         float iconSize = Math.min(b.height() * 0.7f, b.width() * 0.4f);
         float iconCx = b.left + iconSize * 0.65f;
@@ -147,5 +172,102 @@ public class WeatherRenderer implements ComponentRenderer {
         path.lineTo(cx + r * 0.05f, cy + r * 0.05f);
         path.close();
         canvas.drawPath(path, bolt);
+    }
+    // ------------------------------------------------------------------ card / tiles styles
+
+    private static String describe(WeatherSnapshot w) {
+        if (w.description != null && !w.description.isEmpty()) return w.description;
+        switch (w.condition == null ? "clear" : w.condition) {
+            case "clouds": return "Cloudy";
+            case "rain": return "Rain";
+            case "snow": return "Snow";
+            case "storm": return "Thunderstorm";
+            default: return "Clear";
+        }
+    }
+
+    /** City on top, a huge temperature, then icon + condition — the tall "card" look. */
+    private void drawCard(Canvas canvas, RectF b, java.util.Map<String, Object> p, WeatherSnapshot w,
+                          int iconColor, int textColor, int subColor) {
+        android.graphics.Typeface bold = com.desire.widget.engine.util.FontResolver.resolve(
+                SpecProps.str(p, "font", "medium"), true);
+        Paint loc = new Paint(Paint.ANTI_ALIAS_FLAG);
+        loc.setTypeface(bold);
+        loc.setColor(textColor);
+        loc.setTextSize(b.height() * 0.11f);
+        String city = w.location;
+        while (city.length() > 1 && loc.measureText(city) > b.width()) city = city.substring(0, city.length() - 1);
+        canvas.drawText(city, b.left, b.top + b.height() * 0.13f, loc);
+        Paint temp = new Paint(Paint.ANTI_ALIAS_FLAG);
+        temp.setTypeface(bold);
+        temp.setColor(textColor);
+        temp.setTextSize(b.height() * 0.36f);
+        canvas.drawText(Math.round(w.temp) + "°", b.left - b.height() * 0.01f, b.top + b.height() * 0.5f, temp);
+        drawIcon(canvas, w.condition, b.left + b.height() * 0.07f, b.top + b.height() * 0.68f, b.height() * 0.07f, iconColor);
+        Paint cond = new Paint(Paint.ANTI_ALIAS_FLAG);
+        cond.setColor(subColor);
+        cond.setTextSize(b.height() * 0.1f);
+        canvas.drawText(describe(w), b.left, b.top + b.height() * 0.9f, cond);
+    }
+
+    /** Four shaped tiles: now + the next three days (icon, temperature, day). */
+    private void drawTiles(Canvas canvas, RectF b, java.util.Map<String, Object> p, RenderContext ctx,
+                           WeatherSnapshot w, boolean fahrenheit) {
+        java.util.List<WeatherSnapshot.Day> days = w.days();
+        String[] conds = new String[4];
+        double[] temps = new double[4];
+        String[] labels = new String[4];
+        conds[0] = w.condition;
+        temps[0] = w.temp; // already converted above when °F is on
+        labels[0] = "Now";
+        java.text.SimpleDateFormat dayFmt = new java.text.SimpleDateFormat("EEE", java.util.Locale.getDefault());
+        if (days.size() >= 4 && ctx.appWidgetId >= 0) {
+            for (int i = 1; i < 4; i++) {
+                WeatherSnapshot.Day d = days.get(i);
+                conds[i] = d.condition;
+                temps[i] = fahrenheit ? d.high * 9.0 / 5.0 + 32.0 : d.high;
+                labels[i] = dayFmt.format(new java.util.Date(d.epochSec * 1000L));
+            }
+        } else {
+            String[] sc = {"rain", "clouds", "snow"};
+            double[] st = {12, 12, -4};
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            for (int i = 1; i < 4; i++) {
+                cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
+                conds[i] = sc[i - 1];
+                temps[i] = st[i - 1];
+                labels[i] = dayFmt.format(cal.getTime());
+            }
+        }
+        java.util.List<String> shapes = TimeTilesRenderer.strings(p, "shapes",
+                new String[]{"cookie", "blob", "squircle", "rounded"});
+        int[] fills = com.desire.widget.engine.util.ClockText.colors(p, "fills", ctx.theme,
+                new int[]{0xFFEDEDF0, 0xFFE5322D, 0xFF8E9BF0, 0xFFEDEDF0});
+        int[] inks = com.desire.widget.engine.util.ClockText.colors(p, "textColors", ctx.theme,
+                new int[]{0xFF4A4A52, 0xFFFFE9E6, 0xFFE9ECFF, 0xFF4A4A52});
+        float side = Math.min(b.width(), b.height());
+        float cell = side / 2f;
+        float left = b.centerX() - side / 2f, top = b.centerY() - side / 2f;
+        Paint fp = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Paint tp = new Paint(Paint.ANTI_ALIAS_FLAG);
+        tp.setTypeface(com.desire.widget.engine.util.FontResolver.resolve(SpecProps.str(p, "font", "medium"), true));
+        tp.setTextAlign(Paint.Align.CENTER);
+        for (int i = 0; i < 4; i++) {
+            float inset = cell * 0.06f;
+            RectF tile = new RectF(left + cell * (i % 2) + inset, top + cell * (i / 2) + inset,
+                    left + cell * (i % 2) + cell - inset, top + cell * (i / 2) + cell - inset);
+            fp.setColor(fills[i % fills.length]);
+            canvas.drawPath(com.desire.widget.engine.util.Shapes.path(shapes.get(i % shapes.size()), tile), fp);
+            int ink = inks[i % inks.length];
+            drawIcon(canvas, conds[i], tile.centerX(), tile.top + tile.height() * 0.34f, tile.height() * 0.15f, ink);
+            tp.setColor(ink);
+            tp.setTextSize(tile.height() * 0.2f);
+            canvas.drawText(Math.round(temps[i]) + "°", tile.centerX(), tile.top + tile.height() * 0.7f, tp);
+            Paint lp = new Paint(tp);
+            lp.setTypeface(com.desire.widget.engine.util.FontResolver.resolve(SpecProps.str(p, "font", "medium"), false));
+            lp.setTextSize(tile.height() * 0.1f);
+            lp.setAlpha(190);
+            canvas.drawText(labels[i], tile.centerX(), tile.top + tile.height() * 0.85f, lp);
+        }
     }
 }

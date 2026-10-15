@@ -1,0 +1,46 @@
+{
+  "id": "music_pill",
+  "name": "Pill Player",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "music",
+      "frame": {
+        "x": 0.02,
+        "y": 0.06,
+        "w": 0.96,
+        "h": 0.88
+      },
+      "props": {
+        "style": "pill",
+        "theme": "albumArt",
+        "fallbackColor": "#D0103A",
+        "textColor": "#FFFFFF",
+        "title": "Sweet Escape",
+        "artist": "Velvet Funk",
+        "playing": true
+      }
+    }
+  ],
+  "action": {
+    "type": "music"
+  },
+  "styles": [
+    {
+      "name": "Icons",
+      "props": {
+        "0.button": "icon"
+      }
+    },
+    {
+      "name": "Label",
+      "props": {
+        "0.button": "label"
+      }
+    }
+  ]
+}

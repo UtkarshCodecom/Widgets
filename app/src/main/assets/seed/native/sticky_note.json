@@ -1,0 +1,30 @@
+{
+  "id": "sticky_note",
+  "name": "Sticky Note",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#FFE58F",
+    "cornerRadius": 0.12
+  },
+  "components": [
+    {
+      "type": "notes",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "props": {
+        "title": "NOTE",
+        "titleColor": "#8A6A12",
+        "textColor": "#2B2722",
+        "inset": 0.09,
+        "paper": "#FFE58F"
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_notes"
+  }
+}

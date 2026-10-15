@@ -1,0 +1,48 @@
+{
+  "id": "mini_clock",
+  "name": "Mini Time",
+  "designSize": "1x1",
+  "background": {
+    "gradientStart": "#3A1C71",
+    "gradientEnd": "#D76D77",
+    "gradientAngle": 315,
+    "cornerRadius": 0.26
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.22,
+        "w": 0.92,
+        "h": 0.38
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.82,
+        "align": "center",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.62,
+        "w": 0.92,
+        "h": 0.16
+      },
+      "props": {
+        "format": "EEE d",
+        "fontSize": 0.7,
+        "align": "center",
+        "color": "#F3E0FF",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

@@ -1,14 +1,11 @@
 package com.desire.widget.worker;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -46,10 +43,23 @@ public class WeatherWorker extends Worker {
     @Override
     public Result doWork() {
         Context ctx = getApplicationContext();
+
+        // Surface WHY we're using an approximate location, instead of silently guessing NYC.
+        // Prefer the last coordinates that actually resolved over the default city.
+        double[] cached = loadLastCoords(ctx);
+        double fallbackLat = cached != null ? cached[0] : DEFAULT_LAT;
+        double fallbackLon = cached != null ? cached[1] : DEFAULT_LON;
+        if (!com.desire.widget.util.LocationPermissionHelper.hasPermission(ctx)) {
+            return fetchAndLabel(ctx, fallbackLat, fallbackLon, "Enable location");
+        }
+        if (!com.desire.widget.util.LocationPermissionHelper.isLocationEnabled(ctx)) {
+            return fetchAndLabel(ctx, fallbackLat, fallbackLon, "Location off");
+        }
+
         try {
             double[] loc = resolveLocation(ctx);
             WeatherSnapshot snapshot = fetch(loc[0], loc[1]);
-            if (snapshot == null) return Result.retry();
+            if (snapshot == null) return Result.retry(); // offline: keep showing the last cache
             snapshot.location = reverseGeocode(ctx, loc[0], loc[1]);
 
             new CachedLiveDataSource(ctx).putWeather(snapshot);
@@ -60,22 +70,75 @@ public class WeatherWorker extends Worker {
         }
     }
 
-    private double[] resolveLocation(Context ctx) {
-        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            try {
-                Location l = Tasks.await(LocationServices.getFusedLocationProviderClient(ctx).getLastLocation());
-                if (l != null) return new double[]{l.getLatitude(), l.getLongitude()};
-            } catch (Exception ignored) {}
+    /** Permission/GPS is off: still show real conditions for a default city, but label why. */
+    private Result fetchAndLabel(Context ctx, double lat, double lon, String label) {
+        try {
+            WeatherSnapshot snapshot = fetch(lat, lon);
+            if (snapshot == null) return Result.retry();
+            snapshot.location = label;
+            new CachedLiveDataSource(ctx).putWeather(snapshot);
+            EngineRenderer.render(ctx, EngineWidgetStore.allPlacedIds(ctx));
+            return Result.success();
+        } catch (Exception e) {
+            return Result.retry();
         }
+    }
+
+    private double[] resolveLocation(Context ctx) {
+        try {
+            com.google.android.gms.location.FusedLocationProviderClient client =
+                    LocationServices.getFusedLocationProviderClient(ctx);
+            Location l = Tasks.await(client.getLastLocation());
+            android.util.Log.i("WeatherWorker", "lastLocation=" + l);
+            // getLastLocation() is null when the device has no recent fix (common — nothing else has
+            // asked for location lately). Actively request a single current location so we don't
+            // silently fall back to a stale/default location while permission is actually granted.
+            if (l == null) {
+                l = Tasks.await(client.getCurrentLocation(
+                        com.google.android.gms.location.Priority.PRIORITY_BALANCED_POWER_ACCURACY, null));
+                android.util.Log.i("WeatherWorker", "currentLocation=" + l);
+            }
+            if (l != null) {
+                saveLastCoords(ctx, l.getLatitude(), l.getLongitude());
+                return new double[]{l.getLatitude(), l.getLongitude()};
+            }
+        } catch (Exception e) {
+            android.util.Log.w("WeatherWorker", "resolveLocation failed", e);
+        }
+        // No fix right now (locked screen / background restriction / airplane mode). Reuse the
+        // last coordinates that DID resolve instead of resetting the user to the New York default
+        // — a background refresh must never replace good local weather with a fallback city.
+        double[] cached = loadLastCoords(ctx);
+        if (cached != null) {
+            android.util.Log.i("WeatherWorker", "using cached coords");
+            return cached;
+        }
+        android.util.Log.w("WeatherWorker", "falling back to default NYC");
         return new double[]{DEFAULT_LAT, DEFAULT_LON};
+    }
+
+    private void saveLastCoords(Context ctx, double lat, double lon) {
+        ctx.getSharedPreferences("weather_worker", Context.MODE_PRIVATE).edit()
+                .putLong("last_lat", Double.doubleToRawLongBits(lat))
+                .putLong("last_lon", Double.doubleToRawLongBits(lon))
+                .apply();
+    }
+
+    private double[] loadLastCoords(Context ctx) {
+        android.content.SharedPreferences p =
+                ctx.getSharedPreferences("weather_worker", Context.MODE_PRIVATE);
+        if (!p.contains("last_lat")) return null;
+        return new double[]{
+                Double.longBitsToDouble(p.getLong("last_lat", 0)),
+                Double.longBitsToDouble(p.getLong("last_lon", 0))};
     }
 
     private WeatherSnapshot fetch(double lat, double lon) throws Exception {
         String url = String.format(Locale.US,
                 "https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f" +
                         "&current=temperature_2m,weather_code" +
-                        "&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1",
+                        "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset" +
+                        "&timezone=auto&forecast_days=5&timeformat=unixtime",
                 lat, lon);
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         conn.setConnectTimeout(8000);
@@ -95,13 +158,51 @@ public class WeatherWorker extends Worker {
             WeatherSnapshot s = new WeatherSnapshot();
             s.temp = current.getDouble("temperature_2m");
             s.condition = mapCondition(current.getInt("weather_code"));
+            s.description = describe(current.getInt("weather_code"));
             s.high = daily.getJSONArray("temperature_2m_max").getDouble(0);
             s.low = daily.getJSONArray("temperature_2m_min").getDouble(0);
             s.unit = "°";
+
+            // Open-Meteo returns sunrise/sunset as UTC unix seconds (timeformat=unixtime); these are
+            // the real astronomical times for the location and far more accurate than a local
+            // approximation. Guard the array access in case a response omits them.
+            if (daily.has("sunrise") && daily.getJSONArray("sunrise").length() > 0) {
+                s.sunriseMillis = daily.getJSONArray("sunrise").getLong(0) * 1000L;
+            }
+            if (daily.has("sunset") && daily.getJSONArray("sunset").length() > 0) {
+                s.sunsetMillis = daily.getJSONArray("sunset").getLong(0) * 1000L;
+            }
+            // Daily forecast for the multi-day widgets ("epochSec,condition,high,low;…").
+            if (daily.has("time") && daily.has("weather_code")) {
+                StringBuilder fc = new StringBuilder();
+                int n = Math.min(daily.getJSONArray("time").length(), daily.getJSONArray("weather_code").length());
+                for (int i = 0; i < n; i++) {
+                    if (fc.length() > 0) fc.append(';');
+                    fc.append(daily.getJSONArray("time").getLong(i)).append(',')
+                            .append(mapCondition(daily.getJSONArray("weather_code").getInt(i))).append(',')
+                            .append(daily.getJSONArray("temperature_2m_max").getDouble(i)).append(',')
+                            .append(daily.getJSONArray("temperature_2m_min").getDouble(i));
+                }
+                s.forecast = fc.toString();
+            }
             return s;
         } finally {
             conn.disconnect();
         }
+    }
+
+    /** WMO weather code → short human description. */
+    private String describe(int code) {
+        if (code == 0) return "Clear sky";
+        if (code == 1) return "Mainly clear";
+        if (code == 2) return "Partly cloudy";
+        if (code == 3) return "Overcast";
+        if (code == 45 || code == 48) return "Fog";
+        if (code >= 51 && code <= 57) return "Drizzle";
+        if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return "Rain";
+        if ((code >= 71 && code <= 77) || code == 85 || code == 86) return "Snow";
+        if (code >= 95) return "Thunderstorm";
+        return "Cloudy";
     }
 
     /** WMO weather codes → our condition buckets. */

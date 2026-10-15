@@ -1,0 +1,30 @@
+{
+  "id": "buds_fill",
+  "name": "Earbuds",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "device_battery",
+      "frame": {
+        "x": 0.1,
+        "y": 0.12,
+        "w": 0.8,
+        "h": 0.76
+      },
+      "props": {
+        "style": "fill",
+        "fillColor": "#7B4CB8",
+        "trackColor": "#2A2633",
+        "textColor": "#F4EEFF",
+        "subColor": "#E6C9FF"
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  }
+}

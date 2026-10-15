@@ -1,0 +1,138 @@
+{
+  "id": "min_world",
+  "name": "World",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#1A1C20",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.03,
+        "y": 0.16,
+        "w": 0.28,
+        "h": 0.24
+      },
+      "props": {
+        "text": "LOCAL",
+        "fontSize": 0.34,
+        "align": "left",
+        "color": "#6C7BFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.03,
+        "y": 0.44,
+        "w": 0.28,
+        "h": 0.44
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.5,
+        "align": "left",
+        "color": "#ECEDF0",
+        "bold": true
+      }
+    },
+    {
+      "type": "divider",
+      "frame": {
+        "x": 0.34,
+        "y": 0.2,
+        "w": 0.004,
+        "h": 0.6
+      },
+      "props": {
+        "color": "#2A2E36",
+        "thickness": 0.05
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.37,
+        "y": 0.16,
+        "w": 0.28,
+        "h": 0.24
+      },
+      "props": {
+        "text": "NEW YORK",
+        "fontSize": 0.34,
+        "align": "left",
+        "color": "#A6ABB5",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.37,
+        "y": 0.44,
+        "w": 0.28,
+        "h": 0.44
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.5,
+        "align": "left",
+        "color": "#ECEDF0",
+        "bold": true,
+        "timezone": "America/New_York"
+      }
+    },
+    {
+      "type": "divider",
+      "frame": {
+        "x": 0.68,
+        "y": 0.2,
+        "w": 0.004,
+        "h": 0.6
+      },
+      "props": {
+        "color": "#2A2E36",
+        "thickness": 0.05
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.71,
+        "y": 0.16,
+        "w": 0.28,
+        "h": 0.24
+      },
+      "props": {
+        "text": "TOKYO",
+        "fontSize": 0.34,
+        "align": "left",
+        "color": "#A6ABB5",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.71,
+        "y": 0.44,
+        "w": 0.28,
+        "h": 0.44
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.5,
+        "align": "left",
+        "color": "#ECEDF0",
+        "bold": true,
+        "timezone": "Asia/Tokyo"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

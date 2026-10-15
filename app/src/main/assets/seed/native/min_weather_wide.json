@@ -1,0 +1,35 @@
+{
+  "id": "min_weather_wide",
+  "name": "Weather Wide",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "weather",
+      "frame": {
+        "x": 0.04,
+        "y": 0.12,
+        "w": 0.9,
+        "h": 0.76
+      },
+      "props": {
+        "condition": "clouds",
+        "temp": 22,
+        "location": "City",
+        "high": 25,
+        "low": 16,
+        "iconColor": "#6C7BFF",
+        "textColor": "#ECEDF0",
+        "subColor": "#A6ABB5"
+      }
+    }
+  ],
+  "action": {
+    "type": "weather"
+  }
+}

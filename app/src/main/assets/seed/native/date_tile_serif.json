@@ -1,0 +1,48 @@
+{
+  "id": "date_tile_serif",
+  "name": "Date Serif",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#FFFFFF",
+    "cornerRadius": 0.24
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.08,
+        "w": 0.8,
+        "h": 0.14
+      },
+      "props": {
+        "format": "EEE",
+        "color": "#E5322D",
+        "fontSize": 0.9,
+        "align": "right",
+        "bold": false,
+        "font": "serif"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.24,
+        "w": 0.92,
+        "h": 0.66
+      },
+      "props": {
+        "format": "dd",
+        "color": "#111114",
+        "fontSize": 0.95,
+        "align": "center",
+        "bold": true,
+        "font": "serif"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

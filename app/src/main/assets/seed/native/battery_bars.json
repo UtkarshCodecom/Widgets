@@ -1,0 +1,32 @@
+{
+  "id": "battery_bars",
+  "name": "Battery Cells",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#0F2A1D",
+    "gradientEnd": "#06140D",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.1,
+        "y": 0.12,
+        "w": 0.8,
+        "h": 0.76
+      },
+      "props": {
+        "style": "bars",
+        "fillColor": "#30D158",
+        "bodyColor": "#2E5E41",
+        "textColor": "#FFFFFF",
+        "lowColor": "#FF453A"
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  }
+}

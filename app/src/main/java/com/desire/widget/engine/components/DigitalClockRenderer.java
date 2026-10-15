@@ -9,7 +9,7 @@ import com.desire.widget.engine.ComponentRenderer;
 import com.desire.widget.engine.RenderContext;
 import com.desire.widget.engine.model.ComponentSpec;
 import com.desire.widget.engine.util.FontResolver;
-import com.desire.widget.engine.util.SpecColors;
+import com.desire.widget.engine.util.SpecPaint;
 import com.desire.widget.engine.util.SpecProps;
 
 import java.text.SimpleDateFormat;
@@ -19,8 +19,9 @@ import java.util.Map;
 
 /**
  * Digital clock / formatted date-time. Renders the instant in {@code ctx.nowMillis}, so the
- * minute-tick refresh in Phase 3 advances it. props: format (SimpleDateFormat pattern), color,
- * fontSize (<=1 = fraction of height), bold, align.
+ * minute-tick refresh in Phase 3 advances it. props: format (SimpleDateFormat pattern), color
+ * (plain or {@code gradient:} — see SpecPaint), fontSize (<=1 = fraction of height), bold, align,
+ * style (fill|outline), uppercase, letterSpacing (em, default 0).
  */
 public class DigitalClockRenderer implements ComponentRenderer {
     @Override
@@ -32,22 +33,34 @@ public class DigitalClockRenderer implements ComponentRenderer {
     public void render(Canvas canvas, RectF b, ComponentSpec s, RenderContext ctx) {
         Map<String, Object> p = s.props;
         String fmt = SpecProps.str(p, "format", "HH:mm");
+        String tz = SpecProps.str(p, "timezone", "");
         String text;
         try {
-            text = new SimpleDateFormat(fmt, Locale.getDefault()).format(new Date(ctx.nowMillis));
+            SimpleDateFormat sdf = new SimpleDateFormat(fmt, Locale.getDefault());
+            if (tz != null && !tz.isEmpty()) sdf.setTimeZone(java.util.TimeZone.getTimeZone(tz));
+            text = sdf.format(new Date(ctx.nowMillis));
         } catch (Exception e) {
             text = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(ctx.nowMillis));
         }
 
-        int color = SpecColors.resolve(SpecProps.str(p, "color", "@textPrimary"), ctx.theme, ctx.theme.textPrimary);
+        if (SpecProps.b(p, "uppercase", false)) text = text.toUpperCase(Locale.getDefault());
+
+        String colorValue = SpecProps.str(p, "color", "@textPrimary");
+        boolean outline = "outline".equals(SpecProps.str(p, "style", "fill"));
         String align = SpecProps.str(p, "align", "center");
         float fs = SpecProps.f(p, "fontSize", 0.5f);
         float px = fs <= 1f ? fs * b.height() : fs;
         boolean bold = SpecProps.b(p, "bold", true);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(color);
+        SpecPaint.apply(paint, colorValue, b, ctx.theme, ctx.theme.textPrimary);
         paint.setTextSize(Math.max(1f, px));
+        paint.setLetterSpacing(SpecProps.f(p, "letterSpacing", 0f));
+        if (outline) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(Math.max(1.5f, px * 0.035f));
+            paint.setStrokeJoin(Paint.Join.ROUND);
+        }
         String font = SpecProps.str(p, "font", ctx.theme.fontFamily);
         paint.setTypeface(FontResolver.resolve(font, bold));
         paint.setTextAlign("left".equals(align) ? Paint.Align.LEFT

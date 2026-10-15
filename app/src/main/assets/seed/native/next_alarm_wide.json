@@ -1,0 +1,31 @@
+{
+  "id": "next_alarm_wide",
+  "name": "Alarm Bar",
+  "designSize": "4x1",
+  "background": {
+    "gradientStart": "#20232B",
+    "gradientEnd": "#14161B",
+    "gradientAngle": 0,
+    "cornerRadius": 0.3
+  },
+  "components": [
+    {
+      "type": "next_alarm",
+      "frame": {
+        "x": 0.05,
+        "y": 0.12,
+        "w": 0.9,
+        "h": 0.76
+      },
+      "props": {
+        "layout": "row",
+        "accentColor": "#FF9F0A",
+        "textColor": "#FFFFFF",
+        "subColor": "#9EA3AE"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

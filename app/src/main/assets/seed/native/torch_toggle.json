@@ -1,0 +1,29 @@
+{
+  "id": "torch_toggle",
+  "name": "Torch",
+  "designSize": "1x1",
+  "background": {
+    "gradientStart": "#1B1D22",
+    "gradientEnd": "#121418",
+    "gradientAngle": 270,
+    "cornerRadius": 0.26
+  },
+  "components": [
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "kind": "flashlight",
+        "shape": "circle",
+        "onColor": "#FFD60A",
+        "iconOnColor": "#1C1C1E",
+        "showLabel": false
+      }
+    }
+  ]
+}

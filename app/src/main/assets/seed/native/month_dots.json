@@ -1,0 +1,69 @@
+{
+  "id": "month_dots",
+  "name": "Month Progress",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#EDEDF0",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "year_progress",
+      "frame": {
+        "x": 0.1,
+        "y": 0.1,
+        "w": 0.8,
+        "h": 0.8
+      },
+      "props": {
+        "scope": "month",
+        "style": "dots",
+        "fillColor": "#121214",
+        "emptyColor": "#C3C3CA",
+        "accentColor": "#E5322D",
+        "textColor": "#121214"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  },
+  "styles": [
+    {
+      "name": "Month",
+      "props": {
+        "0.scope": "month"
+      }
+    },
+    {
+      "name": "Week",
+      "props": {
+        "0.scope": "week"
+      }
+    },
+    {
+      "name": "Day",
+      "props": {
+        "0.scope": "day"
+      }
+    },
+    {
+      "name": "Year",
+      "props": {
+        "0.scope": "year"
+      }
+    },
+    {
+      "name": "Bar",
+      "props": {
+        "0.style": "bar"
+      }
+    },
+    {
+      "name": "Ring",
+      "props": {
+        "0.style": "ring"
+      }
+    }
+  ]
+}

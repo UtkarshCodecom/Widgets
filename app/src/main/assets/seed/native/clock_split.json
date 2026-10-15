@@ -1,0 +1,56 @@
+{
+  "id": "clock_split",
+  "name": "Split",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#4A2A78",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "styled_clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "layout": "split",
+        "font": "condensed",
+        "scaleX": 0.62,
+        "hourColors": [
+          "#E6C9FF"
+        ],
+        "minuteColors": [
+          "#F6B8E6"
+        ],
+        "chipColor": "#6E4A9A",
+        "chipTextColor": "#E6C9FF"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Solid",
+      "props": {
+        "0.style": "solid"
+      }
+    },
+    {
+      "name": "Gradient",
+      "props": {
+        "0.style": "gradient"
+      }
+    },
+    {
+      "name": "Outline",
+      "props": {
+        "0.style": "outline"
+      }
+    }
+  ]
+}

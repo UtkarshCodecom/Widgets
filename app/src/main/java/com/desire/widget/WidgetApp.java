@@ -34,6 +34,7 @@ public class WidgetApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        com.desire.widget.engine.runtime.StyleApplier.init(this); // "@wallpaper" colours
         instance = this;
 
         FirebaseApp.initializeApp(this);
@@ -48,6 +49,69 @@ public class WidgetApp extends Application {
         com.desire.widget.billing.BillingManager.getInstance(this); // connect + restore Pro
         ClockTickReceiver.ensureScheduled(this);
         registerScreenReceiver();
+        registerToggleStateListeners();
+        // Screen is on while the app launches — start the per-second ticker for live widgets.
+        com.desire.widget.widget.SecondTicker.start(this);
+    }
+
+    /**
+     * Keeps quick-settings toggle widgets in sync the moment state changes (Wi-Fi, Bluetooth,
+     * flight mode, location, DND, and the torch — which has no broadcast, only a callback). These
+     * live only while the process is alive; the per-minute tick is the fallback.
+     */
+    private void registerToggleStateListeners() {
+        android.content.BroadcastReceiver stateReceiver = new android.content.BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                com.desire.widget.service.ToggleReceiver.renderToggleWidgets(context);
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(android.net.wifi.WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        filter.addAction(android.location.LocationManager.PROVIDERS_CHANGED_ACTION);
+        filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
+        filter.addAction(android.media.AudioManager.RINGER_MODE_CHANGED_ACTION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(stateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(stateReceiver, filter);
+        }
+
+        // Auto-rotate and auto-brightness have no broadcast — watch the settings themselves, so a
+        // change from the system's quick settings shows on the widget too.
+        android.database.ContentObserver settingsObserver = new android.database.ContentObserver(
+                new android.os.Handler(android.os.Looper.getMainLooper())) {
+            @Override
+            public void onChange(boolean selfChange) {
+                com.desire.widget.service.ToggleReceiver.renderToggleWidgets(WidgetApp.this);
+            }
+        };
+        try {
+            getContentResolver().registerContentObserver(android.provider.Settings.System.getUriFor(
+                    android.provider.Settings.System.ACCELEROMETER_ROTATION), false, settingsObserver);
+            getContentResolver().registerContentObserver(android.provider.Settings.System.getUriFor(
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE), false, settingsObserver);
+        } catch (Exception ignored) {}
+
+        try {
+            android.hardware.camera2.CameraManager cm =
+                    (android.hardware.camera2.CameraManager) getSystemService(Context.CAMERA_SERVICE);
+            if (cm != null) {
+                cm.registerTorchCallback(new android.hardware.camera2.CameraManager.TorchCallback() {
+                    @Override
+                    public void onTorchModeChanged(String cameraId, boolean enabled) {
+                        String torch = com.desire.widget.service.ToggleReceiver.torchCameraId(WidgetApp.this);
+                        if (cameraId.equals(torch)
+                                && enabled != com.desire.widget.engine.data.ToggleState.isTorchOn(WidgetApp.this)) {
+                            com.desire.widget.engine.data.ToggleState.setTorchOn(WidgetApp.this, enabled);
+                            com.desire.widget.service.ToggleReceiver.renderToggleWidgets(WidgetApp.this);
+                        }
+                    }
+                }, new android.os.Handler(android.os.Looper.getMainLooper()));
+            }
+        } catch (Exception ignored) {}
     }
 
     private void scheduleWeatherWork() {
@@ -74,6 +138,7 @@ public class WidgetApp extends Application {
         screenReceiver = new ClockTickReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED);

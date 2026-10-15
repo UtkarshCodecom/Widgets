@@ -1,0 +1,51 @@
+{
+  "id": "clock_bezel",
+  "name": "Bezel",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "bezel_clock",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {
+        "bezel": "dots",
+        "faceColor": "#0B0B0D",
+        "bezelColor": "#55FFFFFF",
+        "accentColor": "#FFFFFF",
+        "textColor": "#FFFFFF",
+        "subColor": "#E6E6EA"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Dots",
+      "props": {
+        "0.bezel": "dots"
+      }
+    },
+    {
+      "name": "Ticks",
+      "props": {
+        "0.bezel": "ticks"
+      }
+    },
+    {
+      "name": "Still",
+      "props": {
+        "0.sweep": false
+      }
+    }
+  ]
+}

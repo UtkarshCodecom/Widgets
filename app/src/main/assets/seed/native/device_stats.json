@@ -1,0 +1,46 @@
+{
+  "id": "device_stats",
+  "name": "Device Stats",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#111318",
+    "gradientEnd": "#1A1D24",
+    "gradientAngle": 270,
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.06,
+        "y": 0.08,
+        "w": 0.6,
+        "h": 0.16
+      },
+      "props": {
+        "text": "DEVICE",
+        "fontSize": 0.6,
+        "align": "left",
+        "color": "#8E95A3",
+        "bold": true
+      }
+    },
+    {
+      "type": "device_info",
+      "frame": {
+        "x": 0.06,
+        "y": 0.28,
+        "w": 0.88,
+        "h": 0.64
+      },
+      "props": {
+        "metric": "both",
+        "memoryColor": "#BF5AF2",
+        "storageColor": "#64D2FF",
+        "trackColor": "#22FFFFFF",
+        "textColor": "#FFFFFF",
+        "subColor": "#8E95A3"
+      }
+    }
+  ]
+}

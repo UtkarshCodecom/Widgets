@@ -8,13 +8,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import android.content.pm.PackageManager;
 
+import com.desire.widget.data.local.entity.ThemeEntity;
 import com.desire.widget.data.model.AppConfig;
 import com.desire.widget.data.remote.FirebaseService;
+import com.desire.widget.data.repository.WidgetRepository;
 import com.desire.widget.util.PreferenceManager;
 import com.desire.widget.util.Tasks;
 
+import java.util.List;
+
 public class SettingsViewModel extends AndroidViewModel {
     private final PreferenceManager prefs;
+    private final WidgetRepository repository;
     private final MutableLiveData<Integer> developerTapCount = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> developerMode = new MutableLiveData<>(false);
     private final MutableLiveData<AppConfig> appConfig = new MutableLiveData<>(null);
@@ -26,8 +31,14 @@ public class SettingsViewModel extends AndroidViewModel {
     public SettingsViewModel(Application application) {
         super(application);
         prefs = PreferenceManager.getInstance(application);
+        repository = WidgetRepository.getInstance(application);
         developerTapCount.setValue(prefs.getDeveloperTapCount());
         developerMode.setValue(prefs.isDeveloperModeUnlocked());
+    }
+
+    /** App colour themes shown at the top of Settings. */
+    public LiveData<List<ThemeEntity>> getThemes() {
+        return repository.getAllThemes();
     }
 
     public int getVersionCode() {

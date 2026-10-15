@@ -1,0 +1,28 @@
+{
+  "id": "habit_tracker",
+  "name": "Habits",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#1A1C20",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "habit_tracker",
+      "frame": {
+        "x": 0.06,
+        "y": 0.08,
+        "w": 0.88,
+        "h": 0.84
+      },
+      "props": {
+        "titleColor": "#6C7BFF",
+        "textColor": "#ECEDF0",
+        "accentColor": "#6C7BFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_habits"
+  }
+}

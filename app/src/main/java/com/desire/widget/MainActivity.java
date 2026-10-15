@@ -1,5 +1,6 @@
 package com.desire.widget;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -19,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.desire.widget.data.model.AppConfig;
 import com.desire.widget.data.remote.FirebaseService;
-import com.desire.widget.ui.customize.CustomizeFragment;
 import com.desire.widget.ui.settings.SettingsFragment;
 import com.desire.widget.ui.settings.SettingsViewModel;
 import com.desire.widget.ui.widgets.WidgetsFragment;
@@ -32,6 +34,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private FragmentManager fragmentManager;
+
+    private final ActivityResultLauncher<String> locationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                if (granted) {
+                    // Immediately refresh weather now that we have a real location.
+                    androidx.work.WorkManager.getInstance(this).enqueue(
+                            new androidx.work.OneTimeWorkRequest.Builder(
+                                    com.desire.widget.worker.WeatherWorker.class).build());
+                }
+            });
+
+    public void requestLocationPermission() {
+        if (com.desire.widget.util.LocationPermissionHelper.hasPermission(this)) return;
+        locationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +95,48 @@ public class MainActivity extends AppCompatActivity {
 
         maybeShowOnboarding();
         checkAppConfig();
+        maybeRequestLocationOnce();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshWeatherIfStale();
+    }
+
+    /**
+     * Refresh weather whenever the app comes to the foreground (throttled to every 10 minutes).
+     * Foreground is the one moment location is reliably available on OEM builds — background
+     * refreshes with the screen locked can't get a fix and would reuse cached coordinates — so
+     * this is what locks the weather onto the user's real city.
+     */
+    private void refreshWeatherIfStale() {
+        if (!com.desire.widget.util.LocationPermissionHelper.hasPermission(this)) return;
+        // Until one real location fix has been captured (WeatherWorker saves it), retry on every
+        // app-open — cached data from a fallback city must not suppress getting the real one.
+        boolean hasRealFix = getSharedPreferences("weather_worker", MODE_PRIVATE).contains("last_lat");
+        long updatedAt = new com.desire.widget.engine.data.CachedLiveDataSource(this)
+                .weather().updatedAtMillis;
+        if (hasRealFix && System.currentTimeMillis() - updatedAt < 10 * 60_000L) return;
+        androidx.work.WorkManager.getInstance(this).enqueue(
+                new androidx.work.OneTimeWorkRequest.Builder(
+                        com.desire.widget.worker.WeatherWorker.class).build());
+    }
+
+    /** Ask for location permission once (so weather widgets can use the real location), never nag. */
+    private void maybeRequestLocationOnce() {
+        com.desire.widget.util.PreferenceManager prefs = com.desire.widget.util.PreferenceManager.getInstance(this);
+        if (prefs.getBoolean("asked_location_once", false)) return;
+        prefs.putBoolean("asked_location_once", true);
+        if (!com.desire.widget.util.LocationPermissionHelper.hasPermission(this)) {
+            requestLocationPermission();
+        }
     }
 
     private boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_widgets) {
             loadFragment(new WidgetsFragment(), "Widgets");
-            return true;
-        } else if (id == R.id.nav_customize) {
-            loadFragment(new CustomizeFragment(), "Customize");
             return true;
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingsFragment(), "Settings");

@@ -3,37 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:layout_marginTop="6dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
     android:foreground="?selectableItemBackground"
     app:cardBackgroundColor="@color/dark_card"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeWidth="0dp"
+    app:strokeColor="@color/glass_stroke"
+    app:strokeWidth="1dp"
     app:contentPadding="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_neumorphic_small"
         android:gravity="center_vertical"
+        android:minHeight="64dp"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp">
 
         <TextView
-            android:id="@+id/row_title"
+            android:id="@+id/row_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_icon_badge"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:text="✦" />
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
             android:layout_weight="1"
-            android:textColor="@color/text_primary"
-            android:textSize="14sp"
-            tools:text="Setting Row" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/row_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Setting Row" />
+
+            <TextView
+                android:id="@+id/row_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:textColor="@color/text_tertiary"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="Subtitle text" />
+
+        </LinearLayout>
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:src="@drawable/ic_arrow_right"
-            android:alpha="0.3" />
+            android:alpha="0.35"
+            app:tint="@color/text_tertiary" />
 
     </LinearLayout>
 

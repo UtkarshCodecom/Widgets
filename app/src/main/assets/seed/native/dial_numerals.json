@@ -1,0 +1,33 @@
+{
+  "id": "dial_numerals",
+  "name": "Classic Dial",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#F5F5F7",
+    "gradientEnd": "#E4E4EA",
+    "gradientAngle": 270,
+    "cornerRadius": 0.24
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.06,
+        "w": 0.88,
+        "h": 0.88
+      },
+      "props": {
+        "dialStyle": "numerals",
+        "faceColor": "#FFFFFF",
+        "tickColor": "#3A3A3C",
+        "numeralColor": "#1C1C1E",
+        "handColor": "#1C1C1E",
+        "secondColor": "#FF9500"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

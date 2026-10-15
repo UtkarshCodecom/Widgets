@@ -1,0 +1,31 @@
+{
+  "id": "agenda",
+  "name": "Agenda",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#1A1F2B",
+    "gradientEnd": "#11141C",
+    "gradientAngle": 270,
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "agenda",
+      "frame": {
+        "x": 0.05,
+        "y": 0.08,
+        "w": 0.9,
+        "h": 0.86
+      },
+      "props": {
+        "maxEvents": 3,
+        "accentColor": "#FF6B6B",
+        "textColor": "#FFFFFF",
+        "subColor": "#98A2B3"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

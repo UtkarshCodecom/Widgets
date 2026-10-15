@@ -18,6 +18,11 @@ public class RenderContext {
     public final long nowMillis;
     /** May be null; renderers fall back to component props when absent. */
     public final LiveDataSource live;
+    /**
+     * The installed widget's id, so per-instance components (notes/todo/qr) read their own data.
+     * -1 for gallery previews (renderers then show sample content). Set by EngineRenderer.
+     */
+    public int appWidgetId = -1;
 
     public RenderContext(android.content.Context context, int widthPx, int heightPx,
                          RenderTheme theme, long nowMillis) {

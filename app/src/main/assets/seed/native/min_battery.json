@@ -1,0 +1,46 @@
+{
+  "id": "min_battery",
+  "name": "Battery",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.08,
+        "y": 0.14,
+        "w": 0.84,
+        "h": 0.12
+      },
+      "props": {
+        "text": "BATTERY",
+        "fontSize": 0.42,
+        "align": "left",
+        "color": "#A6ABB5",
+        "bold": true
+      }
+    },
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.08,
+        "y": 0.34,
+        "w": 0.84,
+        "h": 0.4
+      },
+      "props": {
+        "fillColor": "#6C7BFF",
+        "bodyColor": "#A6ABB5",
+        "textColor": "#ECEDF0"
+      }
+    }
+  ],
+  "action": {
+    "type": "battery"
+  }
+}

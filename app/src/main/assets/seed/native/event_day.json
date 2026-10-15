@@ -1,0 +1,29 @@
+{
+  "id": "event_day",
+  "name": "Next Event",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#0E0E11",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "agenda",
+      "frame": {
+        "x": 0.1,
+        "y": 0.1,
+        "w": 0.8,
+        "h": 0.8
+      },
+      "props": {
+        "layout": "day",
+        "accentColor": "#B8A7FF",
+        "textColor": "#F2F2F4",
+        "subColor": "#9A9AA4"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

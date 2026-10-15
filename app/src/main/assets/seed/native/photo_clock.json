@@ -1,0 +1,75 @@
+{
+  "id": "photo_clock",
+  "name": "Photo Clock",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#2A2A2E",
+    "gradientEnd": "#1A1A1E",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "image",
+      "frame": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 1.0
+      },
+      "props": {
+        "source": "photo_placeholder",
+        "scaleType": "crop",
+        "cornerRadius": 0
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.0,
+        "y": 0.55,
+        "w": 1.0,
+        "h": 0.45
+      },
+      "props": {
+        "shape": "rect",
+        "fill": "#59000000"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.58,
+        "w": 0.84,
+        "h": 0.24
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.86,
+        "align": "left",
+        "color": "#FFFFFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.82,
+        "w": 0.84,
+        "h": 0.1
+      },
+      "props": {
+        "format": "EEE, d MMM",
+        "fontSize": 0.72,
+        "align": "left",
+        "color": "#E5E5EA",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

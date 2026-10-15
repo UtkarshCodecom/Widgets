@@ -1,0 +1,58 @@
+{
+  "id": "min_system",
+  "name": "System",
+  "designSize": "4x1",
+  "background": {
+    "fill": "#161719",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.05,
+        "y": 0.2,
+        "w": 0.5,
+        "h": 0.58
+      },
+      "props": {
+        "format": "HH:mm",
+        "fontSize": 0.62,
+        "align": "left",
+        "color": "#ECEDF0",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.05,
+        "y": 0.62,
+        "w": 0.5,
+        "h": 0.3
+      },
+      "props": {
+        "format": "EEE, MMM d",
+        "fontSize": 0.3,
+        "align": "left",
+        "color": "#A6ABB5",
+        "bold": false
+      }
+    },
+    {
+      "type": "battery",
+      "frame": {
+        "x": 0.62,
+        "y": 0.26,
+        "w": 0.34,
+        "h": 0.5
+      },
+      "props": {
+        "fillColor": "#6C7BFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

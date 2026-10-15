@@ -1,0 +1,130 @@
+{
+  "id": "clock_brush",
+  "name": "Brush",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "styled_clock",
+      "frame": {
+        "x": 0.02,
+        "y": 0.04,
+        "w": 0.6,
+        "h": 0.92
+      },
+      "props": {
+        "layout": "diagonal",
+        "font": "cursive",
+        "colors": [
+          "#D7F25A"
+        ],
+        "sepColor": "#D7F25A",
+        "fill": 0.62
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.62,
+        "y": 0.08,
+        "w": 0.36,
+        "h": 0.17
+      },
+      "props": {
+        "format": "MMMM",
+        "uppercase": true,
+        "font": "casual",
+        "color": "#FFFFFF",
+        "fontSize": 0.85,
+        "align": "left",
+        "bold": true
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.665,
+        "y": 0.3,
+        "w": 0.115,
+        "h": 0.23
+      },
+      "props": {
+        "shape": "circle",
+        "fill": "#00000000",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0.07
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.665,
+        "y": 0.3,
+        "w": 0.115,
+        "h": 0.23
+      },
+      "props": {
+        "format": "d",
+        "font": "casual",
+        "color": "#FFFFFF",
+        "fontSize": 0.62,
+        "align": "center",
+        "bold": true
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.62,
+        "y": 0.6,
+        "w": 0.34,
+        "h": 0.09
+      },
+      "props": {
+        "text": "TODAY IS",
+        "font": "casual",
+        "color": "#FFFFFF",
+        "fontSize": 0.8,
+        "align": "left",
+        "bold": true
+      }
+    },
+    {
+      "type": "shape",
+      "frame": {
+        "x": 0.6,
+        "y": 0.71,
+        "w": 0.38,
+        "h": 0.19
+      },
+      "props": {
+        "shape": "pill",
+        "fill": "#F4EEDC"
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.6,
+        "y": 0.71,
+        "w": 0.38,
+        "h": 0.19
+      },
+      "props": {
+        "format": "EEEE",
+        "uppercase": true,
+        "font": "casual",
+        "color": "#15161A",
+        "fontSize": 0.6,
+        "align": "center",
+        "bold": true
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

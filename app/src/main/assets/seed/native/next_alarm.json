@@ -1,0 +1,31 @@
+{
+  "id": "next_alarm",
+  "name": "Next Alarm",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#20232B",
+    "gradientEnd": "#14161B",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "next_alarm",
+      "frame": {
+        "x": 0.08,
+        "y": 0.08,
+        "w": 0.84,
+        "h": 0.84
+      },
+      "props": {
+        "layout": "stack",
+        "accentColor": "#FF9F0A",
+        "textColor": "#FFFFFF",
+        "subColor": "#9EA3AE"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

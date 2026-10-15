@@ -1,0 +1,47 @@
+{
+  "id": "dial_rays",
+  "name": "Sunburst",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.02,
+        "y": 0.04,
+        "w": 0.96,
+        "h": 0.92
+      },
+      "props": {
+        "dialStyle": "stadium",
+        "faceColor": "#00000000",
+        "tickColor": "#77777E",
+        "handColor": "#FFFFFF",
+        "secondColor": "#FF2D55",
+        "accentColor": "#FF2D55",
+        "showNumerals": false,
+        "showDate": false
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Rays",
+      "props": {
+        "0.showNumerals": false
+      }
+    },
+    {
+      "name": "Numerals",
+      "props": {
+        "0.showNumerals": true
+      }
+    }
+  ]
+}

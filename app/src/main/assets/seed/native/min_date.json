@@ -1,0 +1,64 @@
+{
+  "id": "min_date",
+  "name": "Date",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.14,
+        "w": 0.8,
+        "h": 0.14
+      },
+      "props": {
+        "format": "EEEE",
+        "fontSize": 0.6,
+        "align": "left",
+        "color": "#6C7BFF",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.26,
+        "w": 0.88,
+        "h": 0.48
+      },
+      "props": {
+        "format": "d",
+        "fontSize": 1.05,
+        "align": "left",
+        "color": "#ECEDF0",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.1,
+        "y": 0.76,
+        "w": 0.8,
+        "h": 0.13
+      },
+      "props": {
+        "format": "MMMM yyyy",
+        "fontSize": 0.5,
+        "align": "left",
+        "color": "#A6ABB5",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "date_tile",
+  "name": "Date Tile",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#FFFFFF",
+    "cornerRadius": 0.24
+  },
+  "components": [
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.08,
+        "y": 0.12,
+        "w": 0.84,
+        "h": 0.16
+      },
+      "props": {
+        "format": "EEE MMM",
+        "color": "#E5322D",
+        "fontSize": 0.85,
+        "align": "center",
+        "bold": true
+      }
+    },
+    {
+      "type": "clock",
+      "frame": {
+        "x": 0.06,
+        "y": 0.3,
+        "w": 0.88,
+        "h": 0.56
+      },
+      "props": {
+        "format": "d",
+        "color": "#111114",
+        "fontSize": 0.95,
+        "align": "center",
+        "bold": true,
+        "font": "black"
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

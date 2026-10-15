@@ -1,0 +1,31 @@
+{
+  "id": "min_analog",
+  "name": "Analog",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#262A31",
+    "gradientEnd": "#191B1F",
+    "gradientAngle": 270,
+    "cornerRadius": 0.5
+  },
+  "components": [
+    {
+      "type": "analog_clock",
+      "frame": {
+        "x": 0.14,
+        "y": 0.14,
+        "w": 0.72,
+        "h": 0.72
+      },
+      "props": {
+        "faceColor": "#1A1C20",
+        "tickColor": "#4A4E57",
+        "handColor": "#ECEDF0",
+        "secondColor": "#6C7BFF"
+      }
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  }
+}

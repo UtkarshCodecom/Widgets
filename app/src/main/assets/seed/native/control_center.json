@@ -1,0 +1,66 @@
+{
+  "id": "control_center",
+  "name": "Control Center",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#1B1D22",
+    "gradientEnd": "#121418",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.05,
+        "y": 0.05,
+        "w": 0.42,
+        "h": 0.42
+      },
+      "props": {
+        "kind": "flashlight",
+        "onColor": "#0A84FF"
+      }
+    },
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.53,
+        "y": 0.05,
+        "w": 0.42,
+        "h": 0.42
+      },
+      "props": {
+        "kind": "sound",
+        "onColor": "#0A84FF"
+      }
+    },
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.05,
+        "y": 0.53,
+        "w": 0.42,
+        "h": 0.42
+      },
+      "props": {
+        "kind": "rotate",
+        "onColor": "#FFD60A",
+        "iconOnColor": "#1C1C1E"
+      }
+    },
+    {
+      "type": "toggle",
+      "frame": {
+        "x": 0.53,
+        "y": 0.53,
+        "w": 0.42,
+        "h": 0.42
+      },
+      "props": {
+        "kind": "dnd",
+        "onColor": "#5E5CE6"
+      }
+    }
+  ]
+}

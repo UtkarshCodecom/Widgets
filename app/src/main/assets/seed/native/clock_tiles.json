@@ -1,0 +1,70 @@
+{
+  "id": "clock_tiles",
+  "name": "Shapes",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#00000000",
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "time_tiles",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {}
+    }
+  ],
+  "action": {
+    "type": "alarms"
+  },
+  "styles": [
+    {
+      "name": "Playful",
+      "props": {
+        "0.shapes": [
+          "cookie",
+          "squircle",
+          "circle",
+          "blob"
+        ]
+      }
+    },
+    {
+      "name": "Soft",
+      "props": {
+        "0.shapes": [
+          "squircle",
+          "squircle",
+          "squircle",
+          "squircle"
+        ]
+      }
+    },
+    {
+      "name": "Round",
+      "props": {
+        "0.shapes": [
+          "circle",
+          "circle",
+          "circle",
+          "circle"
+        ]
+      }
+    },
+    {
+      "name": "Petals",
+      "props": {
+        "0.shapes": [
+          "flower",
+          "clover",
+          "wavy",
+          "gem"
+        ]
+      }
+    }
+  ]
+}

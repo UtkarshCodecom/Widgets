@@ -1,0 +1,29 @@
+{
+  "id": "min_calendar",
+  "name": "Calendar",
+  "designSize": "4x2",
+  "background": {
+    "fill": "#1A1C20",
+    "cornerRadius": 0.14
+  },
+  "components": [
+    {
+      "type": "calendar",
+      "frame": {
+        "x": 0.04,
+        "y": 0.04,
+        "w": 0.92,
+        "h": 0.92
+      },
+      "props": {
+        "accentColor": "#6C7BFF",
+        "textColor": "#ECEDF0",
+        "headerColor": "#6C7280",
+        "showTitleBar": true
+      }
+    }
+  ],
+  "action": {
+    "type": "calendar"
+  }
+}

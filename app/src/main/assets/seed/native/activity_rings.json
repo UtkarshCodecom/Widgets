@@ -1,0 +1,18 @@
+{
+  "id": "activity_rings",
+  "name": "Activity",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#1D1D2B",
+    "gradientEnd": "#111118",
+    "gradientAngle": 270,
+    "cornerRadius": 0.2
+  },
+  "components": [
+    { "type": "progress_ring", "frame": { "x": 0.14, "y": 0.04, "w": 0.72, "h": 0.72 }, "props": { "progress": 0.82, "progressColor": "#FF375F", "trackColor": "#3A1E28", "thickness": 0.11, "centerText": "" } },
+    { "type": "progress_ring", "frame": { "x": 0.23, "y": 0.13, "w": 0.54, "h": 0.54 }, "props": { "progress": 0.66, "progressColor": "#8CFF00", "trackColor": "#263316", "thickness": 0.14, "centerText": "" } },
+    { "type": "progress_ring", "frame": { "x": 0.32, "y": 0.22, "w": 0.36, "h": 0.36 }, "props": { "progress": 0.5, "progressColor": "#00E5FF", "trackColor": "#16303A", "thickness": 0.2, "centerText": "" } },
+    { "type": "text", "frame": { "x": 0.1, "y": 0.82, "w": 0.8, "h": 0.12 }, "props": { "text": "Activity", "fontSize": 0.52, "align": "center", "color": "#C9CDD6", "bold": true } }
+  ],
+  "action": { "type": "launch_app", "packageName": "com.google.android.apps.fitness" }
+}

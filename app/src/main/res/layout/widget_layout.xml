@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Home-screen widget layout. The engine renders the whole widget to a bitmap shown in widget_image.
+  Layered on top is a transparent, weighted tap overlay: three cells along the top (calendar
+  prev / today / next), an 8-zone seek row over the middle (music progress bar), and three cells
+  along the bottom (music prev / play-pause / next, or a timer reset). These regions are only given
+  click PendingIntents by EngineRenderer for the widget types that need them; for every other widget
+  the cells stay un-clickable, so taps fall through to the whole-widget action on widget_root. The
+  row weights are fixed so the cells always line up with the bitmap (title bar top ~20%, progress
+  bar ~60%, transport controls bottom ~26%).
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
@@ -10,6 +21,107 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="false"
         android:contentDescription="@string/widget_preview"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <!-- Top row: calendar prev / today / next (top ~22%). -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="22"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/widget_cal_prev"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:id="@+id/widget_cal_today"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:id="@+id/widget_cal_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <!-- Spacer above the seek row (FrameLayout, not Space — Space isn't a valid RemoteViews
+             view and would fail to inflate). Taps here fall through to the root. -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="32" />
+
+        <!-- Seek row (~54-66% height): 8 tap zones over the music progress bar, wired to seek-to
+             fractions for music widgets. The empty edge cells (weight 1) keep the 8 zones lined up
+             with the bar, which the renderer draws across ~10-90% of the width. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="12"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <FrameLayout android:id="@+id/widget_seek_0" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_1" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_2" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_3" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_4" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_5" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_6" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            <FrameLayout android:id="@+id/widget_seek_7" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <!-- Spacer between the seek row and the controls. -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8" />
+
+        <!-- Bottom row: music prev / play-pause / next, or timer toggle / toggle / reset (bottom ~26%). -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="26"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/widget_ctrl_prev"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:id="@+id/widget_ctrl_playpause"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:id="@+id/widget_ctrl_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

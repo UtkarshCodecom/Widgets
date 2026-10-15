@@ -1,0 +1,44 @@
+{
+  "id": "min_qr",
+  "name": "QR Code",
+  "designSize": "2x2",
+  "background": {
+    "fill": "#FFFFFF",
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "qr_code",
+      "frame": {
+        "x": 0.13,
+        "y": 0.1,
+        "w": 0.74,
+        "h": 0.74
+      },
+      "props": {
+        "data": "@user",
+        "foreground": "#16171B",
+        "background": "#FFFFFF"
+      }
+    },
+    {
+      "type": "text",
+      "frame": {
+        "x": 0.1,
+        "y": 0.86,
+        "w": 0.8,
+        "h": 0.1
+      },
+      "props": {
+        "text": "Tap to edit",
+        "fontSize": 0.4,
+        "align": "center",
+        "color": "#16171B",
+        "bold": false
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_qr"
+  }
+}

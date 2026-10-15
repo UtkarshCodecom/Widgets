@@ -12,7 +12,8 @@ public final class FontResolver {
 
     /** Font keys offered in the Customize screen. */
     public static final String[] FAMILIES = {
-            "default", "serif", "monospace", "condensed", "light", "medium", "thin", "black"
+            "default", "serif", "monospace", "condensed", "light", "medium", "thin", "black",
+            "cursive", "casual"
     };
 
     public static Typeface resolve(String family, boolean bold) {
@@ -29,6 +30,12 @@ public final class FontResolver {
             case "medium": return Typeface.create("sans-serif-medium", style);
             case "thin": return Typeface.create("sans-serif-thin", style);
             case "black": return Typeface.create("sans-serif-black", style);
+            // Handwritten (Dancing Script) and comic (Coming Soon) system families; fall back to
+            // the default sans on ROMs that drop them.
+            case "cursive":
+            case "brush": return Typeface.create("cursive", style);
+            case "casual": return Typeface.create("casual", style);
+            case "condensed-light": return Typeface.create("sans-serif-condensed-light", Typeface.NORMAL);
             default: return Typeface.create(Typeface.SANS_SERIF, style);
         }
     }

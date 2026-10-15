@@ -1,179 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<!-- Editor: the live preview floats over the user's wallpaper (the window shows it); below it a
+     solid sheet with the widget's own tabs ("Clock Style", "Hour Color"…), the tab's controls and
+     the ✕ / ↻ / ADD NEW bar. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cw_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?android:colorBackground"
-    android:fitsSystemWindows="true">
+    android:background="@android:color/transparent">
 
-    <!-- Top bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Customize"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/cw_advanced"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Advanced"
-            android:padding="10dp"
-            android:textColor="?attr/colorOnSurface"
-            android:background="?selectableItemBackground" />
-    </LinearLayout>
-
-    <!-- Live preview -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="#11000000">
-
-        <ImageView
-            android:id="@+id/cw_preview"
+        <FrameLayout
+            android:id="@+id/cw_preview_area"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:contentDescription="Widget preview"
-            android:scaleType="fitCenter" />
-    </FrameLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="200dp">
 
-    <!-- Controls -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none">
+            <ImageView
+                android:id="@+id/cw_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="36dp"
+                android:layout_marginBottom="28dp"
+                android:contentDescription="Widget preview"
+                android:scaleType="fitCenter" />
+
+        </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/cw_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="16dp">
+            android:background="@drawable/bg_editor_sheet"
+            android:orientation="vertical">
 
-            <TextView style="@style/CwSectionLabel" android:text="Accent color" />
-            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
-                <LinearLayout android:id="@+id/cw_accent_swatches" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingVertical="6dp" />
-            </HorizontalScrollView>
-
-            <TextView style="@style/CwSectionLabel" android:text="Text color" />
-            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
-                <LinearLayout android:id="@+id/cw_text_swatches" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingVertical="6dp" />
-            </HorizontalScrollView>
-
-            <TextView style="@style/CwSectionLabel" android:text="Background" />
-            <LinearLayout
-                android:id="@+id/cw_bg_mode_row"
+            <HorizontalScrollView
+                android:id="@+id/cw_tabs_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/cw_tabs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="8dp" />
+            </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider" />
+
+            <FrameLayout
+                android:id="@+id/cw_content"
+                android:layout_width="match_parent"
+                android:layout_height="290dp" />
+
+            <LinearLayout
+                android:id="@+id/cw_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingVertical="6dp" />
+                android:paddingStart="16dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="14dp">
 
-            <LinearLayout
-                android:id="@+id/cw_bg_color_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView style="@style/CwSectionLabel" android:text="Background color" />
-                <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
-                    <LinearLayout android:id="@+id/cw_bg_swatches" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingVertical="6dp" />
-                </HorizontalScrollView>
+                <TextView
+                    android:id="@+id/cw_close"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_round_glass"
+                    android:contentDescription="Close"
+                    android:gravity="center"
+                    android:text="✕"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cw_reset"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_round_glass"
+                    android:contentDescription="Reset"
+                    android:gravity="center"
+                    android:text="↻"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/cw_add_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_premium_pill"
+                    android:gravity="center"
+                    android:letterSpacing="0.06"
+                    android:paddingHorizontal="24dp"
+                    android:text="＋  ADD NEW"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textStyle="bold" />
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/cw_gradient_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <TextView style="@style/CwSectionLabel" android:text="Gradient end color" />
-                <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
-                    <LinearLayout android:id="@+id/cw_gradient_swatches" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingVertical="6dp" />
-                </HorizontalScrollView>
-            </LinearLayout>
-
-            <TextView style="@style/CwSectionLabel" android:text="Corner radius" />
-            <com.google.android.material.slider.Slider
-                android:id="@+id/cw_corner_slider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="0.0"
-                android:valueTo="0.5"
-                android:stepSize="0.02"
-                android:value="0.14" />
-
-            <TextView style="@style/CwSectionLabel" android:text="Background opacity" />
-            <com.google.android.material.slider.Slider
-                android:id="@+id/cw_opacity_slider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="0.0"
-                android:valueTo="1.0"
-                android:stepSize="0.05"
-                android:value="1.0" />
-
-            <TextView style="@style/CwSectionLabel" android:text="Font" />
-            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
-                <LinearLayout android:id="@+id/cw_font_row" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingVertical="6dp" />
-            </HorizontalScrollView>
-
-            <TextView style="@style/CwSectionLabel" android:text="Photo" />
-            <TextView
-                android:id="@+id/cw_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Choose photo…"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:textColor="#FFFFFFFF"
-                android:background="@drawable/bg_widget_tile" />
 
         </LinearLayout>
-    </ScrollView>
 
-    <!-- Bottom actions -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/cw_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset"
-            android:padding="12dp"
-            android:layout_marginEnd="8dp"
-            android:textColor="?attr/colorOnSurface"
-            android:background="?selectableItemBackground" />
-
-        <TextView
-            android:id="@+id/cw_add_home"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add to Home"
-            android:gravity="center"
-            android:paddingVertical="14dp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnPrimary"
-            android:background="@drawable/bg_premium_pill" />
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/cw_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="@drawable/bg_top_scrim" />
+
+</FrameLayout>

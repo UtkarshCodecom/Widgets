@@ -1,0 +1,30 @@
+{
+  "id": "ram_ring",
+  "name": "Memory",
+  "designSize": "2x2",
+  "background": {
+    "gradientStart": "#1A1033",
+    "gradientEnd": "#0D0820",
+    "gradientAngle": 270,
+    "cornerRadius": 0.22
+  },
+  "components": [
+    {
+      "type": "device_info",
+      "frame": {
+        "x": 0.1,
+        "y": 0.08,
+        "w": 0.8,
+        "h": 0.86
+      },
+      "props": {
+        "metric": "memory",
+        "style": "ring",
+        "memoryColor": "#BF5AF2",
+        "trackColor": "#22FFFFFF",
+        "textColor": "#FFFFFF",
+        "subColor": "#A79BC7"
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "note_wide",
+  "name": "Note Wide",
+  "designSize": "4x2",
+  "background": {
+    "gradientStart": "#2A2340",
+    "gradientEnd": "#1A1726",
+    "gradientAngle": 270,
+    "cornerRadius": 0.16
+  },
+  "components": [
+    {
+      "type": "notes",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "props": {
+        "title": "NOTES",
+        "titleColor": "#B79CFF",
+        "textColor": "#ECEDF0",
+        "inset": 0.09
+      }
+    }
+  ],
+  "action": {
+    "type": "edit_notes"
+  }
+}
